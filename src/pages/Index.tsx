@@ -1,13 +1,27 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { HeroCarousel } from '@/components/layout/HeroCarousel';
+import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <>
+      <Helmet>
+        <title>築安心 | 輕鋼構建築專家 - 安全、質感、快速</title>
+        <meta name="description" content="築安心專營輕鋼構別墅、移動宅、農舍建造。以綠色環保、耐震防風、精準工藝為核心，打造您的夢想家園。" />
+        <meta name="keywords" content="輕鋼構,別墅,移動屋,農舍,建築,耐震,綠色建築" />
+      </Helmet>
+      
+      <div className="min-h-screen overflow-hidden">
+        <Sidebar 
+          isMenuOpen={isMenuOpen} 
+          onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} 
+        />
+        <HeroCarousel sidebarExpanded={isMenuOpen} />
       </div>
-    </div>
+    </>
   );
 };
 
