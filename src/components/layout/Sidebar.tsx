@@ -12,7 +12,7 @@ const menuItems = [
   { label: '關於築安心', href: '/about' },
   { label: '優勢工法', href: '/advantages' },
   { label: '服務項目', href: '/services' },
-  { label: '工程實例', href: '/portfolio' },
+  { label: '工程實例', href: '/projects' },
   { label: '工程進度', href: '/progress' },
   { label: '線上估價', href: '/estimate' },
   { label: '專業知識庫/常見問答', href: '/faq' },
