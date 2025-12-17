@@ -5,13 +5,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Calculator, Home, Building2, Warehouse, Wrench, Info, Check, Plus } from "lucide-react";
+import { Calculator, Home, Building2, Warehouse, Wrench, Info, Check, Plus, Image as ImageIcon } from "lucide-react";
+
+// Project images
+import mobileHouseImg from "@/assets/projects/mobile-house.jpg";
+import villaHouseImg from "@/assets/projects/villa-house.jpg";
+import guesthouseImg from "@/assets/projects/guesthouse.jpg";
+import renovationImg from "@/assets/projects/renovation.jpg";
 
 const buildingTypes = [
-  { id: "mobile", name: "移動式住宅", price: 100000, icon: Home, description: "快速建造、可移動" },
-  { id: "villa", name: "輕鋼別墅", price: 108000, icon: Building2, description: "永久住宅首選" },
-  { id: "guesthouse", name: "民宿/商業空間", price: 130000, icon: Warehouse, description: "商業營運最佳" },
-  { id: "renovation", name: "老屋翻新加建", price: 150000, icon: Wrench, description: "舊屋新生命" },
+  { id: "mobile", name: "移動式住宅", price: 100000, icon: Home, description: "快速建造、可移動", image: mobileHouseImg },
+  { id: "villa", name: "輕鋼別墅", price: 108000, icon: Building2, description: "永久住宅首選", image: villaHouseImg },
+  { id: "guesthouse", name: "民宿/商業空間", price: 130000, icon: Warehouse, description: "商業營運最佳", image: guesthouseImg },
+  { id: "renovation", name: "老屋翻新加建", price: 150000, icon: Wrench, description: "舊屋新生命", image: renovationImg },
 ];
 
 const baseFeatures = [
@@ -107,6 +113,37 @@ const OnlineEstimate = () => {
               快速了解您的建築預算，選擇配置即可獲得初步報價
             </p>
           </div>
+
+          {/* Project Image Showcase */}
+          <Card className="mb-8 border-border/50 bg-card/50 backdrop-blur overflow-hidden">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <ImageIcon className="w-5 h-5 text-primary" />
+                {selectedBuilding?.name} 案例展示
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="relative aspect-[21/9] overflow-hidden">
+                <img
+                  src={selectedBuilding?.image}
+                  alt={`${selectedBuilding?.name} 實際案例`}
+                  className="w-full h-full object-cover transition-all duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
+                      {selectedBuilding && <selectedBuilding.icon className="w-5 h-5" />}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-foreground">{selectedBuilding?.name}</h3>
+                      <p className="text-sm text-muted-foreground">{selectedBuilding?.description} · 每坪 ¥{((selectedBuilding?.price || 0) / 10000).toFixed(1)}萬</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Left Column - Building Type & Area */}
