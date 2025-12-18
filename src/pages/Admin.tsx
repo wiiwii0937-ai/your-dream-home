@@ -4,7 +4,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -13,7 +12,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { 
+import { Input } from '@/components/ui/input';
+import { ImageUpload } from '@/components/ImageUpload';
+import {
   Loader2, Plus, Pencil, Trash2, LogOut, FileText, 
   Image as ImageIcon, LayoutDashboard, Settings, Users, 
   Calendar, TrendingUp, Home, Shield, Eye
@@ -368,26 +369,11 @@ const Admin = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="image_url" className="text-sm font-medium">
-                          封面圖片網址
-                        </Label>
-                        <Input
-                          id="image_url"
+                        <Label className="text-sm font-medium">封面圖片</Label>
+                        <ImageUpload
                           value={formData.image_url}
-                          onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                          placeholder="https://example.com/image.jpg"
-                          className="h-11"
+                          onChange={(url) => setFormData({ ...formData, image_url: url })}
                         />
-                        {formData.image_url && (
-                          <div className="mt-2 rounded-lg overflow-hidden border border-border">
-                            <img 
-                              src={formData.image_url} 
-                              alt="Preview" 
-                              className="w-full h-32 object-cover"
-                              onError={(e) => e.currentTarget.style.display = 'none'}
-                            />
-                          </div>
-                        )}
                       </div>
                       <Separator />
                       <Button onClick={handleSave} className="w-full h-11" disabled={saving}>
