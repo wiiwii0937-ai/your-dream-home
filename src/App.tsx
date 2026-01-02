@@ -16,6 +16,11 @@ import OnlineEstimate from "./pages/OnlineEstimate";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Services from "./pages/Services";
+import ServiceVilla from "./pages/services/ServiceVilla";
+import ServiceFarm from "./pages/services/ServiceFarm";
+import ServiceCommercial from "./pages/services/ServiceCommercial";
+import ServiceRenovation from "./pages/services/ServiceRenovation";
 
 const queryClient = new QueryClient();
 
