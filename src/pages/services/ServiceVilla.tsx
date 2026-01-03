@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { AnimatedSection, AnimatedItem } from "@/hooks/useScrollAnimation";
 
 import villaImage from "@/assets/projects/villa-house.jpg";
 import villaExterior from "@/assets/projects/villa-exterior-1.jpg";
@@ -105,14 +106,14 @@ const ServiceVilla = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
             <div className="absolute inset-0 flex items-end">
               <div className="max-w-7xl mx-auto px-6 md:px-12 pb-12 w-full">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary text-sm font-medium mb-4 backdrop-blur-sm">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary text-sm font-medium mb-4 backdrop-blur-sm animate-fade-in-up">
                   <Home className="w-4 h-4" />
                   服務項目
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
+                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
                   輕鋼構別墅/住宅
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl">
+                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up" style={{ animationDelay: "200ms" }}>
                   打造您夢想中的永久家園。耐震、節能、快速完工，讓美好生活提早開始。
                 </p>
               </div>
@@ -121,7 +122,7 @@ const ServiceVilla = () => {
 
           <div className="max-w-7xl mx-auto px-6 md:px-12 py-16">
             {/* 服務介紹 */}
-            <section className="mb-20">
+            <AnimatedSection className="mb-20" animation="fade-up">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
                   <h2 className="text-3xl font-bold text-foreground mb-6">
@@ -145,16 +146,16 @@ const ServiceVilla = () => {
                     alt="別墅外觀"
                     className="rounded-2xl shadow-2xl"
                   />
-                  <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground p-6 rounded-xl shadow-lg">
+                  <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground p-6 rounded-xl shadow-lg animate-float">
                     <div className="text-4xl font-bold">60</div>
                     <div className="text-sm">天快速完工</div>
                   </div>
                 </div>
               </div>
-            </section>
+            </AnimatedSection>
 
             {/* 目標客群 */}
-            <section className="mb-20">
+            <AnimatedSection className="mb-20" animation="fade-up">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-foreground mb-4">
                   這項服務適合您嗎？
@@ -164,38 +165,37 @@ const ServiceVilla = () => {
                 </p>
               </div>
               <div className="grid md:grid-cols-2 gap-6">
-                {targetCustomers.map((customer) => (
-                  <div
-                    key={customer.title}
-                    className="bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow"
-                  >
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className={cn("p-3 rounded-xl bg-gradient-to-br text-white", customer.color)}>
-                        <customer.icon className="w-6 h-6" />
+                {targetCustomers.map((customer, index) => (
+                  <AnimatedItem key={customer.title} index={index} baseDelay={150}>
+                    <div className="bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow h-full">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className={cn("p-3 rounded-xl bg-gradient-to-br text-white", customer.color)}>
+                          <customer.icon className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-foreground">{customer.title}</h3>
+                          <span className="text-sm text-muted-foreground">{customer.age}</span>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-foreground">{customer.title}</h3>
-                        <span className="text-sm text-muted-foreground">{customer.age}</span>
+                      <div className="space-y-3">
+                        <div className="bg-destructive/10 rounded-lg p-3">
+                          <span className="text-sm font-medium text-destructive">痛點：</span>
+                          <p className="text-sm text-muted-foreground mt-1">{customer.pain}</p>
+                        </div>
+                        <div className="bg-primary/10 rounded-lg p-3">
+                          <span className="text-sm font-medium text-primary">他們要的是：</span>
+                          <span className="text-sm font-bold text-primary ml-1">{customer.desire}</span>
+                          <p className="text-sm text-muted-foreground mt-1">{customer.solution}</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      <div className="bg-destructive/10 rounded-lg p-3">
-                        <span className="text-sm font-medium text-destructive">痛點：</span>
-                        <p className="text-sm text-muted-foreground mt-1">{customer.pain}</p>
-                      </div>
-                      <div className="bg-primary/10 rounded-lg p-3">
-                        <span className="text-sm font-medium text-primary">他們要的是：</span>
-                        <span className="text-sm font-bold text-primary ml-1">{customer.desire}</span>
-                        <p className="text-sm text-muted-foreground mt-1">{customer.solution}</p>
-                      </div>
-                    </div>
-                  </div>
+                  </AnimatedItem>
                 ))}
               </div>
-            </section>
+            </AnimatedSection>
 
             {/* 輕鋼優勢 */}
-            <section className="mb-20">
+            <AnimatedSection className="mb-20" animation="fade-up">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-foreground mb-4">
                   輕鋼構別墅六大優勢
@@ -206,22 +206,21 @@ const ServiceVilla = () => {
               </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {advantages.map((item, index) => (
-                  <div
-                    key={item.title}
-                    className="bg-card rounded-xl p-6 shadow-md border border-border hover:shadow-lg transition-all hover:-translate-y-1"
-                  >
-                    <div className="bg-primary/10 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                      <item.icon className="w-6 h-6 text-primary" />
+                  <AnimatedItem key={item.title} index={index} baseDelay={100}>
+                    <div className="bg-card rounded-xl p-6 shadow-md border border-border hover:shadow-lg transition-all hover:-translate-y-1 h-full">
+                      <div className="bg-primary/10 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                        <item.icon className="w-6 h-6 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
                     </div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-                  </div>
+                  </AnimatedItem>
                 ))}
               </div>
-            </section>
+            </AnimatedSection>
 
             {/* 施工流程 */}
-            <section className="mb-20">
+            <AnimatedSection className="mb-20" animation="scale">
               <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl p-8 md:p-12 border border-primary/10">
                 <h2 className="text-3xl font-bold text-foreground mb-8 text-center">
                   從夢想到入住的旅程
@@ -233,47 +232,51 @@ const ServiceVilla = () => {
                     { step: "03", title: "工廠生產", desc: "精密構件工廠預製，品質穩定可靠" },
                     { step: "04", title: "組裝完工", desc: "現場快速組裝，60天入住新家" },
                   ].map((item, index) => (
-                    <div key={item.step} className="text-center">
-                      <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                        {item.step}
+                    <AnimatedItem key={item.step} index={index} baseDelay={200}>
+                      <div className="text-center">
+                        <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                          {item.step}
+                        </div>
+                        <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
+                        <p className="text-sm text-muted-foreground">{item.desc}</p>
+                        {index < 3 && (
+                          <ArrowRight className="w-6 h-6 text-primary mx-auto mt-4 hidden md:block" />
+                        )}
                       </div>
-                      <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
-                      {index < 3 && (
-                        <ArrowRight className="w-6 h-6 text-primary mx-auto mt-4 hidden md:block" />
-                      )}
-                    </div>
+                    </AnimatedItem>
                   ))}
                 </div>
               </div>
-            </section>
+            </AnimatedSection>
 
             {/* CTA */}
-            <section className="text-center">
-              <div className="bg-card rounded-3xl p-8 md:p-12 shadow-xl border border-border">
-                <Calculator className="w-16 h-16 text-primary mx-auto mb-6" />
-                <h2 className="text-3xl font-bold text-foreground mb-4">
-                  開始規劃您的夢想家園
-                </h2>
-                <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                  使用我們的線上估價工具，快速了解您的別墅專案預算範圍。專業團隊將為您提供最詳細的規劃建議。
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button asChild size="lg" className="gap-2">
-                    <Link to="/estimate">
-                      <Calculator className="w-5 h-5" />
-                      立即估價
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" size="lg" className="gap-2">
-                    <Link to="/contact">
-                      預約免費諮詢
-                      <ArrowRight className="w-5 h-5" />
-                    </Link>
-                  </Button>
+            <AnimatedSection animation="slide-up">
+              <div className="text-center">
+                <div className="bg-card rounded-3xl p-8 md:p-12 shadow-xl border border-border">
+                  <Calculator className="w-16 h-16 text-primary mx-auto mb-6" />
+                  <h2 className="text-3xl font-bold text-foreground mb-4">
+                    開始規劃您的夢想家園
+                  </h2>
+                  <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+                    使用我們的線上估價工具，快速了解您的別墅專案預算範圍。專業團隊將為您提供最詳細的規劃建議。
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button asChild size="lg" className="gap-2">
+                      <Link to="/estimate">
+                        <Calculator className="w-5 h-5" />
+                        立即估價
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" size="lg" className="gap-2">
+                      <Link to="/contact">
+                        預約免費諮詢
+                        <ArrowRight className="w-5 h-5" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </section>
+            </AnimatedSection>
           </div>
         </div>
       </MainLayout>

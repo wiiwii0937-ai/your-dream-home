@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { AnimatedSection, AnimatedItem } from "@/hooks/useScrollAnimation";
 
 import renovationImage from "@/assets/projects/renovation.jpg";
 
@@ -104,14 +105,14 @@ const ServiceRenovation = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
             <div className="absolute inset-0 flex items-end">
               <div className="max-w-7xl mx-auto px-6 md:px-12 pb-12 w-full">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/20 text-orange-600 dark:text-orange-400 text-sm font-medium mb-4 backdrop-blur-sm">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/20 text-orange-600 dark:text-orange-400 text-sm font-medium mb-4 backdrop-blur-sm animate-fade-in-up">
                   <Wrench className="w-4 h-4" />
                   服務項目
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
+                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
                   舊屋增建/翻新
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl">
+                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up" style={{ animationDelay: "200ms" }}>
                   讓老房子重獲新生。以最短時間、最低干擾完成居住空間的升級改造。
                 </p>
               </div>
@@ -120,7 +121,7 @@ const ServiceRenovation = () => {
 
           <div className="max-w-7xl mx-auto px-6 md:px-12 py-16">
             {/* 服務介紹 */}
-            <section className="mb-20">
+            <AnimatedSection className="mb-20" animation="fade-up">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
                   <h2 className="text-3xl font-bold text-foreground mb-6">
@@ -150,30 +151,27 @@ const ServiceRenovation = () => {
                 <div className="relative">
                   <div className="bg-gradient-to-br from-orange-500/20 to-amber-500/20 rounded-3xl p-8">
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-card rounded-xl p-6 text-center shadow-lg">
-                        <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">30</div>
-                        <div className="text-sm text-muted-foreground">天增建完工</div>
-                      </div>
-                      <div className="bg-card rounded-xl p-6 text-center shadow-lg">
-                        <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">60</div>
-                        <div className="text-sm text-muted-foreground">天全棟翻新</div>
-                      </div>
-                      <div className="bg-card rounded-xl p-6 text-center shadow-lg">
-                        <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">-70%</div>
-                        <div className="text-sm text-muted-foreground">施工廢棄物</div>
-                      </div>
-                      <div className="bg-card rounded-xl p-6 text-center shadow-lg">
-                        <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">0</div>
-                        <div className="text-sm text-muted-foreground">追加費用</div>
-                      </div>
+                      {[
+                        { value: "30", label: "天增建完工" },
+                        { value: "60", label: "天全棟翻新" },
+                        { value: "-70%", label: "施工廢棄物" },
+                        { value: "0", label: "追加費用" },
+                      ].map((stat, index) => (
+                        <AnimatedItem key={stat.label} index={index} baseDelay={100}>
+                          <div className="bg-card rounded-xl p-6 text-center shadow-lg">
+                            <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">{stat.value}</div>
+                            <div className="text-sm text-muted-foreground">{stat.label}</div>
+                          </div>
+                        </AnimatedItem>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-            </section>
+            </AnimatedSection>
 
             {/* 目標客群 */}
-            <section className="mb-20">
+            <AnimatedSection className="mb-20" animation="fade-up">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-foreground mb-4">
                   這項服務適合您嗎？
@@ -183,38 +181,37 @@ const ServiceRenovation = () => {
                 </p>
               </div>
               <div className="grid md:grid-cols-2 gap-6">
-                {targetCustomers.map((customer) => (
-                  <div
-                    key={customer.title}
-                    className="bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow"
-                  >
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className={cn("p-3 rounded-xl bg-gradient-to-br text-white", customer.color)}>
-                        <customer.icon className="w-6 h-6" />
+                {targetCustomers.map((customer, index) => (
+                  <AnimatedItem key={customer.title} index={index} baseDelay={150}>
+                    <div className="bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow h-full">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className={cn("p-3 rounded-xl bg-gradient-to-br text-white", customer.color)}>
+                          <customer.icon className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-foreground">{customer.title}</h3>
+                          <span className="text-sm text-muted-foreground">{customer.age}</span>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-foreground">{customer.title}</h3>
-                        <span className="text-sm text-muted-foreground">{customer.age}</span>
+                      <div className="space-y-3">
+                        <div className="bg-destructive/10 rounded-lg p-3">
+                          <span className="text-sm font-medium text-destructive">痛點：</span>
+                          <p className="text-sm text-muted-foreground mt-1">{customer.pain}</p>
+                        </div>
+                        <div className="bg-primary/10 rounded-lg p-3">
+                          <span className="text-sm font-medium text-primary">他們要的是：</span>
+                          <span className="text-sm font-bold text-primary ml-1">{customer.desire}</span>
+                          <p className="text-sm text-muted-foreground mt-1">{customer.solution}</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      <div className="bg-destructive/10 rounded-lg p-3">
-                        <span className="text-sm font-medium text-destructive">痛點：</span>
-                        <p className="text-sm text-muted-foreground mt-1">{customer.pain}</p>
-                      </div>
-                      <div className="bg-primary/10 rounded-lg p-3">
-                        <span className="text-sm font-medium text-primary">他們要的是：</span>
-                        <span className="text-sm font-bold text-primary ml-1">{customer.desire}</span>
-                        <p className="text-sm text-muted-foreground mt-1">{customer.solution}</p>
-                      </div>
-                    </div>
-                  </div>
+                  </AnimatedItem>
                 ))}
               </div>
-            </section>
+            </AnimatedSection>
 
             {/* 輕鋼優勢 */}
-            <section className="mb-20">
+            <AnimatedSection className="mb-20" animation="fade-up">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-foreground mb-4">
                   輕鋼構翻新六大優勢
@@ -224,23 +221,22 @@ const ServiceRenovation = () => {
                 </p>
               </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {advantages.map((item) => (
-                  <div
-                    key={item.title}
-                    className="bg-card rounded-xl p-6 shadow-md border border-border hover:shadow-lg transition-all hover:-translate-y-1"
-                  >
-                    <div className="bg-orange-500/10 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                      <item.icon className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                {advantages.map((item, index) => (
+                  <AnimatedItem key={item.title} index={index} baseDelay={100}>
+                    <div className="bg-card rounded-xl p-6 shadow-md border border-border hover:shadow-lg transition-all hover:-translate-y-1 h-full">
+                      <div className="bg-orange-500/10 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                        <item.icon className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                      </div>
+                      <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
                     </div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-                  </div>
+                  </AnimatedItem>
                 ))}
               </div>
-            </section>
+            </AnimatedSection>
 
             {/* 適用類型 */}
-            <section className="mb-20">
+            <AnimatedSection className="mb-20" animation="scale">
               <div className="bg-gradient-to-br from-orange-500/5 to-amber-500/5 rounded-3xl p-8 md:p-12 border border-orange-500/10">
                 <h2 className="text-3xl font-bold text-foreground mb-8 text-center">
                   服務類型
@@ -250,43 +246,47 @@ const ServiceRenovation = () => {
                     { title: "頂樓加蓋", desc: "合法增建擴大居住空間", icon: "🏗️" },
                     { title: "全棟翻新", desc: "海砂屋、老屋徹底改造", icon: "🔧" },
                     { title: "局部增建", desc: "車庫、儲藏室、工作室", icon: "🏠" },
-                  ].map((item) => (
-                    <div key={item.title} className="bg-card rounded-xl p-6 text-center shadow-lg">
-                      <div className="text-5xl mb-4">{item.icon}</div>
-                      <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
-                    </div>
+                  ].map((item, index) => (
+                    <AnimatedItem key={item.title} index={index} baseDelay={150}>
+                      <div className="bg-card rounded-xl p-6 text-center shadow-lg">
+                        <div className="text-5xl mb-4">{item.icon}</div>
+                        <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
+                        <p className="text-sm text-muted-foreground">{item.desc}</p>
+                      </div>
+                    </AnimatedItem>
                   ))}
                 </div>
               </div>
-            </section>
+            </AnimatedSection>
 
             {/* CTA */}
-            <section className="text-center">
-              <div className="bg-card rounded-3xl p-8 md:p-12 shadow-xl border border-border">
-                <Calculator className="w-16 h-16 text-orange-600 dark:text-orange-400 mx-auto mb-6" />
-                <h2 className="text-3xl font-bold text-foreground mb-4">
-                  讓老屋重獲新生
-                </h2>
-                <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                  使用我們的線上估價工具，快速了解翻新專案預算範圍。專業團隊將免費到府評估，提供最適切的改造建議。
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button asChild size="lg" className="gap-2 bg-orange-600 hover:bg-orange-700">
-                    <Link to="/estimate">
-                      <Calculator className="w-5 h-5" />
-                      立即估價
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" size="lg" className="gap-2">
-                    <Link to="/contact">
-                      預約免費諮詢
-                      <ArrowRight className="w-5 h-5" />
-                    </Link>
-                  </Button>
+            <AnimatedSection animation="slide-up">
+              <div className="text-center">
+                <div className="bg-card rounded-3xl p-8 md:p-12 shadow-xl border border-border">
+                  <Calculator className="w-16 h-16 text-orange-600 dark:text-orange-400 mx-auto mb-6" />
+                  <h2 className="text-3xl font-bold text-foreground mb-4">
+                    讓老屋重獲新生
+                  </h2>
+                  <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+                    使用我們的線上估價工具，快速了解翻新專案預算範圍。專業團隊將免費到府評估，提供最適切的改造建議。
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button asChild size="lg" className="gap-2 bg-orange-600 hover:bg-orange-700">
+                      <Link to="/estimate">
+                        <Calculator className="w-5 h-5" />
+                        立即估價
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" size="lg" className="gap-2">
+                      <Link to="/contact">
+                        預約免費諮詢
+                        <ArrowRight className="w-5 h-5" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </section>
+            </AnimatedSection>
           </div>
         </div>
       </MainLayout>
