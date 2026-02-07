@@ -145,3 +145,50 @@ if ( ! function_exists( 'light_steel_excerpt_more' ) ) :
     }
     add_filter( 'excerpt_more', 'light_steel_excerpt_more' );
 endif;
+
+if ( ! function_exists( 'light_steel_comment_template' ) ) :
+    /**
+     * Custom comment callback for wp_list_comments.
+     */
+    function light_steel_comment_template( $comment, $args, $depth ) {
+        $tag = ( 'div' === $args['style'] ) ? 'div' : 'li';
+        ?>
+        <<?php echo $tag; ?> id="comment-<?php comment_ID(); ?>" <?php comment_class( empty( $args['has_children'] ) ? '' : 'parent' ); ?>>
+            <article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
+                <footer class="comment-meta">
+                    <div class="comment-author vcard">
+                        <?php echo get_avatar( $comment, $args['avatar_size'] ); ?>
+                        <?php printf( '<cite class="fn">%s</cite>', get_comment_author_link() ); ?>
+                    </div>
+                    <div class="comment-metadata">
+                        <a href="<?php echo esc_url( get_comment_link( $comment, $args ) ); ?>">
+                            <time datetime="<?php comment_time( 'c' ); ?>">
+                                <?php printf( '%1$s at %2$s', get_comment_date(), get_comment_time() ); ?>
+                            </time>
+                        </a>
+                        <?php edit_comment_link( esc_html__( 'Edit', 'light-steel' ), ' &middot; ' ); ?>
+                    </div>
+                </footer>
+
+                <?php if ( '0' == $comment->comment_approved ) : ?>
+                    <p class="comment-awaiting-moderation"><?php esc_html_e( 'Your comment is awaiting moderation.', 'light-steel' ); ?></p>
+                <?php endif; ?>
+
+                <div class="comment-content">
+                    <?php comment_text(); ?>
+                </div>
+
+                <div class="reply">
+                    <?php
+                    comment_reply_link( array_merge( $args, array(
+                        'depth'     => $depth,
+                        'max_depth' => $args['max_depth'],
+                        'before'    => '',
+                        'after'     => '',
+                    ) ) );
+                    ?>
+                </div>
+            </article>
+        <?php
+    }
+endif;
