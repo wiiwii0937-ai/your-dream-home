@@ -150,6 +150,18 @@ add_action( 'wp_enqueue_scripts', 'light_steel_scripts' );
  * Register widget areas
  */
 function light_steel_widgets_init() {
+    // Primary Sidebar
+    register_sidebar( array(
+        'name'          => esc_html__( 'Primary Sidebar', 'light-steel' ),
+        'id'            => 'sidebar-1',
+        'description'   => esc_html__( 'Main sidebar displayed on posts and pages.', 'light-steel' ),
+        'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h3 class="widget-title">',
+        'after_title'   => '</h3>',
+    ) );
+
+    // Footer Widget 1
     register_sidebar( array(
         'name'          => esc_html__( 'Footer Widget 1', 'light-steel' ),
         'id'            => 'footer-1',
@@ -160,6 +172,7 @@ function light_steel_widgets_init() {
         'after_title'   => '</h4>',
     ) );
 
+    // Footer Widget 2
     register_sidebar( array(
         'name'          => esc_html__( 'Footer Widget 2', 'light-steel' ),
         'id'            => 'footer-2',
@@ -170,6 +183,7 @@ function light_steel_widgets_init() {
         'after_title'   => '</h4>',
     ) );
 
+    // Footer Widget 3
     register_sidebar( array(
         'name'          => esc_html__( 'Footer Widget 3', 'light-steel' ),
         'id'            => 'footer-3',
@@ -178,6 +192,17 @@ function light_steel_widgets_init() {
         'after_widget'  => '</div>',
         'before_title'  => '<h4 class="widget-title">',
         'after_title'   => '</h4>',
+    ) );
+
+    // Blog Sidebar
+    register_sidebar( array(
+        'name'          => esc_html__( 'Blog Sidebar', 'light-steel' ),
+        'id'            => 'sidebar-blog',
+        'description'   => esc_html__( 'Sidebar for blog archive and single posts.', 'light-steel' ),
+        'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h3 class="widget-title">',
+        'after_title'   => '</h3>',
     ) );
 }
 add_action( 'widgets_init', 'light_steel_widgets_init' );
