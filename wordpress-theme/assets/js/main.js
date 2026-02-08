@@ -14,6 +14,7 @@
         initHeaderScroll();
         initScrollAnimations();
         initContactForm();
+        initThemeToggle();
     });
 
     /**
@@ -211,6 +212,25 @@
                     responseContainer.style.display = 'none';
                 }, 5000);
             });
+        });
+    }
+    /**
+     * Dark/Light Mode Toggle
+     */
+    function initThemeToggle() {
+        var toggle = document.getElementById('theme-toggle');
+        if (!toggle) return;
+
+        // Restore saved preference
+        var saved = localStorage.getItem('light-steel-theme');
+        if (saved === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        toggle.addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+            var isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('light-steel-theme', isLight ? 'light' : 'dark');
         });
     }
 
