@@ -17,7 +17,7 @@ This theme is designed for construction companies specializing in light steel fr
    CSS Variables / Design Tokens
    ========================================================================== */
 :root {
-  /* Colors */
+  /* Colors - Dark Mode (default) */
   --color-primary: #D4A574;
   --color-primary-dark: #C4956A;
   --color-secondary: #1a1a1a;
@@ -54,6 +54,19 @@ This theme is designed for construction companies specializing in light steel fr
   --transition-fast: 150ms ease;
   --transition-normal: 300ms ease;
   --transition-slow: 500ms ease;
+}
+
+/* Light Mode */
+body.light-mode {
+  --color-background: #ffffff;
+  --color-surface: #f5f5f5;
+  --color-border: #e0e0e0;
+  --color-text: #1a1a1a;
+  --color-text-muted: #666666;
+  --color-secondary: #f0f0f0;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 /* ==========================================================================
@@ -178,6 +191,83 @@ p {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
   transition: background-color var(--transition-normal);
+}
+
+body.light-mode .site-header {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Header Controls: Back Button & Theme Toggle */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.back-button:hover {
+  color: var(--color-primary);
+  background-color: rgba(212, 165, 116, 0.1);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.theme-toggle:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background-color: rgba(212, 165, 116, 0.08);
+}
+
+/* Show/hide sun/moon icons based on mode */
+.icon-moon {
+  display: block;
+}
+.icon-sun {
+  display: none;
+}
+
+body.light-mode .icon-moon {
+  display: none;
+}
+body.light-mode .icon-sun {
+  display: block;
+}
+
+/* Light mode overrides for search form */
+body.light-mode .search-input-wrap {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light-mode .search-icon {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-mode .search-field::placeholder {
+  color: rgba(0, 0, 0, 0.35);
 }
 
 .site-header .container {
