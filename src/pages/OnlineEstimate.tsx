@@ -137,7 +137,7 @@ const OnlineEstimate = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-bold text-foreground">{selectedBuilding?.name}</h3>
-                      <p className="text-sm text-muted-foreground">{selectedBuilding?.description} · 每坪 ¥{((selectedBuilding?.price || 0) / 10000).toFixed(1)}萬</p>
+                      <p className="text-sm text-muted-foreground">{selectedBuilding?.description} · 每坪 ${((selectedBuilding?.price || 0) / 10000).toFixed(1)}萬</p>
                     </div>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ const OnlineEstimate = () => {
                             <div className="text-xs text-muted-foreground">{type.description}</div>
                           </div>
                           <div className="text-right">
-                            <div className="font-bold text-primary text-sm">¥{(type.price / 10000).toFixed(1)}萬</div>
+                            <div className="font-bold text-primary text-sm">${(type.price / 10000).toFixed(1)}萬</div>
                             <div className="text-xs text-muted-foreground">/坪</div>
                           </div>
                         </Label>
@@ -281,7 +281,7 @@ const OnlineEstimate = () => {
                                 {option.name}
                               </Label>
                               <div className="text-sm text-primary font-semibold mt-1">
-                                ¥{option.price.toLocaleString()}{option.perPing ? "/坪" : ""}
+                                ${option.price.toLocaleString()}{option.perPing ? "/坪" : ""}
                               </div>
                               {option.perPing && selectedOptions[option.id] && (
                                 <div className="mt-2">
@@ -321,14 +321,14 @@ const OnlineEstimate = () => {
                       <div className="text-center py-4">
                         <div className="text-sm text-muted-foreground mb-2">預估價格區間</div>
                         <div className="text-3xl font-bold text-primary">
-                          ¥{formatPrice(estimate.lowEstimate)} ~ ¥{formatPrice(estimate.highEstimate)}
+                          ${formatPrice(estimate.lowEstimate)} ~ ${formatPrice(estimate.highEstimate)}
                         </div>
                         <div className="text-sm text-muted-foreground mt-2">
-                          基準價：¥{formatPrice(estimate.basePrice)}
+                          基準價：${formatPrice(estimate.basePrice)}
                         </div>
                         {estimate.additionalPrice > 0 && (
                           <div className="text-xs text-muted-foreground mt-1">
-                            (含加價選項 ¥{formatPrice(estimate.additionalPrice)})
+                            (含加價選項 ${formatPrice(estimate.additionalPrice)})
                           </div>
                         )}
                       </div>
@@ -345,7 +345,7 @@ const OnlineEstimate = () => {
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">基本價格</span>
-                          <span className="font-medium text-foreground">¥{formatPrice(parseFloat(area) * (selectedBuilding?.price || 0))}</span>
+                          <span className="font-medium text-foreground">${formatPrice(parseFloat(area) * (selectedBuilding?.price || 0))}</span>
                         </div>
                         {Object.entries(selectedOptions).filter(([_, selected]) => selected).map(([optionId]) => {
                           const option = additionalOptions.find(o => o.id === optionId);
@@ -356,7 +356,7 @@ const OnlineEstimate = () => {
                           return (
                             <div key={optionId} className="flex justify-between text-sm">
                               <span className="text-muted-foreground truncate pr-2">{option.name}</span>
-                              <span className="font-medium text-foreground shrink-0">¥{formatPrice(optionPrice)}</span>
+                              <span className="font-medium text-foreground shrink-0">${formatPrice(optionPrice)}</span>
                             </div>
                           );
                         })}
