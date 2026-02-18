@@ -21,6 +21,7 @@ import ServiceVilla from "./pages/services/ServiceVilla";
 import ServiceFarm from "./pages/services/ServiceFarm";
 import ServiceCommercial from "./pages/services/ServiceCommercial";
 import ServiceRenovation from "./pages/services/ServiceRenovation";
+import Todos from "./pages/Todos";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
                 <Route path="/services/renovation" element={<ServiceRenovation />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/todos" element={<Todos />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
