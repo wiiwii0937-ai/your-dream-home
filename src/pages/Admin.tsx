@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { ImageUpload } from '@/components/ImageUpload';
+import { ImageManager } from '@/components/ImageManager';
 import {
   Loader2, Plus, Pencil, Trash2, LogOut, FileText, 
   Image as ImageIcon, LayoutDashboard, Settings, Users, 
@@ -507,6 +508,9 @@ const Admin = () => {
               )}
             </CardContent>
           </Card>
+
+          {/* Image Management */}
+          <ImageManager />
         </div>
       </main>
     </div>

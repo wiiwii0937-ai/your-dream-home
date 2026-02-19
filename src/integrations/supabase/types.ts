@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      images_management: {
+        Row: {
+          alt_text: string | null
+          created_at: string
+          file_name: string
+          file_path: string
+          id: string
+          public_url: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string
+          file_name: string
+          file_path: string
+          id?: string
+          public_url: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          id?: string
+          public_url?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           author_id: string | null
