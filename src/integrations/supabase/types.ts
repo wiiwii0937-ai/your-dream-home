@@ -24,6 +24,7 @@ export type Database = {
           public_url: string
           updated_at: string
           user_id: string
+          usage_key: string | null
         }
         Insert: {
           alt_text?: string | null
@@ -34,6 +35,7 @@ export type Database = {
           public_url: string
           updated_at?: string
           user_id: string
+          usage_key?: string | null
         }
         Update: {
           alt_text?: string | null
@@ -44,6 +46,7 @@ export type Database = {
           public_url?: string
           updated_at?: string
           user_id?: string
+          usage_key?: string | null
         }
         Relationships: []
       }
@@ -54,6 +57,7 @@ export type Database = {
           created_at: string | null
           id: string
           image_url: string | null
+          layout: string | null
           published_at: string | null
           title: string
           updated_at: string | null
@@ -64,6 +68,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           image_url?: string | null
+          layout?: string | null
           published_at?: string | null
           title: string
           updated_at?: string | null
@@ -74,6 +79,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           image_url?: string | null
+          layout?: string | null
           published_at?: string | null
           title?: string
           updated_at?: string | null

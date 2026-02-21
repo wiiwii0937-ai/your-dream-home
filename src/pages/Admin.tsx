@@ -21,11 +21,22 @@ import {
   Calendar, TrendingUp, Home, Shield, Eye
 } from 'lucide-react';
 
+export const LAYOUT_LABELS: Record<string, string> = {
+  default: 'Layout A - 預設',
+  hero: 'Layout B - 滿版圖片',
+  twocolumn: 'Layout C - 兩欄式',
+  sidebar: '側欄',
+  fullwidth: '全寬',
+};
+
+export type PostLayout = keyof typeof LAYOUT_LABELS;
+
 interface Post {
   id: string;
   title: string;
   content: string | null;
   image_url: string | null;
+  layout: string | null;
   published_at: string | null;
   created_at: string;
 }
@@ -38,8 +49,7 @@ const Admin = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingPost, setEditingPost] = useState<Post | null>(null);
-  const [formData, setFormData] = useState({ title: '', content: '', image_url: '' });
+  const [formData, setFormData] = useState({ title: '', content: '', image_url: '', layout: 'default' });
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -77,57 +87,32 @@ const Admin = () => {
 
     setSaving(true);
     try {
-      if (editingPost) {
-        const { error } = await supabase
-          .from('posts')
-          .update({
-            title: formData.title,
-            content: formData.content || null,
-            image_url: formData.image_url || null,
-          })
-          .eq('id', editingPost.id);
-        
-        if (error) throw error;
-        toast({ title: '更新成功' });
-      } else {
-        const { error } = await supabase
-          .from('posts')
-          .insert({
-            title: formData.title,
-            content: formData.content || null,
-            image_url: formData.image_url || null,
-            author_id: user?.id,
-          });
-        
-        if (error) throw error;
-        toast({ title: '新增成功' });
-      }
-      
+      const { error } = await supabase
+        .from('posts')
+        .insert({
+          title: formData.title,
+          content: formData.content || null,
+          image_url: formData.image_url || null,
+          layout: formData.layout || 'default',
+          author_id: user?.id,
+        });
+
+      if (error) throw error;
+      toast({ title: '新增成功' });
       setDialogOpen(false);
-      setEditingPost(null);
-      setFormData({ title: '', content: '', image_url: '' });
+      setFormData({ title: '', content: '', image_url: '', layout: 'default' });
       fetchPosts();
     } catch (error: any) {
-      toast({ 
-        title: '操作失敗', 
-        description: error.message.includes('row-level security') 
-          ? '您沒有權限執行此操作，請聯繫管理員' 
-          : error.message, 
-        variant: 'destructive' 
+      toast({
+        title: '操作失敗',
+        description: error.message.includes('row-level security')
+          ? '您沒有權限執行此操作，請聯繫管理員'
+          : error.message,
+        variant: 'destructive',
       });
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleEdit = (post: Post) => {
-    setEditingPost(post);
-    setFormData({
-      title: post.title,
-      content: post.content || '',
-      image_url: post.image_url || '',
-    });
-    setDialogOpen(true);
   };
 
   const handleDelete = async (id: string) => {
@@ -153,8 +138,7 @@ const Admin = () => {
   };
 
   const openNewDialog = () => {
-    setEditingPost(null);
-    setFormData({ title: '', content: '', image_url: '' });
+    setFormData({ title: '', content: '', image_url: '', layout: 'default' });
     setDialogOpen(true);
   };
 
@@ -341,9 +325,7 @@ const Admin = () => {
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-lg">
                     <DialogHeader>
-                      <DialogTitle className="text-xl">
-                        {editingPost ? '編輯文章' : '新增文章'}
-                      </DialogTitle>
+                      <DialogTitle className="text-xl">新增文章</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-5 mt-4">
                       <div className="space-y-2">
@@ -376,10 +358,22 @@ const Admin = () => {
                           onChange={(url) => setFormData({ ...formData, image_url: url })}
                         />
                       </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">排版樣式</Label>
+                        <select
+                          className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                          value={formData.layout}
+                          onChange={(e) => setFormData({ ...formData, layout: e.target.value })}
+                        >
+                          {Object.entries(LAYOUT_LABELS).map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                          ))}
+                        </select>
+                      </div>
                       <Separator />
                       <Button onClick={handleSave} className="w-full h-11" disabled={saving}>
                         {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                        {editingPost ? '儲存變更' : '建立文章'}
+                        建立文章
                       </Button>
                     </div>
                   </DialogContent>
@@ -413,61 +407,43 @@ const Admin = () => {
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-secondary/30 hover:bg-secondary/30">
-                        <TableHead className="w-12 text-center">#</TableHead>
-                        <TableHead>標題</TableHead>
-                        <TableHead className="hidden md:table-cell w-20">封面</TableHead>
-                        <TableHead className="hidden sm:table-cell w-32">建立日期</TableHead>
-                        <TableHead className="hidden sm:table-cell w-24">狀態</TableHead>
+                        <TableHead>文章標題</TableHead>
+                        <TableHead className="w-36">發布日期</TableHead>
+                        <TableHead className="w-28">排版樣式</TableHead>
                         <TableHead className="text-right w-28">操作</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {posts.map((post, index) => (
+                      {posts.map((post) => (
                         <TableRow key={post.id} className="group">
-                          <TableCell className="text-center text-muted-foreground font-mono text-sm">
-                            {index + 1}
-                          </TableCell>
                           <TableCell>
                             <div className="max-w-[300px]">
                               <p className="font-medium truncate">{post.title}</p>
-                              {post.content && (
-                                <p className="text-sm text-muted-foreground truncate mt-0.5">
-                                  {post.content.slice(0, 50)}...
-                                </p>
-                              )}
                             </div>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {post.image_url ? (
-                              <img 
-                                src={post.image_url} 
-                                alt={post.title}
-                                className="w-14 h-10 object-cover rounded-md border border-border"
-                              />
-                            ) : (
-                              <div className="w-14 h-10 bg-secondary rounded-md flex items-center justify-center">
-                                <ImageIcon className="w-4 h-4 text-muted-foreground" />
-                              </div>
-                            )}
+                          <TableCell className="text-muted-foreground text-sm">
+                            {post.published_at
+                              ? new Date(post.published_at).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' })
+                              : '—'}
                           </TableCell>
-                          <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
-                            {new Date(post.created_at).toLocaleDateString('zh-TW')}
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge variant={post.published_at ? "default" : "secondary"} className="text-xs">
-                              {post.published_at ? '已發佈' : '草稿'}
-                            </Badge>
+                          <TableCell>
+                            <span className="text-sm">
+                              {LAYOUT_LABELS[post.layout || 'default'] ?? post.layout ?? '預設'}
+                            </span>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
                               <Button
                                 variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                                onClick={() => handleEdit(post)}
+                                size="sm"
+                                className="h-8 gap-1.5"
                                 disabled={!isAdmin}
+                                asChild
                               >
-                                <Pencil className="w-4 h-4" />
+                                <Link to={`/admin/edit/${post.id}`}>
+                                  <Pencil className="w-4 h-4" />
+                                  編輯
+                                </Link>
                               </Button>
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>

@@ -9,9 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatedSection, AnimatedItem } from "@/hooks/useScrollAnimation";
-
-import villaImage from "@/assets/projects/villa-house.jpg";
-import villaExterior from "@/assets/projects/villa-exterior-1.jpg";
+import { useSiteImage } from "@/hooks/useSiteImages";
 
 // 目標客群分析
 const targetCustomers = [
@@ -88,6 +86,9 @@ const advantages = [
 ];
 
 const ServiceVilla = () => {
+  const villaImage = useSiteImage('service-villa');
+  const villaExterior = useSiteImage('service-villa-exterior');
+
   return (
     <>
       <Helmet>

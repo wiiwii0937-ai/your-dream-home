@@ -9,8 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatedSection, AnimatedItem } from "@/hooks/useScrollAnimation";
-
-import commercialImage from "@/assets/projects/mobile-house.jpg";
+import { useSiteImage } from "@/hooks/useSiteImages";
 
 // 目標客群分析
 const targetCustomers = [
@@ -87,6 +86,8 @@ const advantages = [
 ];
 
 const ServiceCommercial = () => {
+  const commercialImage = useSiteImage('service-commercial');
+
   return (
     <>
       <Helmet>

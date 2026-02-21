@@ -6,18 +6,13 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calculator, Home, Building2, Warehouse, Wrench, Info, Check, Plus, Image as ImageIcon } from "lucide-react";
+import { useSiteImagesMap } from "@/hooks/useSiteImages";
 
-// Project images
-import mobileHouseImg from "@/assets/projects/mobile-house.jpg";
-import villaHouseImg from "@/assets/projects/villa-house.jpg";
-import guesthouseImg from "@/assets/projects/guesthouse.jpg";
-import renovationImg from "@/assets/projects/renovation.jpg";
-
-const buildingTypes = [
-  { id: "mobile", name: "移動式住宅", price: 100000, icon: Home, description: "快速建造、可移動", image: mobileHouseImg },
-  { id: "villa", name: "輕鋼別墅", price: 108000, icon: Building2, description: "永久住宅首選", image: villaHouseImg },
-  { id: "guesthouse", name: "民宿/商業空間", price: 130000, icon: Warehouse, description: "商業營運最佳", image: guesthouseImg },
-  { id: "renovation", name: "老屋翻新加建", price: 150000, icon: Wrench, description: "舊屋新生命", image: renovationImg },
+const BUILDING_TYPE_CONFIG = [
+  { id: "mobile", usageKey: "estimate-mobile", name: "移動式住宅", price: 100000, icon: Home, description: "快速建造、可移動" },
+  { id: "villa", usageKey: "estimate-villa", name: "輕鋼別墅", price: 108000, icon: Building2, description: "永久住宅首選" },
+  { id: "guesthouse", usageKey: "estimate-guesthouse", name: "民宿/商業空間", price: 130000, icon: Warehouse, description: "商業營運最佳" },
+  { id: "renovation", usageKey: "estimate-renovation", name: "老屋翻新加建", price: 150000, icon: Wrench, description: "舊屋新生命" },
 ];
 
 const baseFeatures = [
@@ -45,6 +40,9 @@ const additionalOptions = [
 ];
 
 const OnlineEstimate = () => {
+  const imageMap = useSiteImagesMap(BUILDING_TYPE_CONFIG.map((t) => t.usageKey));
+  const buildingTypes = BUILDING_TYPE_CONFIG.map((t) => ({ ...t, image: imageMap[t.usageKey] || '' }));
+
   const [selectedType, setSelectedType] = useState<string>("villa");
   const [area, setArea] = useState<string>("");
   const [selectedOptions, setSelectedOptions] = useState<Record<string, boolean>>({});

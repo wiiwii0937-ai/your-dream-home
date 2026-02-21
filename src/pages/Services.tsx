@@ -3,61 +3,63 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { Link } from "react-router-dom";
 import { Home, Warehouse, Building2, Wrench, ArrowRight, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSiteImagesMap } from "@/hooks/useSiteImages";
 import { cn } from "@/lib/utils";
 
-import villaImage from "@/assets/projects/villa-house.jpg";
-import farmImage from "@/assets/projects/guesthouse.jpg";
-import commercialImage from "@/assets/projects/mobile-house.jpg";
-import renovationImage from "@/assets/projects/renovation.jpg";
+const SERVICE_KEYS = ["service-villa", "service-farm", "service-commercial", "service-renovation"] as const;
 
-const services = [
+const serviceConfig = [
   {
     id: "villa",
+    usageKey: "service-villa" as const,
     icon: Home,
     title: "輕鋼構別墅/住宅",
     subtitle: "打造您夢想中的永久家園",
     description: "從現代極簡到溫馨鄉村風格，輕鋼構別墅以精準工藝實現您對家的所有想像。耐震、節能、快速完工，讓美好生活提早開始。",
-    image: villaImage,
     color: "from-blue-500 to-cyan-600",
     features: ["耐震安全結構", "節能隔熱系統", "60天快速完工", "客製化設計"],
     route: "/services/villa",
   },
   {
     id: "farm",
+    usageKey: "service-farm" as const,
     icon: Warehouse,
     title: "輕鋼構農舍/資材室",
     subtitle: "田園生活的理想選擇",
     description: "結合實用功能與美學設計，為您的農地打造符合法規、堅固耐用的農舍或資材室。快速興建，早日享受田園樂趣。",
-    image: farmImage,
     color: "from-green-500 to-emerald-600",
     features: ["符合農舍法規", "大跨度空間", "防潮防蟲設計", "低維護成本"],
     route: "/services/farm",
   },
   {
     id: "commercial",
+    usageKey: "service-commercial" as const,
     icon: Building2,
     title: "商業空間/民宿",
     subtitle: "創造吸睛的商業價值",
     description: "獨特的建築外觀是最好的品牌行銷。輕鋼構商業空間與民宿，以快速工期搶占市場先機，創造持續的投資回報。",
-    image: commercialImage,
     color: "from-violet-500 to-purple-600",
     features: ["特色外觀設計", "快速開業營運", "靈活空間規劃", "高投資回報"],
     route: "/services/commercial",
   },
   {
     id: "renovation",
+    usageKey: "service-renovation" as const,
     icon: Wrench,
     title: "舊屋增建/翻新",
     subtitle: "讓老房子重獲新生",
     description: "海砂屋、老舊危樓不必擔心。輕鋼構增建技術讓舊屋華麗轉身，以最短時間、最低干擾完成居住空間的升級改造。",
-    image: renovationImage,
     color: "from-orange-500 to-amber-600",
     features: ["結構安全評估", "快速乾式施工", "降低生活干擾", "現代化升級"],
     route: "/services/renovation",
   },
 ];
 
+
 const Services = () => {
+  const imageMap = useSiteImagesMap([...SERVICE_KEYS]);
+  const services = serviceConfig.map((s) => ({ ...s, image: imageMap[s.usageKey] || '' }));
+
   return (
     <>
       <Helmet>

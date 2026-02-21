@@ -154,18 +154,22 @@ export default function ImageUploadPage() {
               {/* Drop Zone */}
               {!preview ? (
                 <div
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputRef.current?.click(); } }}
                   onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                   onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
                   className={cn(
-                    'border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-200',
+                    'cursor-pointer',
+                    'border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200',
                     dragOver
                       ? 'border-primary bg-primary/5 scale-[1.01]'
                       : 'border-border hover:border-primary hover:bg-primary/5'
                   )}
                 >
-                  <div className="flex flex-col items-center gap-3">
+                  <div className="flex flex-col items-center gap-4">
                     <div className={cn(
                       'w-16 h-16 rounded-2xl flex items-center justify-center transition-colors',
                       dragOver ? 'bg-primary/10' : 'bg-secondary'
@@ -174,12 +178,25 @@ export default function ImageUploadPage() {
                     </div>
                     <div>
                       <p className="font-medium text-foreground">
-                        {dragOver ? '放開以選擇圖片' : '點擊選擇或拖曳圖片'}
+                        {dragOver ? '放開以選擇圖片' : '拖曳圖片至此，或'}
                       </p>
                       <p className="text-sm text-muted-foreground mt-1">
                         支援 JPG、PNG、GIF、WebP（最大 10MB）
                       </p>
                     </div>
+                    <Button
+                      type="button"
+                      variant="default"
+                      size="lg"
+                      className="gap-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fileInputRef.current?.click();
+                      }}
+                    >
+                      <ImageIcon className="w-5 h-5" />
+                      選擇檔案
+                    </Button>
                   </div>
                   <input
                     ref={fileInputRef}

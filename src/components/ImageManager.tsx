@@ -1,17 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useSiteImages } from '@/hooks/useSiteImages';
+import { SITE_IMAGE_SLOTS } from '@/lib/siteImageSlots';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import {
   Loader2, Upload, Trash2, RefreshCw, Image as ImageIcon,
-  Plus, X, Copy, Check
+  Plus, X, Copy, Check, Download, ChevronDown, ChevronRight
 } from 'lucide-react';
 
 interface ManagedImage {
@@ -21,15 +25,20 @@ interface ManagedImage {
   public_url: string;
   alt_text: string | null;
   created_at: string;
+  usage_key?: string | null;
 }
 
 export const ImageManager = () => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const { data: siteImages = [], refetch: refetchSiteImages } = useSiteImages();
 
   const [images, setImages] = useState<ManagedImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [siteSlotsOpen, setSiteSlotsOpen] = useState(true);
   const [replacing, setReplacing] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -104,14 +113,104 @@ export const ImageManager = () => {
     }
   };
 
+  const handleImportSiteImages = async () => {
+    if (!user || !isAdmin) return;
+    setImporting(true);
+    try {
+      const existingKeys = new Set(siteImages.map((img) => img.usage_key).filter(Boolean));
+      let imported = 0;
+
+      for (const slot of SITE_IMAGE_SLOTS) {
+        if (existingKeys.has(slot.usageKey)) continue;
+
+        const isExternal = slot.defaultUrl.startsWith('http');
+        let publicUrl = slot.defaultUrl;
+        let filePath = slot.defaultUrl;
+        let fileName = `${slot.usageKey}.jpg`;
+
+        if (!isExternal && slot.isLocalAsset) {
+          const fullUrl = slot.defaultUrl.startsWith('/') ? `${window.location.origin}${slot.defaultUrl}` : slot.defaultUrl;
+          const res = await fetch(fullUrl);
+          if (!res.ok) {
+            toast({ title: `無法取得 ${slot.label}`, variant: 'destructive' });
+            continue;
+          }
+          const blob = await res.blob();
+          const ext = slot.defaultUrl.split('.').pop()?.split('?')[0] || 'jpg';
+          filePath = `site-slots/${Date.now()}-${slot.usageKey}.${ext}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from('website-images')
+            .upload(filePath, blob, { cacheControl: '3600', upsert: false });
+
+          if (uploadError) throw uploadError;
+
+          const { data: urlData } = supabase.storage.from('website-images').getPublicUrl(filePath);
+          publicUrl = urlData.publicUrl;
+          fileName = `${slot.usageKey}.${ext}`;
+        } else if (isExternal) {
+          filePath = slot.defaultUrl;
+          fileName = `${slot.usageKey}.jpg`;
+        }
+
+        const { error: dbError } = await supabase.from('images_management').insert({
+          user_id: user.id,
+          file_name: fileName,
+          file_path: filePath,
+          public_url: publicUrl,
+          usage_key: slot.usageKey,
+        } as any);
+
+        if (dbError) throw dbError;
+        imported++;
+      }
+
+      if (imported > 0) {
+        toast({ title: '匯入成功', description: `已匯入 ${imported} 張網站圖片` });
+        fetchImages();
+        refetchSiteImages();
+        queryClient.invalidateQueries({ queryKey: ['site-images'] });
+      } else {
+        toast({ title: '無需匯入', description: '所有網站圖片已存在於後端' });
+      }
+    } catch (err: any) {
+      toast({ title: '匯入失敗', description: err.message, variant: 'destructive' });
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleAssignSlot = async (imageId: string, usageKey: string) => {
+    try {
+      await supabase
+        .from('images_management')
+        .update({ usage_key: null } as any)
+        .eq('usage_key', usageKey);
+
+      const { error } = await supabase
+        .from('images_management')
+        .update({ usage_key: usageKey } as any)
+        .eq('id', imageId);
+
+      if (error) throw error;
+      toast({ title: '已指派至網站 slot' });
+      fetchImages();
+      refetchSiteImages();
+      queryClient.invalidateQueries({ queryKey: ['site-images'] });
+    } catch (err: any) {
+      toast({ title: '指派失敗', description: (err as Error).message, variant: 'destructive' });
+    }
+  };
+
   const handleDelete = async (image: ManagedImage) => {
     try {
-      // Delete from storage
-      const { error: storageError } = await supabase.storage
-        .from('website-images')
-        .remove([image.file_path]);
-
-      if (storageError) throw storageError;
+      const isExternal = image.file_path.startsWith('http');
+      if (!isExternal) {
+        const { error: storageError } = await supabase.storage
+          .from('website-images')
+          .remove([image.file_path]);
+        if (storageError) throw storageError;
+      }
 
       // Delete from database
       const { error: dbError } = await supabase
@@ -227,7 +326,60 @@ export const ImageManager = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className="p-6 space-y-6">
+        {/* 網站圖片 Slot 管理 */}
+        <Collapsible open={siteSlotsOpen} onOpenChange={setSiteSlotsOpen}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-between hover:bg-secondary/50 -mx-2 px-2">
+              <span className="flex items-center gap-2 font-medium">
+                {siteSlotsOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                網站圖片 Slot 管理（{siteImages.length} / {SITE_IMAGE_SLOTS.length} 已指派）
+              </span>
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="mt-4 p-4 rounded-lg border border-border bg-secondary/20 space-y-4">
+              <p className="text-sm text-muted-foreground">
+                將首頁輪播、工程實例、服務項目等網站現有圖片匯入後端，之後可在下方進行修改或刪除。
+              </p>
+              <Button
+                onClick={handleImportSiteImages}
+                disabled={!isAdmin || importing}
+                variant="outline"
+                className="gap-2"
+              >
+                {importing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                {importing ? '匯入中...' : '匯入網站圖片'}
+              </Button>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-48 overflow-y-auto">
+                {SITE_IMAGE_SLOTS.map((slot) => {
+                  const assigned = siteImages.find((img) => img.usage_key === slot.usageKey);
+                  return (
+                    <div
+                      key={slot.usageKey}
+                      className="flex flex-col gap-1 rounded-lg border border-border overflow-hidden bg-card"
+                    >
+                      <div className="aspect-video bg-secondary relative">
+                        <img
+                          src={assigned?.public_url ?? slot.defaultUrl}
+                          alt={slot.label}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p className="text-xs px-2 py-1 truncate" title={slot.label}>
+                        {slot.label}
+                      </p>
+                      {assigned && (
+                        <p className="text-xs text-muted-foreground px-2 pb-1">✓ 已管理</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <Loader2 className="h-8 w-8 animate-spin mb-4" />

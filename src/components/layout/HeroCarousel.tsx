@@ -1,44 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useSiteImagesMap } from '@/hooks/useSiteImages';
 
 interface CarouselSlide {
   id: string;
+  usageKey: string;
   title: string;
   subtitle?: string;
-  image: string;
   link?: string;
+  image: string;
 }
 
-const slides: CarouselSlide[] = [
-  {
-    id: '1',
-    title: 'YO HOUSE',
-    subtitle: '東港Mini初代宅 展示屋',
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop',
-    link: '/portfolio/yo-house',
-  },
-  {
-    id: '2',
-    title: '4公尺景觀窗微型屋',
-    subtitle: '3.3米挑高Loft 完美微型屋',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=1080&fit=crop',
-    link: '/portfolio/loft-micro',
-  },
-  {
-    id: '3',
-    title: '漁業大哥的鋼構夢想宅',
-    subtitle: '專業輕鋼構打造理想家園',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop',
-    link: '/portfolio/fisherman-house',
-  },
-  {
-    id: '4',
-    title: 'Yo遊 離島鋼構宅',
-    subtitle: '打造你的日式夢想家',
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1920&h=1080&fit=crop',
-    link: '/portfolio/island-house',
-  },
+const SLIDE_CONFIG: Omit<CarouselSlide, 'image'>[] = [
+  { id: '1', usageKey: 'hero-1', title: 'YO HOUSE', subtitle: '東港Mini初代宅 展示屋', link: '/portfolio/yo-house' },
+  { id: '2', usageKey: 'hero-2', title: '4公尺景觀窗微型屋', subtitle: '3.3米挑高Loft 完美微型屋', link: '/portfolio/loft-micro' },
+  { id: '3', usageKey: 'hero-3', title: '漁業大哥的鋼構夢想宅', subtitle: '專業輕鋼構打造理想家園', link: '/portfolio/fisherman-house' },
+  { id: '4', usageKey: 'hero-4', title: 'Yo遊 離島鋼構宅', subtitle: '打造你的日式夢想家', link: '/portfolio/island-house' },
 ];
 
 interface HeroCarouselProps {
@@ -46,26 +24,38 @@ interface HeroCarouselProps {
 }
 
 export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
+  const imageMap = useSiteImagesMap(['hero-1', 'hero-2', 'hero-3', 'hero-4']);
+  const slides: CarouselSlide[] = SLIDE_CONFIG.map((c) => ({
+    ...c,
+    image: imageMap[c.usageKey] || '',
+  })).filter((s) => s.image);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hoveredSlide, setHoveredSlide] = useState(false);
 
+  // Clamp currentIndex when slides length changes (e.g. all filtered out or images load)
+  useEffect(() => {
+    if (slides.length === 0) return;
+    setCurrentIndex((prev) => Math.min(prev, slides.length - 1));
+  }, [slides.length]);
+
   const nextSlide = useCallback(() => {
-    if (isTransitioning) return;
+    if (slides.length === 0 || isTransitioning) return;
     setIsTransitioning(true);
     setCurrentIndex((prev) => (prev + 1) % slides.length);
     setTimeout(() => setIsTransitioning(false), 700);
-  }, [isTransitioning]);
+  }, [isTransitioning, slides.length]);
 
   const prevSlide = useCallback(() => {
-    if (isTransitioning) return;
+    if (slides.length === 0 || isTransitioning) return;
     setIsTransitioning(true);
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
     setTimeout(() => setIsTransitioning(false), 700);
-  }, [isTransitioning]);
+  }, [isTransitioning, slides.length]);
 
   const goToSlide = (index: number) => {
-    if (isTransitioning || index === currentIndex) return;
+    if (slides.length === 0 || isTransitioning || index === currentIndex) return;
     setIsTransitioning(true);
     setCurrentIndex(index);
     setTimeout(() => setIsTransitioning(false), 700);
@@ -73,12 +63,26 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
 
   // Auto-advance slides
   useEffect(() => {
-    if (hoveredSlide) return;
+    if (slides.length === 0 || hoveredSlide) return;
     const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
-  }, [nextSlide, hoveredSlide]);
+  }, [nextSlide, hoveredSlide, slides.length]);
 
   const currentSlide = slides[currentIndex];
+
+  // No slides when all images failed to load — show fallback
+  if (slides.length === 0) {
+    return (
+      <div
+        className={cn(
+          "fixed top-0 right-0 h-screen transition-all duration-500 ease-out overflow-hidden flex items-center justify-center bg-muted",
+          sidebarExpanded ? "w-[70%]" : "w-[93%]"
+        )}
+      >
+        <p className="text-muted-foreground text-lg">輪播圖片載入中...</p>
+      </div>
+    );
+  }
 
   return (
     <div 

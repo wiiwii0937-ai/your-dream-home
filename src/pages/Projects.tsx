@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { useSiteImagesMap } from "@/hooks/useSiteImages";
 import { cn } from "@/lib/utils";
 
 // 案例分類
@@ -13,72 +14,22 @@ const categories = [
   { id: "renovation", label: "增建案例" },
 ];
 
-// 模擬案例資料
-const projects = [
-  {
-    id: 1,
-    title: "YO HOUSE 東港Mini初代宅",
-    category: "mobile",
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop",
-    description: "展示屋案例",
-    fbLink: "https://www.facebook.com/share/v/16whaFxHsM/",
-  },
-  {
-    id: 2,
-    title: "4公尺景觀窗微型屋",
-    category: "mobile",
-    image: "https://images.unsplash.com/photo-1449844908441-8829872d2607?w=600&h=800&fit=crop",
-    description: "4公尺景觀窗 + 3.3米挑高Loft",
-    fbLink: "https://www.facebook.com/share/v/179QZsS3sV/",
-  },
-  {
-    id: 3,
-    title: "漁業大哥的鋼構夢想宅",
-    category: "mobile",
-    image: "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=600&h=500&fit=crop",
-    description: "客製化鋼構住宅",
-    fbLink: "https://www.facebook.com/share/r/1BHveBdekJ/",
-  },
-  {
-    id: 4,
-    title: "Yo遊 離島鋼構宅",
-    category: "villa",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=700&fit=crop",
-    description: "打造你的日式夢想家",
-    fbLink: "https://www.facebook.com/share/v/1BeFd85PEK/",
-  },
-  {
-    id: 5,
-    title: "現代極簡別墅",
-    category: "villa",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=450&fit=crop",
-    description: "簡約設計，質感生活",
-  },
-  {
-    id: 6,
-    title: "鄉村風格農舍",
-    category: "farm",
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=600&fit=crop",
-    description: "融入自然的田園生活",
-  },
-  {
-    id: 7,
-    title: "精品民宿空間",
-    category: "commercial",
-    image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600&h=500&fit=crop",
-    description: "商業空間設計典範",
-  },
-  {
-    id: 8,
-    title: "老屋翻新改建",
-    category: "renovation",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=650&fit=crop",
-    description: "舊屋煥然一新",
-  },
+// 模擬案例資料（image 由 useSiteImagesMap 根據 usageKey 提供）
+const PROJECT_CONFIG = [
+  { id: 1, title: "YO HOUSE 東港Mini初代宅", category: "mobile", usageKey: "project-1", description: "展示屋案例", fbLink: "https://www.facebook.com/share/v/16whaFxHsM/" },
+  { id: 2, title: "4公尺景觀窗微型屋", category: "mobile", usageKey: "project-2", description: "4公尺景觀窗 + 3.3米挑高Loft", fbLink: "https://www.facebook.com/share/v/179QZsS3sV/" },
+  { id: 3, title: "漁業大哥的鋼構夢想宅", category: "mobile", usageKey: "project-3", description: "客製化鋼構住宅", fbLink: "https://www.facebook.com/share/r/1BHveBdekJ/" },
+  { id: 4, title: "Yo遊 離島鋼構宅", category: "villa", usageKey: "project-4", description: "打造你的日式夢想家", fbLink: "https://www.facebook.com/share/v/1BeFd85PEK/" },
+  { id: 5, title: "現代極簡別墅", category: "villa", usageKey: "project-5", description: "簡約設計，質感生活" },
+  { id: 6, title: "鄉村風格農舍", category: "farm", usageKey: "project-6", description: "融入自然的田園生活" },
+  { id: 7, title: "精品民宿空間", category: "commercial", usageKey: "project-7", description: "商業空間設計典範" },
+  { id: 8, title: "老屋翻新改建", category: "renovation", usageKey: "project-8", description: "舊屋煥然一新" },
 ];
 
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("all");
+  const imageMap = useSiteImagesMap(PROJECT_CONFIG.map((p) => p.usageKey));
+  const projects = PROJECT_CONFIG.map((p) => ({ ...p, image: imageMap[p.usageKey] || '' }));
 
   const filteredProjects =
     activeCategory === "all"

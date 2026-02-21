@@ -15,6 +15,7 @@ import ProjectProgress from "./pages/ProjectProgress";
 import OnlineEstimate from "./pages/OnlineEstimate";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import AdminEditPost from "./pages/AdminEditPost";
 import NotFound from "./pages/NotFound";
 import Services from "./pages/Services";
 import ServiceVilla from "./pages/services/ServiceVilla";
@@ -23,6 +24,7 @@ import ServiceCommercial from "./pages/services/ServiceCommercial";
 import ServiceRenovation from "./pages/services/ServiceRenovation";
 import Todos from "./pages/Todos";
 import ImageUploadPage from "./pages/ImageUploadPage";
+import { ArticleDetail } from "./components/ArticleDetail";
 
 const queryClient = new QueryClient();
 
@@ -50,8 +52,10 @@ const App = () => (
                 <Route path="/services/renovation" element={<ServiceRenovation />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/edit/:id" element={<AdminEditPost />} />
                 <Route path="/todos" element={<Todos />} />
                 <Route path="/upload-image" element={<ImageUploadPage />} />
+                <Route path="/article/:id" element={<ArticleDetail />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
