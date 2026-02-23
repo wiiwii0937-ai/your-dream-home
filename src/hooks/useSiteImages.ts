@@ -8,6 +8,9 @@ interface ManagedImage {
   file_path: string;
   public_url: string;
   usage_key: string | null;
+  url: string | null;
+  label: string | null;
+  storage_path: string | null;
 }
 
 /**
@@ -18,7 +21,7 @@ export function useSiteImage(usageKey: string): string {
   const { data: images = [] } = useSiteImages();
   const slot = SITE_IMAGE_SLOTS.find((s) => s.usageKey === usageKey);
   const managed = images.find((img) => img.usage_key === usageKey);
-  return managed?.public_url ?? slot?.defaultUrl ?? '';
+  return managed?.url ?? managed?.public_url ?? slot?.defaultUrl ?? '';
 }
 
 /**
@@ -31,7 +34,7 @@ export function useSiteImages() {
       const usageKeys = SITE_IMAGE_SLOTS.map((s) => s.usageKey);
       const { data, error } = await supabase
         .from('images_management')
-        .select('id, file_name, file_path, public_url, usage_key')
+        .select('id, file_name, file_path, public_url, usage_key, url, label, storage_path')
         .in('usage_key', usageKeys);
 
       if (error) throw error;

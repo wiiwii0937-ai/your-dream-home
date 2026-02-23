@@ -26,6 +26,9 @@ interface ManagedImage {
   alt_text: string | null;
   created_at: string;
   usage_key?: string | null;
+  url?: string | null;
+  label?: string | null;
+  storage_path?: string | null;
 }
 
 export const ImageManager = () => {
@@ -40,6 +43,8 @@ export const ImageManager = () => {
   const [importing, setImporting] = useState(false);
   const [siteSlotsOpen, setSiteSlotsOpen] = useState(true);
   const [replacing, setReplacing] = useState<string | null>(null);
+  const [replacingSlotKey, setReplacingSlotKey] = useState<string | null>(null);
+  const slotReplaceRef = useRef<HTMLInputElement>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -98,6 +103,8 @@ export const ImageManager = () => {
             file_name: file.name,
             file_path: filePath,
             public_url: publicUrl,
+            url: publicUrl,
+            storage_path: filePath,
           } as any);
 
         if (dbError) throw dbError;
@@ -159,6 +166,9 @@ export const ImageManager = () => {
           file_path: filePath,
           public_url: publicUrl,
           usage_key: slot.usageKey,
+          url: publicUrl,
+          label: slot.label,
+          storage_path: filePath,
         } as any);
 
         if (dbError) throw dbError;
@@ -235,9 +245,9 @@ export const ImageManager = () => {
     if (!image) return;
 
     try {
-      // Upload new file
+      // Upload new file to images/ folder
       const ext = file.name.split('.').pop();
-      const newPath = `uploads/${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
+      const newPath = `images/${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
         .from('website-images')
@@ -245,8 +255,11 @@ export const ImageManager = () => {
 
       if (uploadError) throw uploadError;
 
-      // Delete old file
-      await supabase.storage.from('website-images').remove([image.file_path]);
+      // Delete old file (only if it was a storage path, not external URL)
+      const isOldExternal = image.file_path.startsWith('http');
+      if (!isOldExternal) {
+        await supabase.storage.from('website-images').remove([image.file_path]);
+      }
 
       // Get new public URL
       const { data: { publicUrl } } = supabase.storage
@@ -260,6 +273,8 @@ export const ImageManager = () => {
           file_name: file.name,
           file_path: newPath,
           public_url: publicUrl,
+          url: publicUrl,
+          storage_path: newPath,
         } as any)
         .eq('id', image.id);
 
@@ -267,11 +282,87 @@ export const ImageManager = () => {
 
       toast({ title: '圖片已替換' });
       fetchImages();
+      refetchSiteImages();
+      queryClient.invalidateQueries({ queryKey: ['site-images'] });
     } catch (err: any) {
       toast({ title: '替換失敗', description: err.message, variant: 'destructive' });
     } finally {
       setReplacing(null);
       if (replaceRef.current) replaceRef.current.value = '';
+    }
+  };
+
+  /** 更換指定 slot (usage_key) 的圖片 */
+  const handleSlotReplace = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !replacingSlotKey) return;
+
+    try {
+      // Upload to images/ folder
+      const ext = file.name.split('.').pop();
+      const storagePath = `images/${Date.now()}-${replacingSlotKey}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('website-images')
+        .upload(storagePath, file, { cacheControl: '3600', upsert: false });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('website-images')
+        .getPublicUrl(storagePath);
+
+      // Find existing record by usage_key
+      const existing = images.find(i => i.usage_key === replacingSlotKey);
+
+      if (existing) {
+        // Delete old storage file if not external
+        const isOldExternal = existing.file_path.startsWith('http');
+        if (!isOldExternal) {
+          await supabase.storage.from('website-images').remove([existing.file_path]);
+        }
+
+        // Update existing record
+        const { error: dbError } = await supabase
+          .from('images_management')
+          .update({
+            file_name: file.name,
+            file_path: storagePath,
+            public_url: publicUrl,
+            url: publicUrl,
+            storage_path: storagePath,
+          } as any)
+          .eq('usage_key', replacingSlotKey);
+
+        if (dbError) throw dbError;
+      } else {
+        // No existing record — insert new
+        const slot = SITE_IMAGE_SLOTS.find(s => s.usageKey === replacingSlotKey);
+        const { error: dbError } = await supabase
+          .from('images_management')
+          .insert({
+            user_id: user!.id,
+            file_name: file.name,
+            file_path: storagePath,
+            public_url: publicUrl,
+            usage_key: replacingSlotKey,
+            url: publicUrl,
+            label: slot?.label ?? replacingSlotKey,
+            storage_path: storagePath,
+          } as any);
+
+        if (dbError) throw dbError;
+      }
+
+      toast({ title: '圖片已更換' });
+      fetchImages();
+      refetchSiteImages();
+      queryClient.invalidateQueries({ queryKey: ['site-images'] });
+    } catch (err: any) {
+      toast({ title: '更換失敗', description: err.message, variant: 'destructive' });
+    } finally {
+      setReplacingSlotKey(null);
+      if (slotReplaceRef.current) slotReplaceRef.current.value = '';
     }
   };
 
@@ -309,6 +400,13 @@ export const ImageManager = () => {
               type="file"
               accept="image/*"
               onChange={handleReplace}
+              className="hidden"
+            />
+            <input
+              ref={slotReplaceRef}
+              type="file"
+              accept="image/*"
+              onChange={handleSlotReplace}
               className="hidden"
             />
             <Button
@@ -351,7 +449,7 @@ export const ImageManager = () => {
                 {importing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                 {importing ? '匯入中...' : '匯入網站圖片'}
               </Button>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-48 overflow-y-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-64 overflow-y-auto">
                 {SITE_IMAGE_SLOTS.map((slot) => {
                   const assigned = siteImages.find((img) => img.usage_key === slot.usageKey);
                   return (
@@ -359,12 +457,28 @@ export const ImageManager = () => {
                       key={slot.usageKey}
                       className="flex flex-col gap-1 rounded-lg border border-border overflow-hidden bg-card"
                     >
-                      <div className="aspect-video bg-secondary relative">
+                      <div className="aspect-video bg-secondary relative group">
                         <img
-                          src={assigned?.public_url ?? slot.defaultUrl}
+                          src={assigned?.url ?? assigned?.public_url ?? slot.defaultUrl}
                           alt={slot.label}
                           className="w-full h-full object-cover"
                         />
+                        {/* 更換圖片 overlay */}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="gap-1 text-xs h-7"
+                            disabled={!isAdmin}
+                            onClick={() => {
+                              setReplacingSlotKey(slot.usageKey);
+                              slotReplaceRef.current?.click();
+                            }}
+                          >
+                            <RefreshCw className="w-3 h-3" />
+                            更換圖片
+                          </Button>
+                        </div>
                       </div>
                       <p className="text-xs px-2 py-1 truncate" title={slot.label}>
                         {slot.label}

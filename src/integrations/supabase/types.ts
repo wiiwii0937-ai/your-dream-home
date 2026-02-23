@@ -21,10 +21,13 @@ export type Database = {
           file_name: string
           file_path: string
           id: string
+          label: string | null
           public_url: string
+          storage_path: string | null
           updated_at: string
-          user_id: string
+          url: string | null
           usage_key: string | null
+          user_id: string
         }
         Insert: {
           alt_text?: string | null
@@ -32,10 +35,13 @@ export type Database = {
           file_name: string
           file_path: string
           id?: string
+          label?: string | null
           public_url: string
+          storage_path?: string | null
           updated_at?: string
-          user_id: string
+          url?: string | null
           usage_key?: string | null
+          user_id: string
         }
         Update: {
           alt_text?: string | null
@@ -43,10 +49,13 @@ export type Database = {
           file_name?: string
           file_path?: string
           id?: string
+          label?: string | null
           public_url?: string
+          storage_path?: string | null
           updated_at?: string
-          user_id?: string
+          url?: string | null
           usage_key?: string | null
+          user_id?: string
         }
         Relationships: []
       }
