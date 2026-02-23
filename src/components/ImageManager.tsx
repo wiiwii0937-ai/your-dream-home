@@ -113,6 +113,7 @@ export const ImageManager = () => {
       toast({ title: '上傳成功' });
       fetchImages();
     } catch (err: any) {
+      console.error('handleUpload 上傳失敗詳細錯誤:', err);
       toast({ title: '上傳失敗', description: err.message, variant: 'destructive' });
     } finally {
       setUploading(false);
@@ -184,6 +185,7 @@ export const ImageManager = () => {
         toast({ title: '無需匯入', description: '所有網站圖片已存在於後端' });
       }
     } catch (err: any) {
+      console.error('handleImportSiteImages 匯入失敗詳細錯誤:', err);
       toast({ title: '匯入失敗', description: err.message, variant: 'destructive' });
     } finally {
       setImporting(false);
@@ -208,6 +210,7 @@ export const ImageManager = () => {
       refetchSiteImages();
       queryClient.invalidateQueries({ queryKey: ['site-images'] });
     } catch (err: any) {
+      console.error('handleAssignSlot 指派失敗詳細錯誤:', err);
       toast({ title: '指派失敗', description: (err as Error).message, variant: 'destructive' });
     }
   };
@@ -233,6 +236,7 @@ export const ImageManager = () => {
       toast({ title: '已刪除圖片' });
       setImages(prev => prev.filter(i => i.id !== image.id));
     } catch (err: any) {
+      console.error('handleDelete 刪除失敗詳細錯誤:', err);
       toast({ title: '刪除失敗', description: err.message, variant: 'destructive' });
     }
   };
@@ -285,6 +289,7 @@ export const ImageManager = () => {
       refetchSiteImages();
       queryClient.invalidateQueries({ queryKey: ['site-images'] });
     } catch (err: any) {
+      console.error('handleReplace 替換失敗詳細錯誤:', err);
       toast({ title: '替換失敗', description: err.message, variant: 'destructive' });
     } finally {
       setReplacing(null);
@@ -360,6 +365,7 @@ export const ImageManager = () => {
       refetchSiteImages();
       queryClient.invalidateQueries({ queryKey: ['site-images'] });
     } catch (err: any) {
+      console.error('handleSlotReplace 更換圖片失敗詳細錯誤:', err);
       toast({ title: '更換失敗', description: err.message, variant: 'destructive' });
     } finally {
       setReplacingSlotKey(null);

@@ -73,13 +73,13 @@ export default function ImageUploadPage() {
       const filePath = `uploads/${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('website-images')
+        .from('site-images')
         .upload(filePath, selectedFile, { cacheControl: '3600', upsert: false });
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('website-images')
+        .from('site-images')
         .getPublicUrl(filePath);
 
       const { data, error: dbError } = await supabase
@@ -89,6 +89,7 @@ export default function ImageUploadPage() {
           file_name: selectedFile.name,
           file_path: filePath,
           public_url: publicUrl,
+          url: publicUrl,
         } as any)
         .select()
         .single();
@@ -107,6 +108,7 @@ export default function ImageUploadPage() {
       setPreview(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err: any) {
+      console.error('ImageUploadPage 上傳失敗詳細錯誤:', err);
       setError(err.message || '上傳失敗，請稍後再試');
     } finally {
       setUploading(false);
