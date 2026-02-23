@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useSiteImagesMap } from '@/hooks/useSiteImages';
+import { useSiteImagesMap, useSiteImages } from '@/hooks/useSiteImages';
 
 interface CarouselSlide {
   id: string;
@@ -12,11 +12,13 @@ interface CarouselSlide {
   image: string;
 }
 
+const CAROUSEL_KEYS = ['home-carousel-1', 'home-carousel-2', 'home-carousel-3', 'home-carousel-4'] as const;
+
 const SLIDE_CONFIG: Omit<CarouselSlide, 'image'>[] = [
-  { id: '1', usageKey: 'hero-1', title: 'YO HOUSE', subtitle: '東港Mini初代宅 展示屋', link: '/portfolio/yo-house' },
-  { id: '2', usageKey: 'hero-2', title: '4公尺景觀窗微型屋', subtitle: '3.3米挑高Loft 完美微型屋', link: '/portfolio/loft-micro' },
-  { id: '3', usageKey: 'hero-3', title: '漁業大哥的鋼構夢想宅', subtitle: '專業輕鋼構打造理想家園', link: '/portfolio/fisherman-house' },
-  { id: '4', usageKey: 'hero-4', title: 'Yo遊 離島鋼構宅', subtitle: '打造你的日式夢想家', link: '/portfolio/island-house' },
+  { id: '1', usageKey: 'home-carousel-1', title: 'YO HOUSE', subtitle: '東港Mini初代宅 展示屋', link: '/portfolio/yo-house' },
+  { id: '2', usageKey: 'home-carousel-2', title: '4公尺景觀窗微型屋', subtitle: '3.3米挑高Loft 完美微型屋', link: '/portfolio/loft-micro' },
+  { id: '3', usageKey: 'home-carousel-3', title: '漁業大哥的鋼構夢想宅', subtitle: '專業輕鋼構打造理想家園', link: '/portfolio/fisherman-house' },
+  { id: '4', usageKey: 'home-carousel-4', title: 'Yo遊 離島鋼構宅', subtitle: '打造你的日式夢想家', link: '/portfolio/island-house' },
 ];
 
 interface HeroCarouselProps {
@@ -24,7 +26,8 @@ interface HeroCarouselProps {
 }
 
 export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
-  const imageMap = useSiteImagesMap(['hero-1', 'hero-2', 'hero-3', 'hero-4']);
+  const { isLoading } = useSiteImages();
+  const imageMap = useSiteImagesMap([...CAROUSEL_KEYS]);
   const slides: CarouselSlide[] = SLIDE_CONFIG.map((c) => ({
     ...c,
     image: imageMap[c.usageKey] || '',
@@ -70,8 +73,8 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
 
   const currentSlide = slides[currentIndex];
 
-  // No slides when all images failed to load — show fallback
-  if (slides.length === 0) {
+  // Loading state — show animated placeholder while fetching from Supabase
+  if (isLoading || slides.length === 0) {
     return (
       <div
         className={cn(
@@ -79,13 +82,24 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
           sidebarExpanded ? "w-[70%]" : "w-[93%]"
         )}
       >
-        <p className="text-muted-foreground text-lg">輪播圖片載入中...</p>
+        {/* Animated skeleton background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-muted via-muted-foreground/5 to-muted animate-pulse" />
+        <div className="relative z-10 flex flex-col items-center gap-4">
+          <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          <p className="text-muted-foreground text-lg font-medium">輪播圖片載入中...</p>
+        </div>
+        {/* Skeleton slide indicators */}
+        <div className="absolute bottom-12 right-12 flex gap-2">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="w-3 h-3 rounded-full bg-muted-foreground/20 animate-pulse" />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div 
+    <div
       className={cn(
         "fixed top-0 right-0 h-screen transition-all duration-500 ease-out overflow-hidden",
         sidebarExpanded ? "w-[70%]" : "w-[93%]"
@@ -118,7 +132,7 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
           "transition-all duration-500 transform",
           isTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
         )}>
-          <a 
+          <a
             href={currentSlide.link}
             className="group"
           >
@@ -143,8 +157,8 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
                 onClick={() => goToSlide(index)}
                 className={cn(
                   "w-3 h-3 rounded-full transition-all duration-300",
-                  index === currentIndex 
-                    ? "bg-white w-8" 
+                  index === currentIndex
+                    ? "bg-white w-8"
                     : "bg-white/40 hover:bg-white/70"
                 )}
                 aria-label={`Go to slide ${index + 1}`}

@@ -354,7 +354,8 @@ export const ImageManager = () => {
         if (dbError) throw dbError;
       }
 
-      toast({ title: '圖片已更換' });
+      const isCarousel = replacingSlotKey.startsWith('home-carousel-');
+      toast({ title: isCarousel ? '首頁大圖更新成功！' : '圖片已更換' });
       fetchImages();
       refetchSiteImages();
       queryClient.invalidateQueries({ queryKey: ['site-images'] });

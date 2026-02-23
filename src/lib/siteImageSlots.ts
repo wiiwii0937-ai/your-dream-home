@@ -20,22 +20,22 @@ export interface SiteImageSlot {
 export const SITE_IMAGE_SLOTS: SiteImageSlot[] = [
   // Hero Carousel
   {
-    usageKey: 'hero-1',
+    usageKey: 'home-carousel-1',
     label: '首頁輪播 1 - YO HOUSE',
     defaultUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop',
   },
   {
-    usageKey: 'hero-2',
+    usageKey: 'home-carousel-2',
     label: '首頁輪播 2 - 4公尺景觀窗',
     defaultUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=1080&fit=crop',
   },
   {
-    usageKey: 'hero-3',
+    usageKey: 'home-carousel-3',
     label: '首頁輪播 3 - 漁業大哥鋼構宅',
     defaultUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop',
   },
   {
-    usageKey: 'hero-4',
+    usageKey: 'home-carousel-4',
     label: '首頁輪播 4 - Yo遊離島鋼構宅',
     defaultUrl: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1920&h=1080&fit=crop',
   },

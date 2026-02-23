@@ -52,7 +52,7 @@ export function useSiteImagesMap(usageKeys: string[]) {
   for (const key of usageKeys) {
     const slot = SITE_IMAGE_SLOTS.find((s) => s.usageKey === key);
     const managed = images.find((img) => img.usage_key === key);
-    map[key] = managed?.public_url ?? slot?.defaultUrl ?? '';
+    map[key] = managed?.url ?? managed?.public_url ?? slot?.defaultUrl ?? '';
   }
   return map;
 }
