@@ -87,13 +87,13 @@ export const ImageManager = () => {
         const filePath = `uploads/${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
 
         const { error: uploadError } = await supabase.storage
-          .from('website-images')
+          .from('site-images')
           .upload(filePath, file, { cacheControl: '3600', upsert: false });
 
         if (uploadError) throw uploadError;
 
         const { data: { publicUrl } } = supabase.storage
-          .from('website-images')
+          .from('site-images')
           .getPublicUrl(filePath);
 
         const { error: dbError } = await supabase
@@ -105,7 +105,7 @@ export const ImageManager = () => {
             public_url: publicUrl,
             url: publicUrl,
             storage_path: filePath,
-          } as any);
+          });
 
         if (dbError) throw dbError;
       }
@@ -147,12 +147,12 @@ export const ImageManager = () => {
           filePath = `site-slots/${Date.now()}-${slot.usageKey}.${ext}`;
 
           const { error: uploadError } = await supabase.storage
-            .from('website-images')
+            .from('site-images')
             .upload(filePath, blob, { cacheControl: '3600', upsert: false });
 
           if (uploadError) throw uploadError;
 
-          const { data: urlData } = supabase.storage.from('website-images').getPublicUrl(filePath);
+          const { data: urlData } = supabase.storage.from('site-images').getPublicUrl(filePath);
           publicUrl = urlData.publicUrl;
           fileName = `${slot.usageKey}.${ext}`;
         } else if (isExternal) {
@@ -169,7 +169,7 @@ export const ImageManager = () => {
           url: publicUrl,
           label: slot.label,
           storage_path: filePath,
-        } as any);
+        });
 
         if (dbError) throw dbError;
         imported++;
@@ -194,12 +194,12 @@ export const ImageManager = () => {
     try {
       await supabase
         .from('images_management')
-        .update({ usage_key: null } as any)
+        .update({ usage_key: null })
         .eq('usage_key', usageKey);
 
       const { error } = await supabase
         .from('images_management')
-        .update({ usage_key: usageKey } as any)
+        .update({ usage_key: usageKey })
         .eq('id', imageId);
 
       if (error) throw error;
@@ -217,7 +217,7 @@ export const ImageManager = () => {
       const isExternal = image.file_path.startsWith('http');
       if (!isExternal) {
         const { error: storageError } = await supabase.storage
-          .from('website-images')
+          .from('site-images')
           .remove([image.file_path]);
         if (storageError) throw storageError;
       }
@@ -250,7 +250,7 @@ export const ImageManager = () => {
       const newPath = `images/${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('website-images')
+        .from('site-images')
         .upload(newPath, file, { cacheControl: '3600', upsert: false });
 
       if (uploadError) throw uploadError;
@@ -258,12 +258,12 @@ export const ImageManager = () => {
       // Delete old file (only if it was a storage path, not external URL)
       const isOldExternal = image.file_path.startsWith('http');
       if (!isOldExternal) {
-        await supabase.storage.from('website-images').remove([image.file_path]);
+        await supabase.storage.from('site-images').remove([image.file_path]);
       }
 
       // Get new public URL
       const { data: { publicUrl } } = supabase.storage
-        .from('website-images')
+        .from('site-images')
         .getPublicUrl(newPath);
 
       // Update database
@@ -275,7 +275,7 @@ export const ImageManager = () => {
           public_url: publicUrl,
           url: publicUrl,
           storage_path: newPath,
-        } as any)
+        })
         .eq('id', image.id);
 
       if (dbError) throw dbError;
@@ -303,13 +303,13 @@ export const ImageManager = () => {
       const storagePath = `images/${Date.now()}-${replacingSlotKey}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('website-images')
+        .from('site-images')
         .upload(storagePath, file, { cacheControl: '3600', upsert: false });
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('website-images')
+        .from('site-images')
         .getPublicUrl(storagePath);
 
       // Find existing record by usage_key
@@ -319,7 +319,7 @@ export const ImageManager = () => {
         // Delete old storage file if not external
         const isOldExternal = existing.file_path.startsWith('http');
         if (!isOldExternal) {
-          await supabase.storage.from('website-images').remove([existing.file_path]);
+          await supabase.storage.from('site-images').remove([existing.file_path]);
         }
 
         // Update existing record
@@ -331,7 +331,7 @@ export const ImageManager = () => {
             public_url: publicUrl,
             url: publicUrl,
             storage_path: storagePath,
-          } as any)
+          })
           .eq('usage_key', replacingSlotKey);
 
         if (dbError) throw dbError;
@@ -349,7 +349,7 @@ export const ImageManager = () => {
             url: publicUrl,
             label: slot?.label ?? replacingSlotKey,
             storage_path: storagePath,
-          } as any);
+          });
 
         if (dbError) throw dbError;
       }
