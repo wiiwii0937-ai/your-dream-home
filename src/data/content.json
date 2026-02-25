@@ -1,0 +1,682 @@
+{
+    "about": {
+        "hero": {
+            "titlePrefix": "關於",
+            "titleHighlight": "築安心",
+            "subtitle": "專門做輕鋼構住宅的公司，致力於打造安全、質感、快速的理想居所"
+        },
+        "coreValues": [
+            {
+                "icon": "Shield",
+                "title": "安全",
+                "description": "耐震抗風的科學結構，守護每一個家庭的安心。",
+                "color": "from-blue-500 to-cyan-500"
+            },
+            {
+                "icon": "Sparkles",
+                "title": "質感",
+                "description": "精準工藝與美學設計，打造獨一無二的理想居所。",
+                "color": "from-violet-500 to-purple-500"
+            },
+            {
+                "icon": "Zap",
+                "title": "快速",
+                "description": "工廠預製現場組裝，縮短工期讓您早日入住。",
+                "color": "from-amber-500 to-orange-500"
+            }
+        ],
+        "brandStory": {
+            "title": "品牌故事",
+            "paragraphs": [
+                "在臺灣，關於「家」的建築，似乎長久以來只有兩種選擇：",
+                "一邊是厚重而昂貴的RC水泥盒子，它固然堅固，但漫長的工期、難以更動的格局，以及千篇一律的方正線條，彷彿框限了生活的形狀。",
+                "另一邊，則是倉促拼湊的鐵皮浪板，它滿足了速成的需求，但生硬、躁進且不耐久候的材質卻將我們的城市美學，墜落至地平面下。"
+            ],
+            "highlight": "我們不禁想問：家的模樣，能否有第三條路？",
+            "outro": [
+                "這就是「築安心」誕生的起點。",
+                "我們深信，建築不只是遮蔽風雨的構造物，更是承載生活的歸屬，是形塑城市美學的決定性筆觸。"
+            ],
+            "quote": "每個人選擇如何建造自己的家，\n就是在決定我們社會的氣質。"
+        },
+        "principles": {
+            "title": "四大理念",
+            "subtitle": "我們堅持的建築哲學，為每一棟建築注入靈魂",
+            "items": [
+                {
+                    "icon": "Leaf",
+                    "title": "綠色環保",
+                    "description": "低碳排、低汙染、輕量化、減少水泥砂石用量"
+                },
+                {
+                    "icon": "Shield",
+                    "title": "耐震",
+                    "description": "輕量化、高彈性、高延展性能吸震、結構設計符合耐震標準"
+                },
+                {
+                    "icon": "Wind",
+                    "title": "防風",
+                    "description": "精密計算、結構強化、重點連接、並嚴格施工"
+                },
+                {
+                    "icon": "Target",
+                    "title": "精準工藝",
+                    "description": "電腦設計工廠預製、案場快速組裝、乾式施工低粉塵"
+                }
+            ]
+        }
+    },
+    "advantages": {
+        "hero": {
+            "title": "優勢工法",
+            "subtitle": "築安心的精準革新",
+            "description": "在築安心，我們選擇輕鋼構，不僅是一種選擇，更是一種對於現代建築的深刻回應。它代表著一條更精準、更靈活、更負責任的「第三條道路」。"
+        },
+        "items": [
+            {
+                "icon": "Palette",
+                "title": "設計自由",
+                "subtitle": "實現優雅美學的結構基石",
+                "description": "輕鋼結構即是美學的畫布。",
+                "details": [
+                    "實現優雅斜線：各式斜屋頂，打破天際線的沉悶。",
+                    "支撐大面開窗：打破空間界限，將風景變成家中最美的流動畫作。",
+                    "造型多樣性：從現代極簡到鄉村風格，忠實還原各種設計曲線與立面層次。"
+                ],
+                "benefit": "美學的徹底解放。您的家不必再妥協於結構限制，可以是任何夢想中的模樣。",
+                "color": "from-violet-500 to-purple-600"
+            },
+            {
+                "icon": "Shield",
+                "title": "極致耐震",
+                "subtitle": "主動抵禦災害的科學結構",
+                "description": "高強度冷鍍鋅鋼骨構成的「韌性框架」。",
+                "details": [
+                    "輕質高強：鋼材的強度重量比遠優於混凝土，建築自重輕，地震時承受的慣性力大幅降低。",
+                    "專業鉸接設計：關鍵連接點採用特殊設計，能在地震來襲時如同「安全閥」，通過可控的彎曲變形吸收並消散巨大能量。",
+                    "精確結構計算：每棟建築均進行電腦模擬分析，確保從基礎到屋頂的每一根構件都精確參與抗震。"
+                ],
+                "benefit": "一份超越法規標準的安心保障，讓家成為真正的安全避風港。",
+                "color": "from-blue-500 to-cyan-600"
+            },
+            {
+                "icon": "Wind",
+                "title": "抗風防線",
+                "subtitle": "颱風頻仍的臺灣必備防護",
+                "description": "抗拔、抗剪系統與氣密、錨固設計。",
+                "details": [
+                    "抗拔設計：高強度抗拔螺栓、預埋式抗拔件，將輕鋼構主骨架像「釘書針」一樣深層錨固。",
+                    "抗剪設計：在牆體與樓板層內系統性設置鋼製X型或K型斜撐，形成剛性三角結構。",
+                    "牆體與屋面板堅實錨固：外牆結構板材皆以高密度機械式固定鎖於輕鋼骨架上。",
+                    "門窗抗風壓：全數採用抗風壓等級與水密性等級符合標準的門窗。"
+                ],
+                "benefit": "建築的抗風能力不是選配，而是生存與安全的根本。",
+                "color": "from-teal-500 to-emerald-600"
+            },
+            {
+                "icon": "Target",
+                "title": "超凡精準",
+                "subtitle": "工業化生產的毫米級標準",
+                "description": "「工廠預製，現場組裝」的現代化營造模式。",
+                "details": [
+                    "數位化設計與生產：建築藍圖直接轉化為工廠的生產指令，所有鋼骨構件由電腦控制產線精準切割、打孔，誤差控制在毫米級。",
+                    "模塊組裝：從螺栓鎖固與組裝都採乾式施工，大幅減少人為技術誤差與環境變數。",
+                    "穩定品質：構件在出廠前即完成防鏽處理、品檢，杜絕傳統工地材料品質不均的問題。"
+                ],
+                "benefit": "「所見即所得」的確定性。設計圖與完工實物高度一致，告別傳統施工中常見的尺寸誤差與糾紛。",
+                "color": "from-orange-500 to-amber-600"
+            },
+            {
+                "icon": "Zap",
+                "title": "迅捷高效",
+                "subtitle": "縮短一半的建築時程",
+                "description": "不受天候影響的快速施工流程。",
+                "details": [
+                    "並行工程：基礎施工的同時，工廠同步生產鋼構與外牆板，時間被完美疊加利用。",
+                    "無養護期：免除混凝土28天的養護等待，主體結構組裝完成後，內外裝修可立即跟進。",
+                    "全氣候施工：除極端天氣外，雨天仍可進行室內結構組裝與裝修，工期預測性極高。"
+                ],
+                "benefit": "時間的自主權。快速入住，大幅減少租屋過渡成本與心力耗損，讓美好生活提早開始。",
+                "color": "from-yellow-500 to-orange-600"
+            },
+            {
+                "icon": "Leaf",
+                "title": "靈活永續",
+                "subtitle": "順應未來的綠色哲學",
+                "description": "可變、可逆、環境友善的建築系統。",
+                "details": [
+                    "框組壁結構：大跨度無柱空間，輕鬆實現開放式格局。內部隔間可隨家庭生命週期自由調整。",
+                    "低碳建造：施工現場廢棄物減少達70%，對基地周邊環境衝擊最小。",
+                    "綠色建材：主要材料（鋼材）可近乎100%回收再利用。",
+                    "完美整合節能：結構層與高性能保溫隔熱材無縫結合，從物理上杜絕冷熱橋效應。"
+                ],
+                "benefit": "一個能與家人共同成長、變化，並對地球環境友善的永續之家。",
+                "color": "from-green-500 to-emerald-600"
+            }
+        ]
+    },
+    "services": {
+        "hero": {
+            "title": "服務項目",
+            "subtitle": "四大專業領域，全方位滿足您的建築需求",
+            "description": "無論您是想打造夢想住宅、經營民宿事業，還是需要農舍資材室或舊屋翻新，築安心的輕鋼構專業團隊都能為您提供最適切的解決方案。"
+        },
+        "items": [
+            {
+                "id": "villa",
+                "usageKey": "service-villa",
+                "icon": "Home",
+                "title": "輕鋼構別墅/住宅",
+                "subtitle": "打造您夢想中的永久家園",
+                "description": "從現代極簡到溫馨鄉村風格，輕鋼構別墅以精準工藝實現您對家的所有想像。耐震、節能、快速完工，讓美好生活提早開始。",
+                "color": "from-blue-500 to-cyan-600",
+                "features": [
+                    "耐震安全結構",
+                    "節能隔熱系統",
+                    "60天快速完工",
+                    "客製化設計"
+                ],
+                "route": "/services/villa"
+            },
+            {
+                "id": "farm",
+                "usageKey": "service-farm",
+                "icon": "Warehouse",
+                "title": "輕鋼構農舍/資材室",
+                "subtitle": "田園生活的理想選擇",
+                "description": "結合實用功能與美學設計，為您的農地打造符合法規、堅固耐用的農舍或資材室。快速興建，早日享受田園樂趣。",
+                "color": "from-green-500 to-emerald-600",
+                "features": [
+                    "符合農舍法規",
+                    "大跨度空間",
+                    "防潮防蟲設計",
+                    "低維護成本"
+                ],
+                "route": "/services/farm"
+            },
+            {
+                "id": "commercial",
+                "usageKey": "service-commercial",
+                "icon": "Building2",
+                "title": "商業空間/民宿",
+                "subtitle": "創造吸睛的商業價值",
+                "description": "獨特的建築外觀是最好的品牌行銷。輕鋼構商業空間與民宿，以快速工期搶占市場先機，創造持續的投資回報。",
+                "color": "from-violet-500 to-purple-600",
+                "features": [
+                    "特色外觀設計",
+                    "快速開業營運",
+                    "靈活空間規劃",
+                    "高投資回報"
+                ],
+                "route": "/services/commercial"
+            },
+            {
+                "id": "renovation",
+                "usageKey": "service-renovation",
+                "icon": "Wrench",
+                "title": "舊屋增建/翻新",
+                "subtitle": "讓老房子重獲新生",
+                "description": "海砂屋、老舊危樓不必擔心。輕鋼構增建技術讓舊屋華麗轉身，以最短時間、最低干擾完成居住空間的升級改造。",
+                "color": "from-orange-500 to-amber-600",
+                "features": [
+                    "結構安全評估",
+                    "快速乾式施工",
+                    "降低生活干擾",
+                    "現代化升級"
+                ],
+                "route": "/services/renovation"
+            }
+        ],
+        "cta": {
+            "title": "想知道您的專案預算？",
+            "description": "使用我們的線上估價工具，快速獲得專案預算範圍。簡單幾步，即可掌握投資概況。",
+            "button": "立即估價",
+            "route": "/estimate"
+        }
+    },
+    "projects": {
+        "hero": {
+            "title": "工程實例",
+            "description": "探索我們的輕鋼構建築作品，從別墅到商業空間，見證品質與美學的完美結合。"
+        },
+        "categories": [
+            {
+                "id": "all",
+                "label": "全部案例"
+            },
+            {
+                "id": "villa",
+                "label": "別墅系列"
+            },
+            {
+                "id": "mobile",
+                "label": "移動屋系列"
+            },
+            {
+                "id": "farm",
+                "label": "農舍/資材室系列"
+            },
+            {
+                "id": "commercial",
+                "label": "商業空間"
+            },
+            {
+                "id": "renovation",
+                "label": "增建案例"
+            }
+        ],
+        "items": [
+            {
+                "id": 1,
+                "title": "YO HOUSE 東港Mini初代宅",
+                "category": "mobile",
+                "usageKey": "project-1",
+                "description": "展示屋案例",
+                "fbLink": "https://www.facebook.com/share/v/16whaFxHsM/"
+            },
+            {
+                "id": 2,
+                "title": "4公尺景觀窗微型屋",
+                "category": "mobile",
+                "usageKey": "project-2",
+                "description": "4公尺景觀窗 + 3.3米挑高Loft",
+                "fbLink": "https://www.facebook.com/share/v/179QZsS3sV/"
+            },
+            {
+                "id": 3,
+                "title": "漁業大哥的鋼構夢想宅",
+                "category": "mobile",
+                "usageKey": "project-3",
+                "description": "客製化鋼構住宅",
+                "fbLink": "https://www.facebook.com/share/r/1BHveBdekJ/"
+            },
+            {
+                "id": 4,
+                "title": "Yo遊 離島鋼構宅",
+                "category": "villa",
+                "usageKey": "project-4",
+                "description": "打造你的日式夢想家",
+                "fbLink": "https://www.facebook.com/share/v/1BeFd85PEK/"
+            },
+            {
+                "id": 5,
+                "title": "現代極簡別墅",
+                "category": "villa",
+                "usageKey": "project-5",
+                "description": "簡約設計，質感生活"
+            },
+            {
+                "id": 6,
+                "title": "鄉村風格農舍",
+                "category": "farm",
+                "usageKey": "project-6",
+                "description": "融入自然的田園生活"
+            },
+            {
+                "id": 7,
+                "title": "精品民宿空間",
+                "category": "commercial",
+                "usageKey": "project-7",
+                "description": "商業空間設計典範"
+            },
+            {
+                "id": 8,
+                "title": "老屋翻新改建",
+                "category": "renovation",
+                "usageKey": "project-8",
+                "description": "舊屋煥然一新"
+            }
+        ]
+    },
+    "progress": {
+        "hero": {
+            "title": "工程進度",
+            "description": "透明公開的施工進度，讓您隨時掌握專案狀態"
+        },
+        "projects": [
+            {
+                "id": "1",
+                "name": "台中霧峰輕鋼別墅",
+                "location": "台中市霧峰區",
+                "startDate": "2024-11-01",
+                "estimatedCompletion": "2025-02-28",
+                "progress": 65,
+                "currentPhase": "內裝工程",
+                "updates": [
+                    {
+                        "week": 8,
+                        "date": "2024-12-16",
+                        "title": "內裝隔間完成",
+                        "description": "完成所有室內隔間牆面施工，包含主臥、次臥及書房隔間。同步進行水電管線預埋作業。",
+                        "completed": true
+                    },
+                    {
+                        "week": 7,
+                        "date": "2024-12-09",
+                        "title": "屋頂防水層鋪設",
+                        "description": "完成屋頂防水層施工，採用高品質防水材料，確保長期防漏效果。",
+                        "completed": true
+                    },
+                    {
+                        "week": 6,
+                        "date": "2024-12-02",
+                        "title": "外牆板材安裝",
+                        "description": "完成外牆輕鋼板材安裝，含隔熱層及防火層，提升建築整體隔熱性能。",
+                        "completed": true
+                    },
+                    {
+                        "week": 5,
+                        "date": "2024-11-25",
+                        "title": "主結構焊接完成",
+                        "description": "完成主體輕鋼結構焊接及防鏽處理，結構穩固性通過檢測。",
+                        "completed": true
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "name": "苗栗大湖農舍",
+                "location": "苗栗縣大湖鄉",
+                "startDate": "2024-12-01",
+                "estimatedCompletion": "2025-03-15",
+                "progress": 25,
+                "currentPhase": "基礎工程",
+                "updates": [
+                    {
+                        "week": 3,
+                        "date": "2024-12-16",
+                        "title": "基礎灌漿完成",
+                        "description": "完成地基基礎灌漿作業，混凝土養護中，預計下週開始鋼構組裝。",
+                        "completed": true
+                    },
+                    {
+                        "week": 2,
+                        "date": "2024-12-09",
+                        "title": "地基開挖及整地",
+                        "description": "完成基地整地及地基開挖，並進行地質確認及排水系統規劃。",
+                        "completed": true
+                    },
+                    {
+                        "week": 1,
+                        "date": "2024-12-02",
+                        "title": "開工準備",
+                        "description": "完成施工圍籬搭設、工地辦公室設置，材料進場準備就緒。",
+                        "completed": true
+                    }
+                ]
+            },
+            {
+                "id": "3",
+                "name": "南投埔里民宿改建",
+                "location": "南投縣埔里鎮",
+                "startDate": "2024-10-15",
+                "estimatedCompletion": "2025-01-31",
+                "progress": 85,
+                "currentPhase": "收尾工程",
+                "updates": [
+                    {
+                        "week": 10,
+                        "date": "2024-12-16",
+                        "title": "內裝油漆及清潔",
+                        "description": "進行室內油漆粉刷及全面清潔作業，準備進入驗收階段。",
+                        "completed": false
+                    },
+                    {
+                        "week": 9,
+                        "date": "2024-12-09",
+                        "title": "衛浴設備安裝",
+                        "description": "完成6間客房衛浴設備安裝，包含馬桶、洗手台及淋浴設備。",
+                        "completed": true
+                    },
+                    {
+                        "week": 8,
+                        "date": "2024-12-02",
+                        "title": "地板鋪設完成",
+                        "description": "完成全棟地板鋪設，採用耐磨木紋地板，兼具美觀與實用性。",
+                        "completed": true
+                    }
+                ]
+            }
+        ],
+        "cta": {
+            "title": "想了解更多工程細節？",
+            "description": "我們提供定期工地參觀，讓您親眼見證築安心的施工品質"
+        }
+    },
+    "estimate": {
+        "hero": {
+            "title": "線上估價",
+            "description": "快速了解您的建築預算，選擇配置即可獲得初步報價"
+        },
+        "buildingTypes": [
+            {
+                "id": "mobile",
+                "usageKey": "estimate-mobile",
+                "name": "移動式住宅",
+                "price": 100000,
+                "icon": "Home",
+                "description": "快速建造、可移動"
+            },
+            {
+                "id": "villa",
+                "usageKey": "estimate-villa",
+                "name": "輕鋼別墅",
+                "price": 108000,
+                "icon": "Building2",
+                "description": "永久住宅首選"
+            },
+            {
+                "id": "guesthouse",
+                "usageKey": "estimate-guesthouse",
+                "name": "民宿/商業空間",
+                "price": 130000,
+                "icon": "Warehouse",
+                "description": "商業營運最佳"
+            },
+            {
+                "id": "renovation",
+                "usageKey": "estimate-renovation",
+                "name": "老屋翻新加建",
+                "price": 150000,
+                "icon": "Wrench",
+                "description": "舊屋新生命"
+            }
+        ],
+        "baseFeatures": {
+            "title": "基本配置",
+            "basePriceNote": "（每坪10.8萬）",
+            "items": [
+                {
+                    "category": "屋頂瓦",
+                    "value": "斜屋頂"
+                },
+                {
+                    "category": "外牆結構牆板",
+                    "value": "標準配置"
+                },
+                {
+                    "category": "牆板加強固定",
+                    "value": "標準配置"
+                },
+                {
+                    "category": "內部隔間牆板",
+                    "value": "標準配置"
+                },
+                {
+                    "category": "室外裝飾牆板",
+                    "value": "金屬斷熱板"
+                },
+                {
+                    "category": "室內裝飾牆板",
+                    "value": "室內全牆面覆蓋"
+                },
+                {
+                    "category": "室內天花板",
+                    "value": "標準配置"
+                },
+                {
+                    "category": "室內地板",
+                    "value": "石塑地板"
+                },
+                {
+                    "category": "衛浴設備",
+                    "value": "洗手台＋鏡、淋浴龍頭、馬桶"
+                },
+                {
+                    "category": "廚具",
+                    "value": "標準櫥櫃250CM內附流理台"
+                },
+                {
+                    "category": "室外門",
+                    "value": "鋼質門"
+                },
+                {
+                    "category": "室內門",
+                    "value": "房間木門、衛浴鋁合金玻璃門"
+                },
+                {
+                    "category": "推拉窗",
+                    "value": "鋁合金窗配夾膠玻璃"
+                },
+                {
+                    "category": "室內配電",
+                    "value": "基礎插座開關+專迴(以坪數增刪)"
+                }
+            ]
+        },
+        "additionalOptions": {
+            "title": "加價選項",
+            "notice": {
+                "title": "整地及地基",
+                "items": [
+                    "• 整地：依現場現地報價",
+                    "• 地基（連續基礎、筏式基礎）：依現場報價"
+                ]
+            },
+            "items": [
+                {
+                    "id": "septic",
+                    "name": "化糞池 6人份(含施作)",
+                    "price": 25000,
+                    "perPing": false
+                },
+                {
+                    "id": "roofDeck",
+                    "name": "露臺屋頂",
+                    "price": 20000,
+                    "perPing": true,
+                    "unit": "坪"
+                },
+                {
+                    "id": "plasticWoodDeck",
+                    "name": "塑木室外平台地板(含鋼製平台、欄杆、平台樓梯)",
+                    "price": 20000,
+                    "perPing": true,
+                    "unit": "坪"
+                },
+                {
+                    "id": "southernPineDeck",
+                    "name": "南方松室外平台地板(含鋼製平台、欄杆、平台樓梯)",
+                    "price": 23000,
+                    "perPing": true,
+                    "unit": "坪"
+                }
+            ]
+        },
+        "cta": {
+            "description": "想要更精準的報價？立即預約免費現場勘查"
+        }
+    },
+    "faq": {
+        "hero": {
+            "title": "常見問答",
+            "description": "我們為您整理了最常被問到的輕鋼構建築相關問題，希望能解答您的疑惑。"
+        },
+        "categories": [
+            {
+                "id": "general",
+                "title": "一般問題",
+                "questions": [
+                    {
+                        "q": "輕鋼構建築的造價大約多少？",
+                        "a": "依照需求，每坪落於10至15萬不等，這會根據您選擇的外牆材質、內部裝修與地形難易度而有所不同。您可以使用我們的線上估價工具取得更精準的價格！"
+                    },
+                    {
+                        "q": "施工期大約需要多久？",
+                        "a": "一般的輕鋼構別墅主體工程，從地基完成到結構組裝完畢僅需約45-60個工作天；完整完工大約3至4個月，相比傳統RC建築可縮短至少一半的時間。"
+                    }
+                ]
+            },
+            {
+                "id": "structure",
+                "title": "結構與安全",
+                "questions": [
+                    {
+                        "q": "輕鋼構防颱抗震嗎？",
+                        "a": "是的！我們的輕鋼結構具備極佳的韌性，在地震時能有效吸收能量，且經過精密抗風設計，並搭配抗拔與抗剪系統與強化錨固，足以承受17級強風與強烈地震。"
+                    },
+                    {
+                        "q": "輕鋼結構會生鏽嗎？",
+                        "a": "結構體採用冷鍍覆鋁鋅高強度鋼材，防護等級高，不怕腐蝕與水氣，在正常屋況中，結構壽命可達50至70年以上。"
+                    },
+                    {
+                        "q": "輕鋼構房子會不會太熱？",
+                        "a": "隔熱性能比RC牆好！輕鋼構建築外牆、屋頂與樓板系統中，皆會封入高性能保溫隔熱材料(玻璃棉或岩棉)，可以確實阻斷熱橋傳導降低室內溫度。"
+                    }
+                ]
+            },
+            {
+                "id": "license",
+                "title": "申請與法規",
+                "questions": [
+                    {
+                        "q": "輕鋼構可以申請建照與銀行貸款嗎？",
+                        "a": "完全可以。只要基地符合法規要件，輕鋼構房屋與一般鋼筋混凝土(RC)建築一樣，都能正式申請建築執照、使用執照與辦理房屋貸款！"
+                    },
+                    {
+                        "q": "農地的農舍與自用住宅有甚麼區別？",
+                        "a": "要依據「農業用地興建農舍辦法」提出申請，農地面積必須超過0.25公頃(約756坪)等條件，若無法變更則只能以資材室名義申請。"
+                    }
+                ]
+            }
+        ],
+        "cta": {
+            "title": "還有其他問題？",
+            "description": "歡迎隨時聯繫我們，我們的專業團隊將為您詳細解答",
+            "button": "聯絡我們",
+            "route": "/contact"
+        }
+    },
+    "contact": {
+        "hero": {
+            "title": "聯繫我們",
+            "description": "歡迎諮詢任何關於輕鋼構建築的問題，我們將竭誠為您服務"
+        },
+        "companyInfo": [
+            {
+                "icon": "Phone",
+                "label": "聯絡電話",
+                "value": "0800-000-000",
+                "subValue": "週一至週六 09:00-18:00"
+            },
+            {
+                "icon": "Mail",
+                "label": "電子郵件",
+                "value": "service@zhuan-xin.com",
+                "subValue": "24小時內回覆"
+            },
+            {
+                "icon": "MapPin",
+                "label": "公司地址",
+                "value": "台中市西屯區台灣大道三段99號",
+                "subValue": "歡迎預約參觀展示屋"
+            },
+            {
+                "icon": "Clock",
+                "label": "營業時間",
+                "value": "週一至週六 09:00-18:00",
+                "subValue": "週日及國定假日公休"
+            }
+        ]
+    }
+}

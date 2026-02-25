@@ -23,111 +23,10 @@ interface Project {
   updates: ProgressUpdate[];
 }
 
-const projects: Project[] = [
-  {
-    id: '1',
-    name: '台中霧峰輕鋼別墅',
-    location: '台中市霧峰區',
-    startDate: '2024-11-01',
-    estimatedCompletion: '2025-02-28',
-    progress: 65,
-    currentPhase: '內裝工程',
-    updates: [
-      {
-        week: 8,
-        date: '2024-12-16',
-        title: '內裝隔間完成',
-        description: '完成所有室內隔間牆面施工，包含主臥、次臥及書房隔間。同步進行水電管線預埋作業。',
-        completed: true,
-      },
-      {
-        week: 7,
-        date: '2024-12-09',
-        title: '屋頂防水層鋪設',
-        description: '完成屋頂防水層施工，採用高品質防水材料，確保長期防漏效果。',
-        completed: true,
-      },
-      {
-        week: 6,
-        date: '2024-12-02',
-        title: '外牆板材安裝',
-        description: '完成外牆輕鋼板材安裝，含隔熱層及防火層，提升建築整體隔熱性能。',
-        completed: true,
-      },
-      {
-        week: 5,
-        date: '2024-11-25',
-        title: '主結構焊接完成',
-        description: '完成主體輕鋼結構焊接及防鏽處理，結構穩固性通過檢測。',
-        completed: true,
-      },
-    ],
-  },
-  {
-    id: '2',
-    name: '苗栗大湖農舍',
-    location: '苗栗縣大湖鄉',
-    startDate: '2024-12-01',
-    estimatedCompletion: '2025-03-15',
-    progress: 25,
-    currentPhase: '基礎工程',
-    updates: [
-      {
-        week: 3,
-        date: '2024-12-16',
-        title: '基礎灌漿完成',
-        description: '完成地基基礎灌漿作業，混凝土養護中，預計下週開始鋼構組裝。',
-        completed: true,
-      },
-      {
-        week: 2,
-        date: '2024-12-09',
-        title: '地基開挖及整地',
-        description: '完成基地整地及地基開挖，並進行地質確認及排水系統規劃。',
-        completed: true,
-      },
-      {
-        week: 1,
-        date: '2024-12-02',
-        title: '開工準備',
-        description: '完成施工圍籬搭設、工地辦公室設置，材料進場準備就緒。',
-        completed: true,
-      },
-    ],
-  },
-  {
-    id: '3',
-    name: '南投埔里民宿改建',
-    location: '南投縣埔里鎮',
-    startDate: '2024-10-15',
-    estimatedCompletion: '2025-01-31',
-    progress: 85,
-    currentPhase: '收尾工程',
-    updates: [
-      {
-        week: 10,
-        date: '2024-12-16',
-        title: '內裝油漆及清潔',
-        description: '進行室內油漆粉刷及全面清潔作業，準備進入驗收階段。',
-        completed: false,
-      },
-      {
-        week: 9,
-        date: '2024-12-09',
-        title: '衛浴設備安裝',
-        description: '完成6間客房衛浴設備安裝，包含馬桶、洗手台及淋浴設備。',
-        completed: true,
-      },
-      {
-        week: 8,
-        date: '2024-12-02',
-        title: '地板鋪設完成',
-        description: '完成全棟地板鋪設，採用耐磨木紋地板，兼具美觀與實用性。',
-        completed: true,
-      },
-    ],
-  },
-];
+import contentData from "@/data/content.json";
+
+const { progress: progressData } = contentData;
+const projects: Project[] = progressData.projects as Project[];
 
 export default function ProjectProgress() {
   const [selectedProject, setSelectedProject] = useState<string>(projects[0].id);
@@ -139,16 +38,16 @@ export default function ProjectProgress() {
         <title>工程進度 | 築安心輕鋼建築</title>
         <meta name="description" content="查看築安心進行中專案的每週施工進度更新，透明公開的工程管理讓您安心。" />
       </Helmet>
-      
+
       <MainLayout>
         <div className="min-h-screen bg-background py-16 px-4 md:px-8">
           {/* Header */}
           <div className="max-w-6xl mx-auto mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              工程進度
+              {progressData.hero.title}
             </h1>
             <p className="text-lg text-muted-foreground">
-              透明公開的施工進度，讓您隨時掌握專案狀態
+              {progressData.hero.description}
             </p>
           </div>
 
@@ -159,11 +58,10 @@ export default function ProjectProgress() {
                 <button
                   key={project.id}
                   onClick={() => setSelectedProject(project.id)}
-                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
-                    selectedProject === project.id
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${selectedProject === project.id
                       ? 'bg-primary text-primary-foreground shadow-lg'
                       : 'bg-card text-card-foreground hover:bg-accent border border-border'
-                  }`}
+                    }`}
                 >
                   {project.name}
                 </button>
@@ -227,7 +125,7 @@ export default function ProjectProgress() {
               <ArrowRight className="w-5 h-5 text-primary" />
               週進度更新
             </h3>
-            
+
             <div className="relative">
               {/* Timeline Line */}
               <div className="absolute left-4 md:left-6 top-0 bottom-0 w-0.5 bg-border" />
@@ -237,11 +135,10 @@ export default function ProjectProgress() {
                 {currentProject.updates.map((update, index) => (
                   <div key={index} className="relative pl-12 md:pl-16">
                     {/* Timeline Dot */}
-                    <div className={`absolute left-0 md:left-2 w-8 h-8 rounded-full flex items-center justify-center ${
-                      update.completed 
-                        ? 'bg-primary text-primary-foreground' 
+                    <div className={`absolute left-0 md:left-2 w-8 h-8 rounded-full flex items-center justify-center ${update.completed
+                        ? 'bg-primary text-primary-foreground'
                         : 'bg-muted border-2 border-primary text-primary'
-                    }`}>
+                      }`}>
                       {update.completed ? (
                         <CheckCircle className="w-5 h-5" />
                       ) : (
@@ -250,9 +147,8 @@ export default function ProjectProgress() {
                     </div>
 
                     {/* Content Card */}
-                    <div className={`bg-card rounded-xl p-5 border border-border transition-all duration-300 hover:shadow-lg ${
-                      !update.completed ? 'ring-2 ring-primary/20' : ''
-                    }`}>
+                    <div className={`bg-card rounded-xl p-5 border border-border transition-all duration-300 hover:shadow-lg ${!update.completed ? 'ring-2 ring-primary/20' : ''
+                      }`}>
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
                         <div className="flex items-center gap-3">
                           <span className="px-3 py-1 bg-accent text-accent-foreground rounded-full text-sm font-medium">
@@ -286,10 +182,10 @@ export default function ProjectProgress() {
           <div className="max-w-6xl mx-auto mt-16 text-center">
             <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-8 border border-primary/20">
               <h3 className="text-2xl font-bold text-foreground mb-3">
-                想了解更多工程細節？
+                {progressData.cta.title}
               </h3>
               <p className="text-muted-foreground mb-6">
-                我們提供定期工地參觀，讓您親眼見證築安心的施工品質
+                {progressData.cta.description}
               </p>
               <a
                 href="/contact"

@@ -13,7 +13,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
+import * as Icons from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import contentData from "@/data/content.json";
+
+const { contact: contactData } = contentData;
 
 const Contact = () => {
   const { toast } = useToast();
@@ -50,32 +54,7 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const companyInfo = [
-    {
-      icon: Phone,
-      label: "聯絡電話",
-      value: "0800-000-000",
-      subValue: "週一至週六 09:00-18:00",
-    },
-    {
-      icon: Mail,
-      label: "電子郵件",
-      value: "service@zhuan-xin.com",
-      subValue: "24小時內回覆",
-    },
-    {
-      icon: MapPin,
-      label: "公司地址",
-      value: "台中市西屯區台灣大道三段99號",
-      subValue: "歡迎預約參觀展示屋",
-    },
-    {
-      icon: Clock,
-      label: "營業時間",
-      value: "週一至週六 09:00-18:00",
-      subValue: "週日及國定假日公休",
-    },
-  ];
+  const companyInfo = contactData.companyInfo;
 
   return (
     <MainLayout>
@@ -92,10 +71,10 @@ const Contact = () => {
           {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              聯繫我們
+              {contactData.hero.title}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              歡迎諮詢任何關於輕鋼構建築的問題，我們將竭誠為您服務
+              {contactData.hero.description}
             </p>
           </div>
 
@@ -104,29 +83,32 @@ const Contact = () => {
             <div className="space-y-8">
               {/* Company Info Cards */}
               <div className="grid sm:grid-cols-2 gap-4">
-                {companyInfo.map((info, index) => (
-                  <div
-                    key={index}
-                    className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <info.icon className="w-6 h-6 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">
-                          {info.label}
-                        </p>
-                        <p className="font-semibold text-foreground">
-                          {info.value}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {info.subValue}
-                        </p>
+                {companyInfo.map((info, index) => {
+                  const Icon = Icons[info.icon as keyof typeof Icons] as any;
+                  return (
+                    <div
+                      key={index}
+                      className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          {Icon && <Icon className="w-6 h-6 text-primary" />}
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-1">
+                            {info.label}
+                          </p>
+                          <p className="font-semibold text-foreground">
+                            {info.value}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {info.subValue}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               {/* Google Map */}

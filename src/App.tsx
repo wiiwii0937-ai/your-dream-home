@@ -11,6 +11,7 @@ import Projects from "./pages/Projects";
 import Advantages from "./pages/Advantages";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import FAQ from "./pages/FAQ";
 import ProjectProgress from "./pages/ProjectProgress";
 import OnlineEstimate from "./pages/OnlineEstimate";
 import Auth from "./pages/Auth";
@@ -43,6 +44,7 @@ const App = () => (
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/advantages" element={<Advantages />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/faq" element={<FAQ />} />
                 <Route path="/progress" element={<ProjectProgress />} />
                 <Route path="/estimate" element={<OnlineEstimate />} />
                 <Route path="/services" element={<Services />} />

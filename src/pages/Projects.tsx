@@ -3,33 +3,14 @@ import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useSiteImagesMap } from "@/hooks/useSiteImages";
 import { cn } from "@/lib/utils";
+import contentData from "@/data/content.json";
 
-// 案例分類
-const categories = [
-  { id: "all", label: "全部案例" },
-  { id: "villa", label: "別墅系列" },
-  { id: "mobile", label: "移動屋系列" },
-  { id: "farm", label: "農舍/資材室系列" },
-  { id: "commercial", label: "商業空間" },
-  { id: "renovation", label: "增建案例" },
-];
-
-// 模擬案例資料（image 由 useSiteImagesMap 根據 usageKey 提供）
-const PROJECT_CONFIG = [
-  { id: 1, title: "YO HOUSE 東港Mini初代宅", category: "mobile", usageKey: "project-1", description: "展示屋案例", fbLink: "https://www.facebook.com/share/v/16whaFxHsM/" },
-  { id: 2, title: "4公尺景觀窗微型屋", category: "mobile", usageKey: "project-2", description: "4公尺景觀窗 + 3.3米挑高Loft", fbLink: "https://www.facebook.com/share/v/179QZsS3sV/" },
-  { id: 3, title: "漁業大哥的鋼構夢想宅", category: "mobile", usageKey: "project-3", description: "客製化鋼構住宅", fbLink: "https://www.facebook.com/share/r/1BHveBdekJ/" },
-  { id: 4, title: "Yo遊 離島鋼構宅", category: "villa", usageKey: "project-4", description: "打造你的日式夢想家", fbLink: "https://www.facebook.com/share/v/1BeFd85PEK/" },
-  { id: 5, title: "現代極簡別墅", category: "villa", usageKey: "project-5", description: "簡約設計，質感生活" },
-  { id: 6, title: "鄉村風格農舍", category: "farm", usageKey: "project-6", description: "融入自然的田園生活" },
-  { id: 7, title: "精品民宿空間", category: "commercial", usageKey: "project-7", description: "商業空間設計典範" },
-  { id: 8, title: "老屋翻新改建", category: "renovation", usageKey: "project-8", description: "舊屋煥然一新" },
-];
+const { projects: projectsData } = contentData;
 
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("all");
-  const imageMap = useSiteImagesMap(PROJECT_CONFIG.map((p) => p.usageKey));
-  const projects = PROJECT_CONFIG.map((p) => ({ ...p, image: imageMap[p.usageKey] || '' }));
+  const imageMap = useSiteImagesMap(projectsData.items.map((p) => p.usageKey));
+  const projects = projectsData.items.map((p) => ({ ...p, image: imageMap[p.usageKey] || '' }));
 
   const filteredProjects =
     activeCategory === "all"
@@ -47,16 +28,16 @@ const Projects = () => {
           {/* 頁面標題 */}
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-              工程實例
+              {projectsData.hero.title}
             </h1>
             <p className="text-muted-foreground">
-              探索我們的輕鋼構建築作品，從別墅到商業空間，見證品質與美學的完美結合。
+              {projectsData.hero.description}
             </p>
           </div>
 
           {/* 分類篩選 */}
           <div className="flex flex-wrap gap-3 mb-10">
-            {categories.map((cat) => (
+            {projectsData.categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
@@ -119,7 +100,7 @@ const Projects = () => {
                   {/* 分類標籤 */}
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 bg-primary/90 text-primary-foreground text-xs font-medium rounded-full backdrop-blur-sm">
-                      {categories.find((c) => c.id === project.category)?.label}
+                      {projectsData.categories.find((c) => c.id === project.category)?.label}
                     </span>
                   </div>
                 </div>

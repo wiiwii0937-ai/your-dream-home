@@ -5,39 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Calculator, Home, Building2, Warehouse, Wrench, Info, Check, Plus, Image as ImageIcon } from "lucide-react";
+import * as Icons from "lucide-react";
 import { useSiteImagesMap } from "@/hooks/useSiteImages";
+import contentData from "@/data/content.json";
 
-const BUILDING_TYPE_CONFIG = [
-  { id: "mobile", usageKey: "estimate-mobile", name: "移動式住宅", price: 100000, icon: Home, description: "快速建造、可移動" },
-  { id: "villa", usageKey: "estimate-villa", name: "輕鋼別墅", price: 108000, icon: Building2, description: "永久住宅首選" },
-  { id: "guesthouse", usageKey: "estimate-guesthouse", name: "民宿/商業空間", price: 130000, icon: Warehouse, description: "商業營運最佳" },
-  { id: "renovation", usageKey: "estimate-renovation", name: "老屋翻新加建", price: 150000, icon: Wrench, description: "舊屋新生命" },
-];
-
-const baseFeatures = [
-  { category: "屋頂瓦", value: "斜屋頂" },
-  { category: "外牆結構牆板", value: "標準配置" },
-  { category: "牆板加強固定", value: "標準配置" },
-  { category: "內部隔間牆板", value: "標準配置" },
-  { category: "室外裝飾牆板", value: "金屬斷熱板" },
-  { category: "室內裝飾牆板", value: "室內全牆面覆蓋" },
-  { category: "室內天花板", value: "標準配置" },
-  { category: "室內地板", value: "石塑地板" },
-  { category: "衛浴設備", value: "洗手台＋鏡、淋浴龍頭、馬桶" },
-  { category: "廚具", value: "標準櫥櫃250CM內附流理台" },
-  { category: "室外門", value: "鋼質門" },
-  { category: "室內門", value: "房間木門、衛浴鋁合金玻璃門" },
-  { category: "推拉窗", value: "鋁合金窗配夾膠玻璃" },
-  { category: "室內配電", value: "基礎插座開關+專迴(以坪數增刪)" },
-];
-
-const additionalOptions = [
-  { id: "septic", name: "化糞池 6人份(含施作)", price: 25000, perPing: false },
-  { id: "roofDeck", name: "露臺屋頂", price: 20000, perPing: true, unit: "坪" },
-  { id: "plasticWoodDeck", name: "塑木室外平台地板(含鋼製平台、欄杆、平台樓梯)", price: 20000, perPing: true, unit: "坪" },
-  { id: "southernPineDeck", name: "南方松室外平台地板(含鋼製平台、欄杆、平台樓梯)", price: 23000, perPing: true, unit: "坪" },
-];
+const { estimate: estimateData } = contentData;
+const BUILDING_TYPE_CONFIG = estimateData.buildingTypes;
+const baseFeatures = estimateData.baseFeatures.items;
+const additionalOptions = estimateData.additionalOptions.items;
 
 const OnlineEstimate = () => {
   const imageMap = useSiteImagesMap(BUILDING_TYPE_CONFIG.map((t) => t.usageKey));
@@ -49,13 +24,13 @@ const OnlineEstimate = () => {
   const [optionAreas, setOptionAreas] = useState<Record<string, string>>({});
 
   const selectedBuilding = buildingTypes.find(t => t.id === selectedType);
-  
+
   const estimate = useMemo(() => {
     const areaNum = parseFloat(area);
     if (!areaNum || areaNum <= 0 || !selectedBuilding) return null;
-    
+
     const basePrice = areaNum * selectedBuilding.price;
-    
+
     // Calculate additional options price
     let additionalPrice = 0;
     additionalOptions.forEach(option => {
@@ -68,11 +43,11 @@ const OnlineEstimate = () => {
         }
       }
     });
-    
+
     const totalBase = basePrice + additionalPrice;
     const lowEstimate = Math.round(totalBase * 0.9);
     const highEstimate = Math.round(totalBase * 1.1);
-    
+
     return { lowEstimate, highEstimate, basePrice: totalBase, additionalPrice };
   }, [area, selectedBuilding, selectedOptions, optionAreas]);
 
@@ -104,11 +79,11 @@ const OnlineEstimate = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
-              <Calculator className="w-8 h-8 text-primary" />
+              {Icons.Calculator && <Icons.Calculator className="w-8 h-8 text-primary" />}
             </div>
-            <h1 className="text-4xl font-bold text-foreground mb-4">線上估價</h1>
+            <h1 className="text-4xl font-bold text-foreground mb-4">{estimateData.hero.title}</h1>
             <p className="text-lg text-muted-foreground">
-              快速了解您的建築預算，選擇配置即可獲得初步報價
+              {estimateData.hero.description}
             </p>
           </div>
 
@@ -116,7 +91,7 @@ const OnlineEstimate = () => {
           <Card className="mb-8 border-border/50 bg-card/50 backdrop-blur overflow-hidden">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <ImageIcon className="w-5 h-5 text-primary" />
+                {Icons.Image && <Icons.Image className="w-5 h-5 text-primary" />}
                 {selectedBuilding?.name} 案例展示
               </CardTitle>
             </CardHeader>
@@ -131,7 +106,10 @@ const OnlineEstimate = () => {
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
-                      {selectedBuilding && <selectedBuilding.icon className="w-5 h-5" />}
+                      {(() => {
+                        const SelectedIcon = Icons[selectedBuilding?.icon as keyof typeof Icons] as any;
+                        return SelectedIcon ? <SelectedIcon className="w-5 h-5" /> : null;
+                      })()}
                     </div>
                     <div>
                       <h3 className="text-lg font-bold text-foreground">{selectedBuilding?.name}</h3>
@@ -157,22 +135,20 @@ const OnlineEstimate = () => {
                 <CardContent>
                   <RadioGroup value={selectedType} onValueChange={setSelectedType} className="space-y-3">
                     {buildingTypes.map((type) => {
-                      const Icon = type.icon;
+                      const Icon = Icons[type.icon as keyof typeof Icons] as any;
                       return (
                         <Label
                           key={type.id}
                           htmlFor={type.id}
-                          className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                            selectedType === type.id
+                          className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${selectedType === type.id
                               ? "border-primary bg-primary/5"
                               : "border-border hover:border-primary/50"
-                          }`}
+                            }`}
                         >
                           <RadioGroupItem value={type.id} id={type.id} className="sr-only" />
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            selectedType === type.id ? "bg-primary text-primary-foreground" : "bg-muted"
-                          }`}>
-                            <Icon className="w-5 h-5" />
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${selectedType === type.id ? "bg-primary text-primary-foreground" : "bg-muted"
+                            }`}>
+                            {Icon && <Icon className="w-5 h-5" />}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="font-semibold text-foreground text-sm">{type.name}</div>
@@ -225,15 +201,15 @@ const OnlineEstimate = () => {
               <Card className="border-border/50 bg-card/50 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <Check className="w-5 h-5 text-primary" />
-                    基本配置（每坪10.8萬）
+                    {Icons.Check && <Icons.Check className="w-5 h-5 text-primary" />}
+                    {estimateData.baseFeatures.title} {estimateData.baseFeatures.basePriceNote}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     {baseFeatures.map((feature, index) => (
                       <div key={index} className="flex items-start gap-2 py-1.5 border-b border-border/30 last:border-0">
-                        <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                        {Icons.Check && <Icons.Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />}
                         <div className="flex-1 min-w-0">
                           <span className="text-sm font-medium text-foreground">{feature.category}：</span>
                           <span className="text-sm text-muted-foreground">{feature.value}</span>
@@ -248,25 +224,25 @@ const OnlineEstimate = () => {
               <Card className="border-border/50 bg-card/50 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <Plus className="w-5 h-5 text-primary" />
-                    加價選項
+                    {Icons.Plus && <Icons.Plus className="w-5 h-5 text-primary" />}
+                    {estimateData.additionalOptions.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {/* Site preparation notice */}
                     <div className="bg-muted/50 rounded-lg p-3 text-sm text-muted-foreground">
-                      <p className="font-medium text-foreground mb-1">整地及地基</p>
-                      <p>• 整地：依現場現地報價</p>
-                      <p>• 地基（連續基礎、筏式基礎）：依現場報價</p>
+                      <p className="font-medium text-foreground mb-1">{estimateData.additionalOptions.notice.title}</p>
+                      {estimateData.additionalOptions.notice.items.map((item, idx) => (
+                        <p key={idx}>{item}</p>
+                      ))}
                     </div>
 
                     {/* Selectable options */}
                     <div className="space-y-3">
                       {additionalOptions.map((option) => (
-                        <div key={option.id} className={`p-3 rounded-lg border-2 transition-all ${
-                          selectedOptions[option.id] ? "border-primary bg-primary/5" : "border-border"
-                        }`}>
+                        <div key={option.id} className={`p-3 rounded-lg border-2 transition-all ${selectedOptions[option.id] ? "border-primary bg-primary/5" : "border-border"
+                          }`}>
                           <div className="flex items-start gap-3">
                             <Checkbox
                               id={option.id}
@@ -348,7 +324,7 @@ const OnlineEstimate = () => {
                         {Object.entries(selectedOptions).filter(([_, selected]) => selected).map(([optionId]) => {
                           const option = additionalOptions.find(o => o.id === optionId);
                           if (!option) return null;
-                          const optionPrice = option.perPing 
+                          const optionPrice = option.perPing
                             ? option.price * parseFloat(optionAreas[optionId] || "0")
                             : option.price;
                           return (
@@ -362,7 +338,7 @@ const OnlineEstimate = () => {
 
                       <div className="bg-muted/50 rounded-lg p-4">
                         <div className="flex items-start gap-2">
-                          <Info className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+                          {Icons.Info && <Icons.Info className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />}
                           <p className="text-sm text-muted-foreground">
                             以上為概算價格，實際報價需依現場勘查、地形條件、設計需求等因素調整。歡迎聯繫我們進行免費現場評估。
                           </p>
@@ -371,7 +347,7 @@ const OnlineEstimate = () => {
                     </div>
                   ) : (
                     <div className="text-center py-8 text-muted-foreground">
-                      <Calculator className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                      {Icons.Calculator && <Icons.Calculator className="w-12 h-12 mx-auto mb-3 opacity-50" />}
                       <p>請選擇建築類型並輸入坪數</p>
                       <p className="text-sm">即可獲得估算價格</p>
                     </div>
@@ -383,7 +359,7 @@ const OnlineEstimate = () => {
               <Card className="border-border/50 bg-card/50 backdrop-blur">
                 <CardContent className="p-6 text-center">
                   <p className="text-muted-foreground mb-4">
-                    想要更精準的報價？立即預約免費現場勘查
+                    {estimateData.cta.description}
                   </p>
                   <a
                     href="/contact"
