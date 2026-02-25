@@ -401,6 +401,8 @@ export const ImageManager = () => {
               multiple
               onChange={handleUpload}
               className="hidden"
+              title="上傳圖片"
+              aria-label="上傳圖片"
             />
             <input
               ref={replaceRef}
@@ -408,6 +410,8 @@ export const ImageManager = () => {
               accept="image/*"
               onChange={handleReplace}
               className="hidden"
+              title="替換圖片"
+              aria-label="替換圖片"
             />
             <input
               ref={slotReplaceRef}
@@ -415,6 +419,8 @@ export const ImageManager = () => {
               accept="image/*"
               onChange={handleSlotReplace}
               className="hidden"
+              title="更換網站圖片"
+              aria-label="更換網站圖片"
             />
             <Button
               onClick={() => uploadRef.current?.click()}

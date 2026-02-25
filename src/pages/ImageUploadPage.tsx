@@ -156,9 +156,6 @@ export default function ImageUploadPage() {
               {/* Drop Zone */}
               {!preview ? (
                 <div
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputRef.current?.click(); } }}
                   onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                   onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}
@@ -206,6 +203,8 @@ export default function ImageUploadPage() {
                     accept="image/*"
                     onChange={handleInputChange}
                     className="hidden"
+                    aria-label="選擇圖片"
+                    title="選擇圖片"
                   />
                 </div>
               ) : (
@@ -220,6 +219,8 @@ export default function ImageUploadPage() {
                     <button
                       onClick={clearPreview}
                       className="absolute top-2 right-2 w-8 h-8 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center hover:bg-card transition-colors shadow-sm border border-border"
+                      aria-label="清除預覽"
+                      title="清除預覽"
                     >
                       <X className="w-4 h-4" />
                     </button>
