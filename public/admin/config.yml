@@ -1,11 +1,9 @@
 backend:
   name: github
-  # 請替換為您的 GitHub 帳號與儲存庫名稱，例如 "your-username/your-dream-home"
-  repo: your-username/your-dream-home
+  repo: wiiwii0937-ai/your-dream-home
   branch: main
-  # 若您使用 Vercel，您需要搭配一個 OAuth Provider。此為預設路徑：
-  # base_url: https://your-vercel-domain.vercel.app
-  # auth_endpoint: api/auth
+  base_url: https://your-dream-home.vercel.app
+  auth_endpoint: api/auth
 
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
