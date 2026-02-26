@@ -3,7 +3,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { Link } from "react-router-dom";
 import * as Icons from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSiteImagesMap } from "@/hooks/useSiteImages";
+
 import { cn } from "@/lib/utils";
 import contentData from "@/data/content.json";
 
@@ -11,8 +11,7 @@ const { services: servicesData } = contentData;
 
 
 const Services = () => {
-  const imageMap = useSiteImagesMap(servicesData.items.map(s => s.usageKey));
-  const services = servicesData.items.map((s) => ({ ...s, image: imageMap[s.usageKey] || '' }));
+  const services = servicesData.items;
 
   return (
     <>

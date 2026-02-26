@@ -59,8 +59,8 @@ export default function ProjectProgress() {
                   key={project.id}
                   onClick={() => setSelectedProject(project.id)}
                   className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${selectedProject === project.id
-                      ? 'bg-primary text-primary-foreground shadow-lg'
-                      : 'bg-card text-card-foreground hover:bg-accent border border-border'
+                    ? 'bg-primary text-primary-foreground shadow-lg'
+                    : 'bg-card text-card-foreground hover:bg-accent border border-border'
                     }`}
                 >
                   {project.name}
@@ -105,7 +105,7 @@ export default function ProjectProgress() {
                 <div className="h-3 bg-muted rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-500"
-                    style={{ width: `${currentProject.progress}%` }}
+                    {...{ style: { width: `${currentProject.progress}%` } }}
                   />
                 </div>
               </div>
@@ -136,8 +136,8 @@ export default function ProjectProgress() {
                   <div key={index} className="relative pl-12 md:pl-16">
                     {/* Timeline Dot */}
                     <div className={`absolute left-0 md:left-2 w-8 h-8 rounded-full flex items-center justify-center ${update.completed
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted border-2 border-primary text-primary'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted border-2 border-primary text-primary'
                       }`}>
                       {update.completed ? (
                         <CheckCircle className="w-5 h-5" />

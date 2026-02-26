@@ -1,15 +1,15 @@
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Link } from "react-router-dom";
-import { 
-  Wrench, Shield, Zap, HardHat, Clock, 
+import {
+  Wrench, Shield, Zap, HardHat, Clock,
   ArrowRight, Calculator, Sparkles,
   AlertTriangle, Target, Home, RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatedSection, AnimatedItem } from "@/hooks/useScrollAnimation";
-import { useSiteImage } from "@/hooks/useSiteImages";
+
 
 // 目標客群分析
 const targetCustomers = [
@@ -86,7 +86,7 @@ const advantages = [
 ];
 
 const ServiceRenovation = () => {
-  const renovationImage = useSiteImage('service-renovation');
+  const renovationImage = '/images/services/renovation.jpg';
 
   return (
     <>
@@ -110,10 +110,10 @@ const ServiceRenovation = () => {
                   <Wrench className="w-4 h-4" />
                   服務項目
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up [animation-delay:100ms]">
                   舊屋增建/翻新
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up [animation-delay:200ms]">
                   讓老房子重獲新生。以最短時間、最低干擾完成居住空間的升級改造。
                 </p>
               </div>

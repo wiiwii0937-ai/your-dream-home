@@ -40,8 +40,10 @@ const About = () => {
                   return (
                     <div
                       key={value.title}
-                      className="group relative bg-card rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 text-center"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className={cn(
+                        "group relative bg-card rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 text-center",
+                        ["[animation-delay:0ms]", "[animation-delay:100ms]", "[animation-delay:200ms]"][index] || "[animation-delay:300ms]"
+                      )}
                     >
                       <div
                         className={cn(
@@ -109,8 +111,10 @@ const About = () => {
                   return (
                     <div
                       key={principle.title}
-                      className="flex items-start gap-4 bg-card rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className={cn(
+                        "flex items-start gap-4 bg-card rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300",
+                        ["[animation-delay:0ms]", "[animation-delay:100ms]", "[animation-delay:200ms]", "[animation-delay:300ms]"][index] || "[animation-delay:400ms]"
+                      )}
                     >
                       <div className="p-3 rounded-lg bg-primary/10 flex-shrink-0">
                         {Icon && <Icon className="w-6 h-6 text-primary" />}

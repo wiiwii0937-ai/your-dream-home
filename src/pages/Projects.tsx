@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { useSiteImagesMap } from "@/hooks/useSiteImages";
+
 import { cn } from "@/lib/utils";
 import contentData from "@/data/content.json";
 
@@ -9,8 +9,7 @@ const { projects: projectsData } = contentData;
 
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState("all");
-  const imageMap = useSiteImagesMap(projectsData.items.map((p) => p.usageKey));
-  const projects = projectsData.items.map((p) => ({ ...p, image: imageMap[p.usageKey] || '' }));
+  const projects = projectsData.items;
 
   const filteredProjects =
     activeCategory === "all"
@@ -53,55 +52,58 @@ const Projects = () => {
             ))}
           </div>
 
-          {/* 瀑布流展示 */}
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+          {/* 卡片式展示 (Card Layout) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProjects.map((project, index) => (
               <div
                 key={project.id}
-                className="break-inside-avoid group cursor-pointer"
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                }}
+                className={cn(
+                  "group flex flex-col overflow-hidden rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300",
+                  ["[animation-delay:0ms]", "[animation-delay:100ms]", "[animation-delay:200ms]", "[animation-delay:300ms]", "[animation-delay:400ms]", "[animation-delay:500ms]", "[animation-delay:600ms]", "[animation-delay:700ms]"][index] || "[animation-delay:800ms]"
+                )}
               >
-                <div className="relative overflow-hidden rounded-lg bg-card shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-1">
-                  {/* 圖片 */}
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                    {/* 遮罩層 */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
-
-                  {/* 內容 */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-lg font-bold text-foreground mb-1">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {project.description}
-                    </p>
-                    {project.fbLink && (
-                      <a
-                        href={project.fbLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-sm font-medium transition-colors"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        查看詳情 →
-                      </a>
-                    )}
-                  </div>
-
+                {/* 封面圖 */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
                   {/* 分類標籤 */}
                   <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-primary/90 text-primary-foreground text-xs font-medium rounded-full backdrop-blur-sm">
+                    <span className="px-3 py-1 bg-background/80 text-foreground text-xs font-bold rounded-full backdrop-blur-md shadow-sm border border-border/30">
                       {projectsData.categories.find((c) => c.id === project.category)?.label}
                     </span>
+                  </div>
+                </div>
+
+                {/* 內容區 */}
+                <div className="flex flex-col flex-1 p-6">
+                  <div className="flex items-center text-sm text-muted-foreground mb-3">
+                    <span className="font-medium text-emerald-600 dark:text-emerald-400">{project.date}</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-6 line-clamp-3 flex-1 text-sm md:text-base">
+                    {project.description}
+                  </p>
+
+                  {/* 查看更多按鈕 */}
+                  <div className="mt-auto pt-4 border-t border-border/50 flex justify-end">
+                    <a
+                      href={project.link || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors text-sm group/btn"
+                      onClick={(e) => {
+                        if (!project.link || project.link === "#") e.preventDefault();
+                      }}
+                    >
+                      查看更多
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/btn:translate-x-1"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    </a>
                   </div>
                 </div>
               </div>

@@ -2,24 +2,84 @@ import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
 import * as Icons from "lucide-react";
 import contentData from "@/data/content.json";
+import { cn } from "@/lib/utils";
 
-const { faq: faqData } = contentData;
+const { faq: faqData, knowledgeBase: kbData } = contentData;
 
 export default function FAQ() {
     return (
         <>
             <Helmet>
-                <title>{faqData.hero.title} | 築安心 - 輕鋼構建築專家</title>
-                <meta name="description" content={faqData.hero.description} />
+                <title>{kbData.hero.title} 與 {faqData.hero.title} | 築安心 - 輕鋼構建築專家</title>
+                <meta name="description" content={`${kbData.hero.description} ${faqData.hero.description}`} />
             </Helmet>
             <MainLayout>
                 <div className="min-h-screen bg-background py-16 px-6 md:px-12">
-                    {/* Hero */}
-                    <div className="text-center mb-16 max-w-4xl mx-auto">
+                    {/* Knowledge Base Hero */}
+                    <div className="text-center mb-12 max-w-4xl mx-auto">
                         <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                            {faqData.hero.title}
+                            {kbData.hero.title}
                         </h1>
                         <p className="text-xl text-muted-foreground">
+                            {kbData.hero.description}
+                        </p>
+                    </div>
+
+                    {/* Knowledge Base Cards */}
+                    <div className="max-w-6xl mx-auto mb-20">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {kbData.items.map((article, index) => (
+                                <div
+                                    key={article.id}
+                                    className={cn(
+                                        "group flex flex-col overflow-hidden rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300",
+                                        ["[animation-delay:0ms]", "[animation-delay:100ms]", "[animation-delay:200ms]"][index % 3] || ""
+                                    )}
+                                >
+                                    <div className="relative aspect-[4/3] overflow-hidden">
+                                        <img
+                                            src={article.image}
+                                            alt={article.title}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            loading="lazy"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col flex-1 p-6">
+                                        <div className="flex items-center text-sm text-muted-foreground mb-3">
+                                            <span className="font-medium text-emerald-600 dark:text-emerald-400">{article.date}</span>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                                            {article.title}
+                                        </h3>
+                                        <p className="text-muted-foreground mb-6 line-clamp-3 flex-1 text-sm md:text-base">
+                                            {article.description}
+                                        </p>
+                                        <div className="mt-auto pt-4 border-t border-border/50 flex justify-end">
+                                            <a
+                                                href={article.link || "#"}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors text-sm group/btn"
+                                                onClick={(e) => {
+                                                    if (!article.link || article.link === "#") e.preventDefault();
+                                                }}
+                                            >
+                                                查看更多
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/btn:translate-x-1"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* FAQ Hero */}
+                    <div className="text-center mb-12 max-w-4xl mx-auto pt-10 border-t border-border/50">
+                        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                            {faqData.hero.title}
+                        </h2>
+                        <p className="text-lg text-muted-foreground">
                             {faqData.hero.description}
                         </p>
                     </div>

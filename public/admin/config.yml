@@ -1,0 +1,327 @@
+backend:
+  name: github
+  # 請替換為您的 GitHub 帳號與儲存庫名稱，例如 "your-username/your-dream-home"
+  repo: your-username/your-dream-home
+  branch: main
+  # 若您使用 Vercel，您需要搭配一個 OAuth Provider。此為預設路徑：
+  # base_url: https://your-vercel-domain.vercel.app
+  # auth_endpoint: api/auth
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+display_url: "https://your-dream-home.vercel.app"
+logo_url: "/favicon.ico"
+
+# 定義 8 大區塊的編輯結構
+collections:
+  - name: "pages"
+    label: "網頁內容管理"
+    files:
+      - label: "首頁 8 大單元內容"
+        name: "home_content"
+        file: "src/data/content.json"
+        description: "編輯首頁所有出現的文字與區塊內容"
+        fields:
+          # 1. 關於築安心 (about)
+          - label: "1. 關於築安心 (About)"
+            name: "about"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題前綴", name: "titlePrefix", widget: "string"}
+                  - {label: "標題高光", name: "titleHighlight", widget: "string"}
+                  - {label: "副標題", name: "subtitle", widget: "string"}
+              - label: "核心價值 (Core Values)"
+                name: "coreValues"
+                widget: "list"
+                fields:
+                  - {label: "Icon 名稱 (如 Shield)", name: "icon", widget: "string"}
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+                  - {label: "顏色 (CSS Class)", name: "color", widget: "string"}
+              - label: "品牌故事 (Brand Story)"
+                name: "brandStory"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "段落列表", name: "paragraphs", widget: "list", field: {label: "段落", name: "paragraph", widget: "text"}}
+                  - {label: "強調語句", name: "highlight", widget: "string"}
+                  - {label: "結尾段落", name: "outro", widget: "list", field: {label: "段落", name: "paragraph", widget: "text"}}
+                  - {label: "引言", name: "quote", widget: "text"}
+              - label: "四大理念 (Principles)"
+                name: "principles"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "副標題", name: "subtitle", widget: "string"}
+                  - label: "理念清單"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - {label: "Icon", name: "icon", widget: "string"}
+                      - {label: "標題", name: "title", widget: "string"}
+                      - {label: "描述", name: "description", widget: "text"}
+          
+          # 2. 優勢工法 (advantages)
+          - label: "2. 優勢工法 (Advantages)"
+            name: "advantages"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "副標題", name: "subtitle", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+              - label: "工法優勢項目"
+                name: "items"
+                widget: "list"
+                fields:
+                  - {label: "Icon", name: "icon", widget: "string"}
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "副標題", name: "subtitle", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+                  - {label: "詳細資訊列表", name: "details", widget: "list", field: {label: "細節", name: "detail", widget: "string"}}
+                  - {label: "效益說明", name: "benefit", widget: "text"}
+                  - {label: "顏色 (CSS Class)", name: "color", widget: "string"}
+
+          # 3. 服務項目 (services)
+          - label: "3. 服務項目 (Services)"
+            name: "services"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "副標題", name: "subtitle", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+              - label: "服務列表"
+                name: "items"
+                widget: "list"
+                fields:
+                  - {label: "ID", name: "id", widget: "string"}
+                  - {label: "服務圖片", name: "image", widget: "image"}
+                  - {label: "Icon", name: "icon", widget: "string"}
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "副標題", name: "subtitle", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+                  - {label: "顏色 (CSS Class)", name: "color", widget: "string"}
+                  - {label: "特點列表", name: "features", widget: "list", field: {label: "特點", name: "feature", widget: "string"}}
+                  - {label: "連結路徑", name: "route", widget: "string"}
+              - label: "呼籲行動 (CTA)"
+                name: "cta"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+                  - {label: "按鈕文字", name: "button", widget: "string"}
+                  - {label: "連結路徑", name: "route", widget: "string"}
+
+          # 4. 工程實例 (projects)
+          - label: "4. 工程實例 (Projects)"
+            name: "projects"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+              - label: "專案分類標籤"
+                name: "categories"
+                widget: "list"
+                fields:
+                  - {label: "分類 ID (如 villa)", name: "id", widget: "string"}
+                  - {label: "標籤文字 (如 別墅系列)", name: "label", widget: "string"}
+              - label: "專案案例列表"
+                name: "items"
+                widget: "list"
+                fields:
+                  - {label: "ID (數字)", name: "id", widget: "number"}
+                  - {label: "專案名稱", name: "title", widget: "string"}
+                  - {label: "分類 ID", name: "category", widget: "string"}
+                  - {label: "封面圖片", name: "image", widget: "image"}
+                  - {label: "描述", name: "description", widget: "text"}
+                  - {label: "發佈日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "YYYY-MM-DD", required: false}
+                  - {label: "連結/詳情", name: "link", widget: "string", required: false}
+                  - {label: "FB 連結 (相容舊版)", name: "fbLink", widget: "string", required: false}
+
+          # 5. 工程進度 (progress)
+          - label: "5. 工程進度 (Progress)"
+            name: "progress"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+              - label: "進行中專案"
+                name: "projects"
+                widget: "list"
+                fields:
+                  - {label: "ID", name: "id", widget: "string"}
+                  - {label: "專案名稱", name: "name", widget: "string"}
+                  - {label: "地點", name: "location", widget: "string"}
+                  - {label: "開工日期 (YYYY-MM-DD)", name: "startDate", widget: "string"}
+                  - {label: "預計完工日", name: "estimatedCompletion", widget: "string"}
+                  - {label: "進度比例 (0-100)", name: "progress", widget: "number"}
+                  - {label: "目前階段", name: "currentPhase", widget: "string"}
+                  - label: "更新紀錄列表"
+                    name: "updates"
+                    widget: "list"
+                    fields:
+                      - {label: "第幾週", name: "week", widget: "number"}
+                      - {label: "紀錄日期", name: "date", widget: "string"}
+                      - {label: "標題", name: "title", widget: "string"}
+                      - {label: "詳細說明", name: "description", widget: "text"}
+                      - {label: "是否完成", name: "completed", widget: "boolean"}
+              - label: "呼籲行動 (CTA)"
+                name: "cta"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+
+          # 6. 線上估價 (estimate)
+          - label: "6. 線上估價 (Estimate)"
+            name: "estimate"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+              - label: "可選建築類型"
+                name: "buildingTypes"
+                widget: "list"
+                fields:
+                  - {label: "ID", name: "id", widget: "string"}
+                  - {label: "示意圖片", name: "image", widget: "image"}
+                  - {label: "類型名稱", name: "name", widget: "string"}
+                  - {label: "基礎價格/坪", name: "price", widget: "number"}
+                  - {label: "Icon 名稱", name: "icon", widget: "string"}
+                  - {label: "簡短描述", name: "description", widget: "string"}
+              - label: "標配項目 (Base Features)"
+                name: "baseFeatures"
+                widget: "object"
+                fields:
+                  - {label: "區塊標題", name: "title", widget: "string"}
+                  - {label: "價格備註", name: "basePriceNote", widget: "string"}
+                  - label: "標配清單"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - {label: "項目類別", name: "category", widget: "string"}
+                      - {label: "預設值/內容", name: "value", widget: "string"}
+              - label: "額外加價選項 (Additional Options)"
+                name: "additionalOptions"
+                widget: "object"
+                fields:
+                  - {label: "區塊標題", name: "title", widget: "string"}
+                  - label: "注意事項說明"
+                    name: "notice"
+                    widget: "object"
+                    fields:
+                      - {label: "標題", name: "title", widget: "string"}
+                      - {label: "注意事項列表", name: "items", widget: "list", field: {label: "事項", name: "item", widget: "string"}}
+                  - label: "加價項目清單"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - {label: "ID", name: "id", widget: "string"}
+                      - {label: "選項名稱", name: "name", widget: "string"}
+                      - {label: "單價", name: "price", widget: "number"}
+                      - {label: "是否採坪數計算", name: "perPing", widget: "boolean"}
+                      - {label: "顯示單位 (如: 坪)", name: "unit", widget: "string", required: false}
+              - label: "呼籲行動 (CTA)"
+                name: "cta"
+                widget: "object"
+                fields:
+                  - {label: "描述文字", name: "description", widget: "string"}
+
+          # 7. FAQ 與 知識庫 (faq & knowledgeBase)
+          - label: "7.1 專業知識庫 (Knowledge Base)"
+            name: "knowledgeBase"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+              - label: "知識庫文章列表"
+                name: "items"
+                widget: "list"
+                fields:
+                  - {label: "ID (數字)", name: "id", widget: "number"}
+                  - {label: "文章標題", name: "title", widget: "string"}
+                  - {label: "封面圖片", name: "image", widget: "image"}
+                  - {label: "發佈日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", dateFormat: "YYYY-MM-DD"}
+                  - {label: "簡短描述", name: "description", widget: "text"}
+                  - {label: "按鈕連結 (或 #)", name: "link", widget: "string"}
+
+          - label: "7.2 常見問答 (FAQ)"
+            name: "faq"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+              - label: "問答分類與內容"
+                name: "categories"
+                widget: "list"
+                fields:
+                  - {label: "分類 ID (如 general)", name: "id", widget: "string"}
+                  - {label: "Icon 名稱", name: "icon", widget: "string"}
+                  - {label: "分類標題", name: "title", widget: "string"}
+                  - label: "Q&A 問題清單"
+                    name: "questions"
+                    widget: "list"
+                    fields:
+                      - {label: "問題 (Q)", name: "q", widget: "string"}
+                      - {label: "回答 (A)", name: "a", widget: "text"}
+              - label: "呼籲行動 (CTA)"
+                name: "cta"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+                  - {label: "按鈕文字", name: "button", widget: "string"}
+                  - {label: "連結路徑", name: "route", widget: "string"}
+
+          # 8. 聯繫我們 (contact)
+          - label: "8. 聯繫我們 (Contact)"
+            name: "contact"
+            widget: "object"
+            fields:
+              - label: "首圖標題 (Hero)"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - {label: "標題", name: "title", widget: "string"}
+                  - {label: "描述", name: "description", widget: "text"}
+              - label: "公司聯絡資訊列表"
+                name: "companyInfo"
+                widget: "list"
+                fields:
+                  - {label: "Icon 名稱", name: "icon", widget: "string"}
+                  - {label: "顯示標籤", name: "label", widget: "string"}
+                  - {label: "主要內容", name: "value", widget: "string"}
+                  - {label: "補充內容", name: "subValue", widget: "string"}
+

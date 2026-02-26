@@ -164,7 +164,7 @@
         "items": [
             {
                 "id": "villa",
-                "usageKey": "service-villa",
+                "image": "/images/services/villa.jpg",
                 "icon": "Home",
                 "title": "輕鋼構別墅/住宅",
                 "subtitle": "打造您夢想中的永久家園",
@@ -180,7 +180,7 @@
             },
             {
                 "id": "farm",
-                "usageKey": "service-farm",
+                "image": "/images/services/farm.jpg",
                 "icon": "Warehouse",
                 "title": "輕鋼構農舍/資材室",
                 "subtitle": "田園生活的理想選擇",
@@ -196,7 +196,7 @@
             },
             {
                 "id": "commercial",
-                "usageKey": "service-commercial",
+                "image": "/images/services/commercial.jpg",
                 "icon": "Building2",
                 "title": "商業空間/民宿",
                 "subtitle": "創造吸睛的商業價值",
@@ -212,7 +212,7 @@
             },
             {
                 "id": "renovation",
-                "usageKey": "service-renovation",
+                "image": "/images/services/renovation.jpg",
                 "icon": "Wrench",
                 "title": "舊屋增建/翻新",
                 "subtitle": "讓老房子重獲新生",
@@ -270,61 +270,77 @@
                 "id": 1,
                 "title": "YO HOUSE 東港Mini初代宅",
                 "category": "mobile",
-                "usageKey": "project-1",
+                "image": "/images/projects/project-1.jpg",
                 "description": "展示屋案例",
-                "fbLink": "https://www.facebook.com/share/v/16whaFxHsM/"
+                "fbLink": "https://www.facebook.com/share/v/16whaFxHsM/",
+                "date": "2024-03-25",
+                "link": "https://www.facebook.com/share/v/16whaFxHsM/"
             },
             {
                 "id": 2,
                 "title": "4公尺景觀窗微型屋",
                 "category": "mobile",
-                "usageKey": "project-2",
+                "image": "/images/projects/project-2.jpg",
                 "description": "4公尺景觀窗 + 3.3米挑高Loft",
-                "fbLink": "https://www.facebook.com/share/v/179QZsS3sV/"
+                "fbLink": "https://www.facebook.com/share/v/179QZsS3sV/",
+                "date": "2024-03-24",
+                "link": "https://www.facebook.com/share/v/179QZsS3sV/"
             },
             {
                 "id": 3,
                 "title": "漁業大哥的鋼構夢想宅",
                 "category": "mobile",
-                "usageKey": "project-3",
+                "image": "/images/projects/project-3.jpg",
                 "description": "客製化鋼構住宅",
-                "fbLink": "https://www.facebook.com/share/r/1BHveBdekJ/"
+                "fbLink": "https://www.facebook.com/share/r/1BHveBdekJ/",
+                "date": "2024-03-23",
+                "link": "https://www.facebook.com/share/r/1BHveBdekJ/"
             },
             {
                 "id": 4,
                 "title": "Yo遊 離島鋼構宅",
                 "category": "villa",
-                "usageKey": "project-4",
+                "image": "/images/projects/project-4.jpg",
                 "description": "打造你的日式夢想家",
-                "fbLink": "https://www.facebook.com/share/v/1BeFd85PEK/"
+                "fbLink": "https://www.facebook.com/share/v/1BeFd85PEK/",
+                "date": "2024-03-22",
+                "link": "https://www.facebook.com/share/v/1BeFd85PEK/"
             },
             {
                 "id": 5,
                 "title": "現代極簡別墅",
                 "category": "villa",
-                "usageKey": "project-5",
-                "description": "簡約設計，質感生活"
+                "image": "/images/projects/project-5.jpg",
+                "description": "簡約設計，質感生活",
+                "date": "2024-03-21",
+                "link": "#"
             },
             {
                 "id": 6,
                 "title": "鄉村風格農舍",
                 "category": "farm",
-                "usageKey": "project-6",
-                "description": "融入自然的田園生活"
+                "image": "/images/projects/project-6.jpg",
+                "description": "融入自然的田園生活",
+                "date": "2024-03-20",
+                "link": "#"
             },
             {
                 "id": 7,
                 "title": "精品民宿空間",
                 "category": "commercial",
-                "usageKey": "project-7",
-                "description": "商業空間設計典範"
+                "image": "/images/projects/project-7.jpg",
+                "description": "商業空間設計典範",
+                "date": "2024-03-19",
+                "link": "#"
             },
             {
                 "id": 8,
                 "title": "老屋翻新改建",
                 "category": "renovation",
-                "usageKey": "project-8",
-                "description": "舊屋煥然一新"
+                "image": "/images/projects/project-8.jpg",
+                "description": "舊屋煥然一新",
+                "date": "2024-03-18",
+                "link": "#"
             }
         ]
     },
@@ -451,7 +467,7 @@
         "buildingTypes": [
             {
                 "id": "mobile",
-                "usageKey": "estimate-mobile",
+                "image": "/images/estimate/mobile.jpg",
                 "name": "移動式住宅",
                 "price": 100000,
                 "icon": "Home",
@@ -459,7 +475,7 @@
             },
             {
                 "id": "villa",
-                "usageKey": "estimate-villa",
+                "image": "/images/estimate/villa.jpg",
                 "name": "輕鋼別墅",
                 "price": 108000,
                 "icon": "Building2",
@@ -467,7 +483,7 @@
             },
             {
                 "id": "guesthouse",
-                "usageKey": "estimate-guesthouse",
+                "image": "/images/estimate/guesthouse.jpg",
                 "name": "民宿/商業空間",
                 "price": 130000,
                 "icon": "Warehouse",
@@ -475,7 +491,7 @@
             },
             {
                 "id": "renovation",
-                "usageKey": "estimate-renovation",
+                "image": "/images/estimate/renovation.jpg",
                 "name": "老屋翻新加建",
                 "price": 150000,
                 "icon": "Wrench",
@@ -595,6 +611,7 @@
         "categories": [
             {
                 "id": "general",
+                "icon": "HelpCircle",
                 "title": "一般問題",
                 "questions": [
                     {
@@ -609,6 +626,7 @@
             },
             {
                 "id": "structure",
+                "icon": "Shield",
                 "title": "結構與安全",
                 "questions": [
                     {
@@ -627,6 +645,7 @@
             },
             {
                 "id": "license",
+                "icon": "FileText",
                 "title": "申請與法規",
                 "questions": [
                     {
@@ -676,6 +695,38 @@
                 "label": "營業時間",
                 "value": "週一至週六 09:00-18:00",
                 "subValue": "週日及國定假日公休"
+            }
+        ]
+    },
+    "knowledgeBase": {
+        "hero": {
+            "title": "專業知識庫",
+            "description": "提供您最專業的輕鋼構建築知識、工法解析與案例分享，讓您更了解築安心的堅持。"
+        },
+        "items": [
+            {
+                "id": 1,
+                "title": "輕鋼構建築的基本原理與優勢介紹",
+                "image": "/images/projects/project-6.jpg",
+                "date": "2024-03-20",
+                "description": "深入了解輕鋼構建築為何能成為現代綠色建築的首選，以及它帶來的各種優勢。",
+                "link": "#"
+            },
+            {
+                "id": 2,
+                "title": "耐震防護：守護家人安全的建築關鍵",
+                "image": "/images/projects/project-2.jpg",
+                "date": "2024-03-15",
+                "description": "台灣位處地震帶，選擇適合的建築工法至關重要。解析輕鋼構的抗震性能。",
+                "link": "#"
+            },
+            {
+                "id": 3,
+                "title": "老屋翻新：輕鋼構增建的無限可能性",
+                "image": "/images/projects/project-8.jpg",
+                "date": "2024-03-10",
+                "description": "不想搬家但空間不夠？來看看輕鋼構如何以低干擾的方式，讓老屋重獲新生。",
+                "link": "#"
             }
         ]
     }

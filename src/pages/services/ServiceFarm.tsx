@@ -1,15 +1,15 @@
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Link } from "react-router-dom";
-import { 
-  Warehouse, Shield, Zap, Droplets, Wind, Clock, 
+import {
+  Warehouse, Shield, Zap, Droplets, Wind, Clock,
   CheckCircle2, ArrowRight, Calculator, Sparkles,
   DollarSign, Target, Leaf, TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatedSection, AnimatedItem } from "@/hooks/useScrollAnimation";
-import { useSiteImage } from "@/hooks/useSiteImages";
+
 
 // 目標客群分析
 const targetCustomers = [
@@ -86,7 +86,7 @@ const advantages = [
 ];
 
 const ServiceFarm = () => {
-  const farmImage = useSiteImage('service-farm');
+  const farmImage = '/images/services/farm.jpg';
 
   return (
     <>
@@ -110,10 +110,10 @@ const ServiceFarm = () => {
                   <Warehouse className="w-4 h-4" />
                   服務項目
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up [animation-delay:100ms]">
                   輕鋼構農舍/資材室
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up [animation-delay:200ms]">
                   田園生活的理想選擇。結合實用功能與美學設計，為您的農地打造符合法規、堅固耐用的空間。
                 </p>
               </div>

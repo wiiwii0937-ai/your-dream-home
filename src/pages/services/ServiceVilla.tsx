@@ -1,15 +1,15 @@
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Link } from "react-router-dom";
-import { 
-  Home, Shield, Zap, Thermometer, Users, Clock, 
+import {
+  Home, Shield, Zap, Thermometer, Users, Clock,
   CheckCircle2, ArrowRight, Calculator, Sparkles,
   Heart, Target, Leaf
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatedSection, AnimatedItem } from "@/hooks/useScrollAnimation";
-import { useSiteImage } from "@/hooks/useSiteImages";
+
 
 // 目標客群分析
 const targetCustomers = [
@@ -86,8 +86,8 @@ const advantages = [
 ];
 
 const ServiceVilla = () => {
-  const villaImage = useSiteImage('service-villa');
-  const villaExterior = useSiteImage('service-villa-exterior');
+  const villaImage = '/images/services/villa.jpg';
+  const villaExterior = '/images/services/villa-exterior.jpg';
 
   return (
     <>
@@ -111,10 +111,10 @@ const ServiceVilla = () => {
                   <Home className="w-4 h-4" />
                   服務項目
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up [animation-delay:100ms]">
                   輕鋼構別墅/住宅
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up [animation-delay:200ms]">
                   打造您夢想中的永久家園。耐震、節能、快速完工，讓美好生活提早開始。
                 </p>
               </div>

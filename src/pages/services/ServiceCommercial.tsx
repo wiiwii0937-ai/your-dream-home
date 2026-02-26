@@ -1,15 +1,15 @@
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Link } from "react-router-dom";
-import { 
-  Building2, Shield, Zap, LayoutGrid, Clock, 
+import {
+  Building2, Shield, Zap, LayoutGrid, Clock,
   ArrowRight, Calculator, Sparkles,
   TrendingUp, Target, Users, Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatedSection, AnimatedItem } from "@/hooks/useScrollAnimation";
-import { useSiteImage } from "@/hooks/useSiteImages";
+
 
 // 目標客群分析
 const targetCustomers = [
@@ -86,7 +86,7 @@ const advantages = [
 ];
 
 const ServiceCommercial = () => {
-  const commercialImage = useSiteImage('service-commercial');
+  const commercialImage = '/images/services/commercial.jpg';
 
   return (
     <>
@@ -110,10 +110,10 @@ const ServiceCommercial = () => {
                   <Building2 className="w-4 h-4" />
                   服務項目
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in-up [animation-delay:100ms]">
                   商業空間/民宿
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+                <p className="text-xl text-muted-foreground max-w-2xl animate-fade-in-up [animation-delay:200ms]">
                   創造吸睛的商業價值。獨特的建築外觀是最好的品牌行銷，以快速工期搶占市場先機。
                 </p>
               </div>

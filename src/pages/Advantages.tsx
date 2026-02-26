@@ -37,9 +37,9 @@ const Advantages = () => {
                   key={item.title}
                   className={cn(
                     "group relative bg-card rounded-2xl overflow-hidden shadow-lg",
-                    "transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                    "transition-all duration-500 hover:shadow-2xl hover:-translate-y-2",
+                    ["[animation-delay:0ms]", "[animation-delay:100ms]", "[animation-delay:200ms]", "[animation-delay:300ms]", "[animation-delay:400ms]", "[animation-delay:500ms]"][index] || "[animation-delay:600ms]"
                   )}
-                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* 頂部漸層條 */}
                   <div className={cn("h-2 bg-gradient-to-r", item.color)} />

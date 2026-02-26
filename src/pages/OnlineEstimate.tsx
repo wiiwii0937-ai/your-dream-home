@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as Icons from "lucide-react";
-import { useSiteImagesMap } from "@/hooks/useSiteImages";
+
 import contentData from "@/data/content.json";
 
 const { estimate: estimateData } = contentData;
@@ -15,8 +15,7 @@ const baseFeatures = estimateData.baseFeatures.items;
 const additionalOptions = estimateData.additionalOptions.items;
 
 const OnlineEstimate = () => {
-  const imageMap = useSiteImagesMap(BUILDING_TYPE_CONFIG.map((t) => t.usageKey));
-  const buildingTypes = BUILDING_TYPE_CONFIG.map((t) => ({ ...t, image: imageMap[t.usageKey] || '' }));
+  const buildingTypes = BUILDING_TYPE_CONFIG;
 
   const [selectedType, setSelectedType] = useState<string>("villa");
   const [area, setArea] = useState<string>("");
@@ -141,8 +140,8 @@ const OnlineEstimate = () => {
                           key={type.id}
                           htmlFor={type.id}
                           className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${selectedType === type.id
-                              ? "border-primary bg-primary/5"
-                              : "border-border hover:border-primary/50"
+                            ? "border-primary bg-primary/5"
+                            : "border-border hover:border-primary/50"
                             }`}
                         >
                           <RadioGroupItem value={type.id} id={type.id} className="sr-only" />
