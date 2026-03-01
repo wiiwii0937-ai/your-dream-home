@@ -116,6 +116,152 @@ export type Database = {
         }
         Relationships: []
       }
+      progress_items: {
+        Row: {
+          created_at: string | null
+          current_phase: string | null
+          display_order: number | null
+          estimated_completion: string | null
+          id: string
+          location: string | null
+          name: string
+          progress: number | null
+          start_date: string | null
+          updated_at: string | null
+          updates: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_phase?: string | null
+          display_order?: number | null
+          estimated_completion?: string | null
+          id?: string
+          location?: string | null
+          name: string
+          progress?: number | null
+          start_date?: string | null
+          updated_at?: string | null
+          updates?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          current_phase?: string | null
+          display_order?: number | null
+          estimated_completion?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+          progress?: number | null
+          start_date?: string | null
+          updated_at?: string | null
+          updates?: Json | null
+        }
+        Relationships: []
+      }
+      project_images: {
+        Row: {
+          caption: string | null
+          created_at: string | null
+          display_order: number | null
+          id: string
+          image_url: string
+          project_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_url: string
+          project_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_images_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "project_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_items: {
+        Row: {
+          area: string | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          fb_link: string | null
+          id: string
+          link: string | null
+          location: string | null
+          main_image_url: string | null
+          project_date: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          area?: string | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          fb_link?: string | null
+          id?: string
+          link?: string | null
+          location?: string | null
+          main_image_url?: string | null
+          project_date?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          area?: string | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          fb_link?: string | null
+          id?: string
+          link?: string | null
+          location?: string | null
+          main_image_url?: string | null
+          project_date?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      site_sections: {
+        Row: {
+          content: Json
+          id: string
+          section_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          content?: Json
+          id?: string
+          section_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          content?: Json
+          id?: string
+          section_key?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       todos: {
         Row: {
           completed: boolean

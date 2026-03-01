@@ -3,10 +3,10 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import * as Icons from "lucide-react";
 import { cn } from "@/lib/utils";
 import contentData from "@/data/content.json";
-
-const { advantages } = contentData;
+import { useSectionContent } from "@/hooks/useSiteContent";
 
 const Advantages = () => {
+  const advantages = useSectionContent('advantages', contentData.advantages);
   return (
     <>
       <Helmet>
