@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 import contentData from "@/data/content.json";
-
-const { services: servicesData } = contentData;
+import { useSectionContent } from "@/hooks/useSiteContent";
 
 
 const Services = () => {
+  const servicesData = useSectionContent('services', contentData.services);
   const services = servicesData.items;
 
   return (

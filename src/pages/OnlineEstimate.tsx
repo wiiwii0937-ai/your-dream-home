@@ -8,14 +8,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import * as Icons from "lucide-react";
 
 import contentData from "@/data/content.json";
-
-const { estimate: estimateData } = contentData;
-const BUILDING_TYPE_CONFIG = estimateData.buildingTypes;
-const baseFeatures = estimateData.baseFeatures.items;
-const additionalOptions = estimateData.additionalOptions.items;
+import { useSectionContent } from "@/hooks/useSiteContent";
 
 const OnlineEstimate = () => {
-  const buildingTypes = BUILDING_TYPE_CONFIG;
+  const estimateData = useSectionContent('estimate', contentData.estimate);
+  const buildingTypes = estimateData.buildingTypes;
+  const baseFeatures = estimateData.baseFeatures.items;
+  const additionalOptions = estimateData.additionalOptions.items;
 
   const [selectedType, setSelectedType] = useState<string>("villa");
   const [area, setArea] = useState<string>("");
