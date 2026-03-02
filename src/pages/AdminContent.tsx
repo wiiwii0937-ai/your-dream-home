@@ -125,8 +125,7 @@ export default function AdminContent() {
       if (editProject.id) {
         await db.from('project_items').update(payload).eq('id', editProject.id);
       } else {
-        const { data } = await db.from('project_items').insert({ ...payload, title: payload.title || '新專案' }).select().single();
-        if (data) editProject.id = data.id;
+        await db.from('project_items').insert({ ...payload, title: payload.title || '新專案' });
       }
       queryClient.invalidateQueries({ queryKey: ['project-items'] });
       setEditProject(null);
@@ -167,6 +166,7 @@ export default function AdminContent() {
 
   const handleDeleteProjectImage = async (imageId: string) => {
     await db.from('project_images').delete().eq('id', imageId);
+    setEditProject((prev: any) => prev ? { ...prev, project_images: (prev.project_images || []).filter((img: any) => img.id !== imageId) } : null);
     queryClient.invalidateQueries({ queryKey: ['project-items'] });
   };
 
@@ -263,7 +263,7 @@ export default function AdminContent() {
                         <p className="text-sm text-muted-foreground">{project.category} · {project.project_date}{project.project_images?.length > 0 && ` · ${project.project_images.length} 張圖片`}</p>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => setEditProject({ ...project })}><Pencil className="w-4 h-4" /></Button>
+                        <Button variant="outline" size="sm" onClick={() => setEditProject({ ...project, project_images: [...(project.project_images || [])] })}><Pencil className="w-4 h-4" /></Button>
                         <Button variant="destructive" size="sm" onClick={() => handleDeleteProject(project.id)}><Trash2 className="w-4 h-4" /></Button>
                       </div>
                     </CardContent>
