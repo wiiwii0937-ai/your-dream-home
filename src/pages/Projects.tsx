@@ -1,22 +1,13 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
+
 import { cn } from "@/lib/utils";
 import contentData from "@/data/content.json";
-import { useSiteContent } from "@/hooks/useSiteContent";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
-} from "@/components/ui/carousel";
+
+const { projects: projectsData } = contentData;
 
 const Projects = () => {
-  const { data: dynamicContent } = useSiteContent('projects');
-  const projectsData = (dynamicContent as any)?.content || contentData.projects;
-  const galleryImages = (dynamicContent as any)?.images || [];
-
   const [activeCategory, setActiveCategory] = useState("all");
   const projects = projectsData.items;
 
@@ -42,25 +33,6 @@ const Projects = () => {
               {projectsData.hero.description}
             </p>
           </div>
-
-          {/* 工程實例多圖輪播 (Gallery) */}
-          {galleryImages.length > 0 && (
-            <div className="mb-12">
-              <Carousel className="w-full max-w-5xl mx-auto">
-                <CarouselContent>
-                  {galleryImages.map((src, idx) => (
-                    <CarouselItem key={idx}>
-                      <div className="aspect-[21/9] overflow-hidden rounded-3xl">
-                        <img src={src} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="-left-4 md:-left-12" />
-                <CarouselNext className="-right-4 md:-right-12" />
-              </Carousel>
-            </div>
-          )}
 
           {/* 分類篩選 */}
           <div className="flex flex-wrap gap-3 mb-10">

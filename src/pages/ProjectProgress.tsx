@@ -24,24 +24,11 @@ interface Project {
 }
 
 import contentData from "@/data/content.json";
-import { useSiteContent } from "@/hooks/useSiteContent";
+
+const { progress: progressData } = contentData;
+const projects: Project[] = progressData.projects as Project[];
 
 export default function ProjectProgress() {
-  const { data: dynamicContent } = useSiteContent('progress');
-  const progressData = (dynamicContent as any)?.content || contentData.progress;
-  const dynamicMetadata = (dynamicContent as any)?.metadata;
-
-  const projects: Project[] = [...(progressData.projects as Project[])];
-
-  // Override first project with dynamic data from admin panel if available
-  if (dynamicMetadata?.progress !== undefined && projects.length > 0) {
-    projects[0] = {
-      ...projects[0],
-      progress: dynamicMetadata.progress,
-      currentPhase: dynamicMetadata.currentPhase || projects[0].currentPhase
-    };
-  }
-
   const [selectedProject, setSelectedProject] = useState<string>(projects[0].id);
   const currentProject = projects.find(p => p.id === selectedProject)!;
 

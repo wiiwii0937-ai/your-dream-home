@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Menu, ArrowLeft, Sun, Moon } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { useTheme } from '@/hooks/useTheme';
 import { cn } from '@/lib/utils';
 
@@ -27,7 +26,7 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
   return (
     <>
       {/* Main Sidebar - Always visible */}
-      <aside
+      <aside 
         className={cn(
           "fixed left-0 top-0 h-screen z-50 flex flex-col justify-between py-8 px-4 transition-all duration-500 ease-out",
           "bg-background border-r border-border",
@@ -36,7 +35,7 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
       >
         {/* Logo */}
         <div className="flex flex-col items-center">
-          <h1
+          <h1 
             className={cn(
               "font-bold text-primary transition-all duration-300",
               isMenuOpen ? "text-3xl" : "vertical-text text-xl"
@@ -50,21 +49,20 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
         {isMenuOpen && (
           <nav className="flex-1 flex flex-col justify-center gap-4 px-4 slide-in-right">
             {menuItems.map((item) => (
-              <Link
+              <a
                 key={item.href}
-                to={item.href}
+                href={item.href}
                 className={cn(
                   "text-lg font-medium py-2 transition-all duration-300",
-                  hoveredItem === item.href
-                    ? "text-primary-foreground bg-primary px-4 -mx-4 rounded-lg"
+                  hoveredItem === item.href 
+                    ? "text-primary-foreground bg-primary px-4 -mx-4 rounded-lg" 
                     : "text-primary hover:translate-x-2"
                 )}
                 onMouseEnter={() => setHoveredItem(item.href)}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={onMenuToggle}
               >
                 {item.label}
-              </Link>
+              </a>
             ))}
           </nav>
         )}
@@ -116,7 +114,7 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
 
       {/* Overlay when menu is open */}
       {isMenuOpen && (
-        <div
+        <div 
           className="fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
           onClick={onMenuToggle}
         />

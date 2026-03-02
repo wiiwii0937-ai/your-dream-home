@@ -3,14 +3,10 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import * as Icons from "lucide-react";
 import { cn } from "@/lib/utils";
 import contentData from "@/data/content.json";
-import { useSiteContent } from "@/hooks/useSiteContent";
+
+const { about } = contentData;
 
 const About = () => {
-  const { data: dynamicContent, isLoading } = useSiteContent('about');
-
-  // Use dynamic content if available, otherwise fallback to static JSON
-  const about = (dynamicContent as any)?.content || contentData.about;
-
   return (
     <>
       <Helmet>

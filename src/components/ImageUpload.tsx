@@ -13,12 +13,12 @@ interface ImageUploadProps {
   className?: string;
 }
 
-export const ImageUpload = ({
-  value,
-  onChange,
-  bucket = 'site-images',
-  folder = 'uploads',
-  className
+export const ImageUpload = ({ 
+  value, 
+  onChange, 
+  bucket = 'post-images',
+  folder = 'posts',
+  className 
 }: ImageUploadProps) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -116,9 +116,8 @@ export const ImageUpload = ({
             accept="image/*"
             onChange={handleFileSelect}
             className="hidden"
-            title="上傳圖片檔案"
           />
-
+          
           {!value ? (
             <div
               onClick={() => !uploading && fileInputRef.current?.click()}
@@ -147,9 +146,9 @@ export const ImageUpload = ({
             </div>
           ) : (
             <div className="relative rounded-lg overflow-hidden border border-border group">
-              <img
-                src={value}
-                alt="Preview"
+              <img 
+                src={value} 
+                alt="Preview" 
                 className="w-full h-48 object-cover"
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -186,9 +185,9 @@ export const ImageUpload = ({
           />
           {value && (
             <div className="relative rounded-lg overflow-hidden border border-border">
-              <img
-                src={value}
-                alt="Preview"
+              <img 
+                src={value} 
+                alt="Preview" 
                 className="w-full h-48 object-cover"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';

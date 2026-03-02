@@ -45,99 +45,18 @@ export function ArticleDetail() {
     if (!id) return;
     setLoading(true);
     setNotFound(false);
+    const { data, error } = await supabase
+      .from('posts')
+      .select('id, title, content, image_url, layout, published_at, created_at')
+      .eq('id', id)
+      .single();
 
-    try {
-      // Check if the provided id is a valid UUID
-      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
-
-      let result;
-      if (isUuid) {
-        // Direct lookup by ID
-        result = await supabase
-          .from('posts')
-          .select('id, title, content, image_url, layout, published_at, created_at')
-          .eq('id', id)
-          .single();
-      } else {
-        // Smart lookup by title if it's a slug-like string (e.g., "yo-house")
-        // We try to match the title containing components of the slug
-        const searchTerms = id.split('-').filter(t => t.length > 0);
-        let query = supabase
-          .from('posts')
-          .select('id, title, content, image_url, layout, published_at, created_at');
-
-        // Build a query where title contains all terms (roughly)
-        // For "yo-house", we look for title containing "Yo" and "House"
-        // or just starting with "YoHouse"
-        result = await query
-          .ilike('title', `%${id.replace(/-/g, '')}%`)
-          .limit(1)
-          .maybeSingle();
-
-        // If still not found, try searching with spaces or as is
-        if (!result.data) {
-          result = await supabase
-            .from('posts')
-            .select('id, title, content, image_url, layout, published_at, created_at')
-            .ilike('title', `%${id.replace(/-/g, ' ')}%`)
-            .limit(1)
-            .maybeSingle();
-        }
-      }
-
-      // If not found in posts, try searching project_items
-      if (result.error || !result.data) {
-        let pResult;
-        if (isUuid) {
-          pResult = await supabase
-            .from('project_items')
-            .select('id, title, description, main_image_url')
-            .eq('id', id)
-            .maybeSingle();
-        } else {
-          pResult = await supabase
-            .from('project_items')
-            .select('id, title, description, main_image_url')
-            .ilike('title', `%${id.replace(/-/g, '')}%`)
-            .limit(1)
-            .maybeSingle();
-
-          if (!pResult.data) {
-            pResult = await supabase
-              .from('project_items')
-              .select('id, title, description, main_image_url')
-              .ilike('title', `%${id.replace(/-/g, ' ')}%`)
-              .limit(1)
-              .maybeSingle();
-          }
-        }
-
-        if (pResult?.data) {
-          // Map project_items fields to Post interface
-          const project = pResult.data;
-          setPost({
-            id: project.id,
-            title: project.title,
-            content: project.description,
-            image_url: project.main_image_url,
-            layout: 'default',
-            published_at: null,
-            created_at: null
-          } as Post);
-          setLoading(false);
-          return;
-        }
-
-        setNotFound(true);
-      } else {
-        setPost(result.data as Post);
-      }
-    } catch (err) {
-      console.error('Error fetching post:', err);
+    if (error || !data) {
       setNotFound(true);
-    } finally {
-      setLoading(false);
+    } else {
+      setPost(data as Post);
     }
+    setLoading(false);
   };
 
   if (loading) {

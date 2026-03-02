@@ -3,13 +3,10 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import * as Icons from "lucide-react";
 import contentData from "@/data/content.json";
 import { cn } from "@/lib/utils";
-import { useSiteContent } from "@/hooks/useSiteContent";
+
+const { faq: faqData, knowledgeBase: kbData } = contentData;
 
 export default function FAQ() {
-    const { data: dynamicContent } = useSiteContent('faq');
-    const kbData = (dynamicContent as any)?.content?.knowledgeBase || contentData.knowledgeBase;
-    const faqData = (dynamicContent as any)?.content?.faq || contentData.faq;
-
     return (
         <>
             <Helmet>

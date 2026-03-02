@@ -15,11 +15,10 @@ import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { ImageUpload } from '@/components/ImageUpload';
 import { ImageManager } from '@/components/ImageManager';
-import { ContentManager } from '@/components/admin/ContentManager';
 import {
-  Loader2, Plus, Pencil, Trash2, LogOut, FileText,
-  Image as ImageIcon, LayoutDashboard, Settings, Users,
-  Calendar, TrendingUp, Home, Shield, Eye, Database
+  Loader2, Plus, Pencil, Trash2, LogOut, FileText, 
+  Image as ImageIcon, LayoutDashboard, Settings, Users, 
+  Calendar, TrendingUp, Home, Shield, Eye
 } from 'lucide-react';
 
 export const LAYOUT_LABELS: Record<string, string> = {
@@ -46,7 +45,7 @@ const Admin = () => {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -71,7 +70,7 @@ const Admin = () => {
       .from('posts')
       .select('*')
       .order('created_at', { ascending: false });
-
+    
     if (error) {
       toast({ title: '載入失敗', description: error.message, variant: 'destructive' });
     } else {
@@ -123,12 +122,12 @@ const Admin = () => {
       toast({ title: '刪除成功' });
       fetchPosts();
     } catch (error: any) {
-      toast({
-        title: '刪除失敗',
-        description: error.message.includes('row-level security')
-          ? '您沒有權限執行此操作'
-          : error.message,
-        variant: 'destructive'
+      toast({ 
+        title: '刪除失敗', 
+        description: error.message.includes('row-level security') 
+          ? '您沒有權限執行此操作' 
+          : error.message, 
+        variant: 'destructive' 
       });
     }
   };
@@ -227,8 +226,8 @@ const Admin = () => {
               </p>
             </div>
           </div>
-          <Button
-            variant="ghost"
+          <Button 
+            variant="ghost" 
             className="w-full mt-3 justify-start gap-3 text-muted-foreground hover:text-destructive"
             onClick={handleLogout}
           >
@@ -360,13 +359,11 @@ const Admin = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="layout-select" className="text-sm font-medium">排版樣式</Label>
+                        <Label className="text-sm font-medium">排版樣式</Label>
                         <select
-                          id="layout-select"
                           className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                           value={formData.layout}
                           onChange={(e) => setFormData({ ...formData, layout: e.target.value })}
-                          title="選擇文章排版樣式"
                         >
                           {Object.entries(LAYOUT_LABELS).map(([value, label]) => (
                             <option key={value} value={value}>{label}</option>
@@ -450,9 +447,9 @@ const Admin = () => {
                               </Button>
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
                                     className="h-8 w-8 text-destructive hover:text-destructive"
                                     disabled={!isAdmin}
                                   >
@@ -487,9 +484,6 @@ const Admin = () => {
               )}
             </CardContent>
           </Card>
-
-          {/* Site Content Management */}
-          <ContentManager />
 
           {/* Image Management */}
           <ImageManager />
