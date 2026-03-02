@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 import contentData from "@/data/content.json";
-import { useSectionContent } from "@/hooks/useSiteContent";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 
 const Services = () => {
-  const servicesData = useSectionContent('services', contentData.services);
+  const { data: dynamicContent, isLoading } = useSiteContent('services');
+  const servicesData = (dynamicContent as any)?.content || contentData.services;
   const services = servicesData.items;
 
   return (

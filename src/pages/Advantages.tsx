@@ -3,10 +3,12 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import * as Icons from "lucide-react";
 import { cn } from "@/lib/utils";
 import contentData from "@/data/content.json";
-import { useSectionContent } from "@/hooks/useSiteContent";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Advantages = () => {
-  const advantages = useSectionContent('advantages', contentData.advantages);
+  const { data: dynamicContent, isLoading } = useSiteContent('advantages');
+  const advantages = (dynamicContent as any)?.content || contentData.advantages;
+
   return (
     <>
       <Helmet>

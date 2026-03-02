@@ -12,13 +12,13 @@ interface CarouselSlide {
   image: string;
 }
 
-const CAROUSEL_KEYS = ['home-carousel-1', 'home-carousel-2', 'home-carousel-3', 'home-carousel-4'] as const;
+const CAROUSEL_KEYS = ['home-carousel-1', 'home-carousel-2', 'home-carousel-3', 'home-carousel-4'];
 
-const SLIDE_CONFIG: Omit<CarouselSlide, 'image'>[] = [
-  { id: '1', usageKey: 'home-carousel-1', title: 'YO HOUSE', subtitle: '東港Mini初代宅 展示屋', link: '/portfolio/yo-house' },
-  { id: '2', usageKey: 'home-carousel-2', title: '4公尺景觀窗微型屋', subtitle: '3.3米挑高Loft 完美微型屋', link: '/portfolio/loft-micro' },
-  { id: '3', usageKey: 'home-carousel-3', title: '漁業大哥的鋼構夢想宅', subtitle: '專業輕鋼構打造理想家園', link: '/portfolio/fisherman-house' },
-  { id: '4', usageKey: 'home-carousel-4', title: 'Yo遊 離島鋼構宅', subtitle: '打造你的日式夢想家', link: '/portfolio/island-house' },
+const SLIDE_CONFIG: CarouselSlide[] = [
+  { id: '1', usageKey: 'home-carousel-1', title: 'YO HOUSE', subtitle: '東港Mini初代宅 展示屋', link: '/portfolio/yo-house', image: '/images/hero/carousel-1.jpg' },
+  { id: '2', usageKey: 'home-carousel-2', title: '4公尺景觀窗微型屋', subtitle: '3.3米挑高Loft 完美微型屋', link: '/portfolio/loft-micro', image: '/images/hero/carousel-2.jpg' },
+  { id: '3', usageKey: 'home-carousel-3', title: '漁業大哥的鋼構夢想宅', subtitle: '專業輕鋼構打造理想家園', link: '/portfolio/fisherman-house', image: '/images/hero/carousel-3.jpg' },
+  { id: '4', usageKey: 'home-carousel-4', title: 'Yo遊 離島鋼構宅', subtitle: '打造你的日式夢想家', link: '/portfolio/island-house', image: '/images/hero/carousel-4.jpg' },
 ];
 
 interface HeroCarouselProps {
@@ -26,10 +26,11 @@ interface HeroCarouselProps {
 }
 
 export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
-  const imageMap = useSiteImagesMap(CAROUSEL_KEYS as unknown as string[]);
-  const slides: CarouselSlide[] = SLIDE_CONFIG.map((s) => ({
-    ...s,
-    image: imageMap[s.usageKey] || '',
+  const siteImagesMap = useSiteImagesMap(CAROUSEL_KEYS);
+
+  const slides: CarouselSlide[] = SLIDE_CONFIG.map(slide => ({
+    ...slide,
+    image: siteImagesMap[slide.usageKey] || slide.image
   }));
 
   const [currentIndex, setCurrentIndex] = useState(0);

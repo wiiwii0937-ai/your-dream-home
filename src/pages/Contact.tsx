@@ -16,10 +16,12 @@ import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import * as Icons from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import contentData from "@/data/content.json";
-import { useSectionContent } from "@/hooks/useSiteContent";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Contact = () => {
-  const contactData = useSectionContent('contact', contentData.contact);
+  const { data: dynamicContent } = useSiteContent('contact');
+  const contactData = (dynamicContent as any)?.content || contentData.contact;
+  const companyInfo = contactData.companyInfo;
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -54,7 +56,7 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const companyInfo = contactData.companyInfo;
+
 
   return (
     <MainLayout>
