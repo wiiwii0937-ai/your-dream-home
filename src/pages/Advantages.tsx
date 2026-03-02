@@ -2,11 +2,11 @@ import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
 import * as Icons from "lucide-react";
 import { cn } from "@/lib/utils";
-import contentData from "@/data/content.json";
-
-const { advantages } = contentData;
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Advantages = () => {
+  const { data: advantages } = useSiteContent<any>('advantages');
+  if (!advantages) return null;
   return (
     <>
       <Helmet>

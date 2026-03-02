@@ -25,6 +25,7 @@ import ServiceCommercial from "./pages/services/ServiceCommercial";
 import ServiceRenovation from "./pages/services/ServiceRenovation";
 import Todos from "./pages/Todos";
 import ImageUploadPage from "./pages/ImageUploadPage";
+import AdminContent from "./pages/AdminContent";
 import { ArticleDetail } from "./components/ArticleDetail";
 
 const queryClient = new QueryClient();
@@ -57,6 +58,7 @@ const App = () => (
                 <Route path="/admin/edit/:id" element={<AdminEditPost />} />
                 <Route path="/todos" element={<Todos />} />
                 <Route path="/upload-image" element={<ImageUploadPage />} />
+                <Route path="/admin/content" element={<AdminContent />} />
                 <Route path="/article/:id" element={<ArticleDetail />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

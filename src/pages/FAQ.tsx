@@ -1,12 +1,14 @@
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
 import * as Icons from "lucide-react";
-import contentData from "@/data/content.json";
+import { useSiteContent } from "@/hooks/useSiteContent";
 import { cn } from "@/lib/utils";
 
-const { faq: faqData, knowledgeBase: kbData } = contentData;
-
 export default function FAQ() {
+    const { data: faqData } = useSiteContent<any>('faq');
+    const { data: kbData } = useSiteContent<any>('knowledgeBase');
+    if (!faqData || !kbData) return null;
+
     return (
         <>
             <Helmet>

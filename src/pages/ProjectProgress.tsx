@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Calendar, MapPin, Clock, CheckCircle, Circle, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { useSiteContent } from '@/hooks/useSiteContent';
 
 interface ProgressUpdate {
   week: number;
@@ -23,14 +24,16 @@ interface Project {
   updates: ProgressUpdate[];
 }
 
-import contentData from "@/data/content.json";
-
-const { progress: progressData } = contentData;
-const projects: Project[] = progressData.projects as Project[];
-
 export default function ProjectProgress() {
-  const [selectedProject, setSelectedProject] = useState<string>(projects[0].id);
-  const currentProject = projects.find(p => p.id === selectedProject)!;
+  const { data: progressData } = useSiteContent<any>('progress');
+  const [selectedProject, setSelectedProject] = useState<string>('');
+
+  if (!progressData) return null;
+  const projects: Project[] = progressData.projects as Project[];
+  const activeId = selectedProject || projects[0]?.id || '';
+  const currentProject = projects.find(p => p.id === activeId);
+
+  if (!currentProject) return null;
 
   return (
     <>
@@ -58,7 +61,7 @@ export default function ProjectProgress() {
                 <button
                   key={project.id}
                   onClick={() => setSelectedProject(project.id)}
-                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${selectedProject === project.id
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${activeId === project.id
                     ? 'bg-primary text-primary-foreground shadow-lg'
                     : 'bg-card text-card-foreground hover:bg-accent border border-border'
                     }`}
