@@ -60,6 +60,7 @@ const App = () => (
                 <Route path="/upload-image" element={<ImageUploadPage />} />
                 <Route path="/admin/content" element={<AdminContent />} />
                 <Route path="/article/:id" element={<ArticleDetail />} />
+                <Route path="/portfolio/:id" element={<ArticleDetail />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
