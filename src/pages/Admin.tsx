@@ -189,6 +189,12 @@ const Admin = () => {
             <FileText className="w-4 h-4" />
             文章管理
           </Button>
+          <Button variant="ghost" className="w-full justify-start gap-3 h-11 text-muted-foreground hover:text-foreground" asChild>
+            <Link to="/admin/content">
+              <LayoutDashboard className="w-4 h-4" />
+              內容管理
+            </Link>
+          </Button>
           <Button variant="ghost" className="w-full justify-start gap-3 h-11 text-muted-foreground hover:text-foreground" disabled>
             <Users className="w-4 h-4" />
             用戶管理

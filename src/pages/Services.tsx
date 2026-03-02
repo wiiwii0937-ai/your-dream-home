@@ -3,14 +3,12 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { Link } from "react-router-dom";
 import * as Icons from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import { cn } from "@/lib/utils";
-import contentData from "@/data/content.json";
-
-const { services: servicesData } = contentData;
-
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Services = () => {
+  const { data: servicesData } = useSiteContent<any>('services');
+  if (!servicesData) return null;
   const services = servicesData.items;
 
   return (

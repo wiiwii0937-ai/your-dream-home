@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { MainLayout } from "@/components/layout/MainLayout";
-
 import { cn } from "@/lib/utils";
-import contentData from "@/data/content.json";
-
-const { projects: projectsData } = contentData;
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Projects = () => {
+  const { data: projectsData } = useSiteContent<any>('projects');
   const [activeCategory, setActiveCategory] = useState("all");
+  if (!projectsData) return null;
   const projects = projectsData.items;
 
   const filteredProjects =

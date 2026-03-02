@@ -6,23 +6,20 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as Icons from "lucide-react";
-
-import contentData from "@/data/content.json";
-
-const { estimate: estimateData } = contentData;
-const BUILDING_TYPE_CONFIG = estimateData.buildingTypes;
-const baseFeatures = estimateData.baseFeatures.items;
-const additionalOptions = estimateData.additionalOptions.items;
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const OnlineEstimate = () => {
-  const buildingTypes = BUILDING_TYPE_CONFIG;
+  const { data: estimateData } = useSiteContent<any>('estimate');
 
   const [selectedType, setSelectedType] = useState<string>("villa");
   const [area, setArea] = useState<string>("");
   const [selectedOptions, setSelectedOptions] = useState<Record<string, boolean>>({});
   const [optionAreas, setOptionAreas] = useState<Record<string, string>>({});
 
-  const selectedBuilding = buildingTypes.find(t => t.id === selectedType);
+  const buildingTypes = estimateData?.buildingTypes ?? [];
+  const baseFeatures = estimateData?.baseFeatures?.items ?? [];
+  const additionalOptions = estimateData?.additionalOptions?.items ?? [];
+  const selectedBuilding = buildingTypes.find((t: any) => t.id === selectedType);
 
   const estimate = useMemo(() => {
     const areaNum = parseFloat(area);
