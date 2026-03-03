@@ -27,6 +27,7 @@ import Todos from "./pages/Todos";
 import ImageUploadPage from "./pages/ImageUploadPage";
 import AdminContent from "./pages/AdminContent";
 import { ArticleDetail } from "./components/ArticleDetail";
+import ProjectDetail from "./pages/ProjectDetail";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="/portfolio/:slug" element={<ProjectDetail />} />
                 <Route path="/advantages" element={<Advantages />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/faq" element={<FAQ />} />

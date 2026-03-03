@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { cn } from "@/lib/utils";
 import { useSiteContent } from "@/hooks/useSiteContent";
@@ -91,18 +92,17 @@ const Projects = () => {
 
                   {/* 查看更多按鈕 */}
                   <div className="mt-auto pt-4 border-t border-border/50 flex justify-end">
-                    <a
-                      href={project.link || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      to={project.slug ? `/portfolio/${project.slug}` : (project.link && project.link !== '#' ? project.link : '#')}
                       className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors text-sm group/btn"
+                      {...(!project.slug && project.link && project.link !== '#' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                       onClick={(e) => {
-                        if (!project.link || project.link === "#") e.preventDefault();
+                        if (!project.slug && (!project.link || project.link === '#')) e.preventDefault();
                       }}
                     >
                       查看更多
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/btn:translate-x-1"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
