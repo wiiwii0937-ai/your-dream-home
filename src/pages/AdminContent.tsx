@@ -194,10 +194,48 @@ export default function AdminContent() {
   };
 
   // ─── Progress handlers ───
+  const [editingProgress, setEditingProgress] = useState<ProgressItem | null>(null);
+  const [progressUploading, setProgressUploading] = useState(false);
+
   const handleUpdateProgress = async (item: ProgressItem, newProgress: number) => {
     await supabase.from('progress_items').update({ progress: newProgress }).eq('id', item.id);
     setProgressItems(prev => prev.map(p => p.id === item.id ? { ...p, progress: newProgress } : p));
     toast({ title: '進度已更新', description: `${item.name}: ${newProgress}%` });
+  };
+
+  const handleSaveProgress = async () => {
+    if (!editingProgress) return;
+    const { id, ...rest } = editingProgress;
+    if (id.startsWith('new-')) {
+      const { error } = await supabase.from('progress_items').insert({ ...rest });
+      if (error) { toast({ title: '錯誤', description: error.message, variant: 'destructive' }); return; }
+    } else {
+      const { error } = await supabase.from('progress_items').update(rest).eq('id', id);
+      if (error) { toast({ title: '錯誤', description: error.message, variant: 'destructive' }); return; }
+    }
+    toast({ title: '已儲存' });
+    setEditingProgress(null);
+    fetchProgress();
+  };
+
+  const handleDeleteProgress = async (id: string) => {
+    await supabase.from('progress_items').delete().eq('id', id);
+    toast({ title: '已刪除' });
+    fetchProgress();
+  };
+
+  const handleUploadProgressImage = async (file: File) => {
+    if (!editingProgress) return;
+    setProgressUploading(true);
+    const path = `progress/${editingProgress.id}/${Date.now()}-${file.name}`;
+    const { error: upErr } = await supabase.storage.from('site-images').upload(path, file);
+    if (upErr) { toast({ title: '上傳失敗', description: upErr.message, variant: 'destructive' }); setProgressUploading(false); return; }
+    const { data: urlData } = supabase.storage.from('site-images').getPublicUrl(path);
+    // Store the image URL in the updates JSON as a photo field
+    const updatedItem = { ...editingProgress, updates: { ...(editingProgress.updates as any || {}), photo: urlData.publicUrl } };
+    setEditingProgress(updatedItem);
+    setProgressUploading(false);
+    toast({ title: '圖片已上傳' });
   };
 
   // ─── Lightbox ───
@@ -323,6 +361,18 @@ export default function AdminContent() {
 
             {/* ── Tab: Progress ── */}
             <TabsContent value="progress">
+              <div className="flex justify-end mb-4">
+                <Button
+                  onClick={() => setEditingProgress({
+                    id: `new-${Date.now()}`, name: '', location: null, progress: 0,
+                    current_phase: null, start_date: null, estimated_completion: null,
+                    updates: null, display_order: progressItems.length,
+                  })}
+                  disabled={!isAdmin} className="gap-2"
+                >
+                  <Plus className="w-4 h-4" /> 新增工程進度
+                </Button>
+              </div>
               <div className="grid gap-4">
                 {progressItems.map((item) => (
                   <Card key={item.id}>
@@ -332,7 +382,15 @@ export default function AdminContent() {
                           <h3 className="font-semibold text-foreground">{item.name}</h3>
                           <p className="text-sm text-muted-foreground">{item.location} · {item.current_phase}</p>
                         </div>
-                        <span className="text-2xl font-bold text-primary">{item.progress ?? 0}%</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl font-bold text-primary">{item.progress ?? 0}%</span>
+                          <Button size="sm" variant="outline" onClick={() => setEditingProgress({ ...item })} disabled={!isAdmin}>
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button size="sm" variant="destructive" onClick={() => handleDeleteProgress(item.id)} disabled={!isAdmin}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                       <div className="flex items-center gap-4">
                         <Slider
@@ -351,11 +409,15 @@ export default function AdminContent() {
                           style={{ width: `${item.progress ?? 0}%` }}
                         />
                       </div>
+                      {/* Show photo if exists */}
+                      {(item.updates as any)?.photo && (
+                        <img src={(item.updates as any).photo} alt={item.name} className="w-32 h-20 object-cover rounded-lg" />
+                      )}
                     </CardContent>
                   </Card>
                 ))}
                 {progressItems.length === 0 && (
-                  <p className="text-center text-muted-foreground py-8">尚無工程進度資料，請先執行「資料初始化」</p>
+                  <p className="text-center text-muted-foreground py-8">尚無工程進度資料，請點擊「新增工程進度」</p>
                 )}
               </div>
             </TabsContent>
@@ -528,6 +590,98 @@ export default function AdminContent() {
           )}
         </DialogContent>
       </Dialog>
+      {/* ── Progress Edit Dialog ── */}
+      <Dialog open={!!editingProgress} onOpenChange={(o) => !o && setEditingProgress(null)}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingProgress?.id.startsWith('new-') ? '新增' : '編輯'}工程進度</DialogTitle>
+          </DialogHeader>
+          {editingProgress && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>建案名稱 *</Label>
+                <Input value={editingProgress.name} onChange={(e) => setEditingProgress({ ...editingProgress, name: e.target.value })} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>所在地 / 案址</Label>
+                  <Input value={editingProgress.location || ''} onChange={(e) => setEditingProgress({ ...editingProgress, location: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>目前階段描述</Label>
+                  <Input value={editingProgress.current_phase || ''} onChange={(e) => setEditingProgress({ ...editingProgress, current_phase: e.target.value })} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>開工日期</Label>
+                  <Input type="date" value={editingProgress.start_date || ''} onChange={(e) => setEditingProgress({ ...editingProgress, start_date: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>預計完工</Label>
+                  <Input type="date" value={editingProgress.estimated_completion || ''} onChange={(e) => setEditingProgress({ ...editingProgress, estimated_completion: e.target.value })} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>進度百分比: {editingProgress.progress ?? 0}%</Label>
+                <Slider
+                  value={[editingProgress.progress ?? 0]}
+                  min={0}
+                  max={100}
+                  step={1}
+                  onValueChange={(v) => setEditingProgress({ ...editingProgress, progress: v[0] })}
+                />
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all"
+                    style={{ width: `${editingProgress.progress ?? 0}%` }}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>現場照片</Label>
+                {(editingProgress.updates as any)?.photo && (
+                  <div className="relative inline-block">
+                    <img src={(editingProgress.updates as any).photo} alt="" className="w-40 h-28 object-cover rounded-lg" />
+                    <button
+                      onClick={() => setEditingProgress({ ...editingProgress, updates: { ...(editingProgress.updates as any || {}), photo: null } })}
+                      className="absolute top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded-full"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+                <label className="cursor-pointer block">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleUploadProgressImage(file);
+                      e.target.value = '';
+                    }}
+                  />
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 cursor-pointer">
+                    <Upload className="w-4 h-4" /> {progressUploading ? '上傳中...' : '上傳照片'}
+                  </span>
+                </label>
+              </div>
+              <div className="space-y-2">
+                <Label>排序</Label>
+                <Input type="number" value={editingProgress.display_order ?? 0} onChange={(e) => setEditingProgress({ ...editingProgress, display_order: parseInt(e.target.value) || 0 })} />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingProgress(null)}>取消</Button>
+            <Button onClick={handleSaveProgress} className="gap-2">
+              <Save className="w-4 h-4" /> 儲存
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </MainLayout>
   );
 }

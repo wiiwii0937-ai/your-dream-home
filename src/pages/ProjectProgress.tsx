@@ -1,37 +1,59 @@
 import { Helmet } from 'react-helmet-async';
 import { MainLayout } from '@/components/layout/MainLayout';
-import { Calendar, MapPin, Clock, CheckCircle, Circle, ArrowRight } from 'lucide-react';
+import { Calendar, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { useSiteContent } from '@/hooks/useSiteContent';
 
-interface ProgressUpdate {
-  week: number;
-  date: string;
-  title: string;
-  description: string;
-  completed: boolean;
-  images?: string[];
-}
-
-interface Project {
+interface ProgressItem {
   id: string;
   name: string;
-  location: string;
-  startDate: string;
-  estimatedCompletion: string;
-  progress: number;
-  currentPhase: string;
-  updates: ProgressUpdate[];
+  location: string | null;
+  progress: number | null;
+  current_phase: string | null;
+  start_date: string | null;
+  estimated_completion: string | null;
+  updates: any;
+  display_order: number | null;
 }
 
 export default function ProjectProgress() {
   const { data: progressData } = useSiteContent<any>('progress');
   const [selectedProject, setSelectedProject] = useState<string>('');
 
+  const { data: dbItems = [] } = useQuery({
+    queryKey: ['progress-items-public'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('progress_items')
+        .select('*')
+        .order('display_order');
+      if (error) throw error;
+      return (data ?? []) as ProgressItem[];
+    },
+  });
+
   if (!progressData) return null;
-  const projects: Project[] = progressData.projects as Project[];
+
+  // Use DB items if available, else fallback to site_sections JSON
+  const hasDbItems = dbItems.length > 0;
+  const projects = hasDbItems
+    ? dbItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        location: item.location || '',
+        startDate: item.start_date || '',
+        estimatedCompletion: item.estimated_completion || '',
+        progress: item.progress ?? 0,
+        currentPhase: item.current_phase || '',
+        photo: (item.updates as any)?.photo || null,
+        updates: (item.updates as any)?.timeline || [],
+      }))
+    : ((progressData.projects || []) as any[]);
+
   const activeId = selectedProject || projects[0]?.id || '';
-  const currentProject = projects.find(p => p.id === activeId);
+  const currentProject = projects.find((p: any) => p.id === activeId);
 
   if (!currentProject) return null;
 
@@ -47,17 +69,17 @@ export default function ProjectProgress() {
           {/* Header */}
           <div className="max-w-6xl mx-auto mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              {progressData.hero.title}
+              {progressData.hero?.title || '工程進度'}
             </h1>
             <p className="text-lg text-muted-foreground">
-              {progressData.hero.description}
+              {progressData.hero?.description || '即時掌握施工動態'}
             </p>
           </div>
 
           {/* Project Selector */}
           <div className="max-w-6xl mx-auto mb-8">
             <div className="flex flex-wrap gap-3">
-              {projects.map((project) => (
+              {projects.map((project: any) => (
                 <button
                   key={project.id}
                   onClick={() => setSelectedProject(project.id)}
@@ -81,18 +103,24 @@ export default function ProjectProgress() {
                     {currentProject.name}
                   </h2>
                   <div className="flex flex-wrap gap-4 text-muted-foreground">
-                    <span className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      {currentProject.location}
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      開工：{currentProject.startDate}
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      預計完工：{currentProject.estimatedCompletion}
-                    </span>
+                    {currentProject.location && (
+                      <span className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        {currentProject.location}
+                      </span>
+                    )}
+                    {currentProject.startDate && (
+                      <span className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        開工：{currentProject.startDate}
+                      </span>
+                    )}
+                    {currentProject.estimatedCompletion && (
+                      <span className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        預計完工：{currentProject.estimatedCompletion}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="text-center">
@@ -108,7 +136,7 @@ export default function ProjectProgress() {
                 <div className="h-3 bg-muted rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-500"
-                    {...{ style: { width: `${currentProject.progress}%` } }}
+                    style={{ width: `${currentProject.progress}%` }}
                   />
                 </div>
               </div>
@@ -119,76 +147,56 @@ export default function ProjectProgress() {
                   {currentProject.currentPhase}
                 </span>
               </div>
+
+              {/* Photo */}
+              {currentProject.photo && (
+                <div className="mt-6">
+                  <img src={currentProject.photo} alt={currentProject.name} className="w-full max-h-96 object-cover rounded-xl" />
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Timeline */}
-          <div className="max-w-6xl mx-auto">
-            <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
-              <ArrowRight className="w-5 h-5 text-primary" />
-              週進度更新
-            </h3>
-
-            <div className="relative">
-              {/* Timeline Line */}
-              <div className="absolute left-4 md:left-6 top-0 bottom-0 w-0.5 bg-border" />
-
-              {/* Timeline Items */}
-              <div className="space-y-6">
-                {currentProject.updates.map((update, index) => (
-                  <div key={index} className="relative pl-12 md:pl-16">
-                    {/* Timeline Dot */}
-                    <div className={`absolute left-0 md:left-2 w-8 h-8 rounded-full flex items-center justify-center ${update.completed
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted border-2 border-primary text-primary'
-                      }`}>
-                      {update.completed ? (
-                        <CheckCircle className="w-5 h-5" />
-                      ) : (
-                        <Circle className="w-5 h-5" />
-                      )}
-                    </div>
-
-                    {/* Content Card */}
-                    <div className={`bg-card rounded-xl p-5 border border-border transition-all duration-300 hover:shadow-lg ${!update.completed ? 'ring-2 ring-primary/20' : ''
-                      }`}>
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
-                        <div className="flex items-center gap-3">
-                          <span className="px-3 py-1 bg-accent text-accent-foreground rounded-full text-sm font-medium">
-                            第 {update.week} 週
-                          </span>
-                          <h4 className="text-lg font-semibold text-card-foreground">
-                            {update.title}
-                          </h4>
-                        </div>
-                        <span className="text-sm text-muted-foreground">
-                          {update.date}
-                        </span>
+          {/* Timeline (only if updates exist) */}
+          {currentProject.updates && currentProject.updates.length > 0 && (
+            <div className="max-w-6xl mx-auto">
+              <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
+                <ArrowRight className="w-5 h-5 text-primary" />
+                週進度更新
+              </h3>
+              <div className="relative">
+                <div className="absolute left-4 md:left-6 top-0 bottom-0 w-0.5 bg-border" />
+                <div className="space-y-6">
+                  {currentProject.updates.map((update: any, index: number) => (
+                    <div key={index} className="relative pl-12 md:pl-16">
+                      <div className={`absolute left-0 md:left-2 w-8 h-8 rounded-full flex items-center justify-center ${update.completed
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted border-2 border-primary text-primary'
+                        }`}>
+                        <span className="text-xs font-bold">{update.week || index + 1}</span>
                       </div>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {update.description}
-                      </p>
-                      {!update.completed && (
-                        <div className="mt-3 flex items-center gap-2 text-sm text-primary">
-                          <Clock className="w-4 h-4" />
-                          進行中
+                      <div className={`bg-card rounded-xl p-5 border border-border transition-all duration-300 hover:shadow-lg ${!update.completed ? 'ring-2 ring-primary/20' : ''}`}>
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
+                          <h4 className="text-lg font-semibold text-card-foreground">{update.title}</h4>
+                          {update.date && <span className="text-sm text-muted-foreground">{update.date}</span>}
                         </div>
-                      )}
+                        <p className="text-muted-foreground leading-relaxed">{update.description}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* CTA */}
           <div className="max-w-6xl mx-auto mt-16 text-center">
             <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-8 border border-primary/20">
               <h3 className="text-2xl font-bold text-foreground mb-3">
-                {progressData.cta.title}
+                {progressData.cta?.title || '想了解更多？'}
               </h3>
               <p className="text-muted-foreground mb-6">
-                {progressData.cta.description}
+                {progressData.cta?.description || '歡迎聯繫我們'}
               </p>
               <a
                 href="/contact"
