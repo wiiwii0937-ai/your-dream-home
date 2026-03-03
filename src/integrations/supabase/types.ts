@@ -206,6 +206,7 @@ export type Database = {
           location: string | null
           main_image_url: string | null
           project_date: string | null
+          slug: string | null
           title: string
           updated_at: string | null
         }
@@ -221,6 +222,7 @@ export type Database = {
           location?: string | null
           main_image_url?: string | null
           project_date?: string | null
+          slug?: string | null
           title: string
           updated_at?: string | null
         }
@@ -236,6 +238,7 @@ export type Database = {
           location?: string | null
           main_image_url?: string | null
           project_date?: string | null
+          slug?: string | null
           title?: string
           updated_at?: string | null
         }
