@@ -40,6 +40,7 @@ interface ProjectItem {
   fb_link: string | null;
   project_date: string | null;
   link: string | null;
+  slug: string | null;
   display_order: number | null;
 }
 
@@ -139,6 +140,19 @@ export default function AdminContent() {
   // ─── Project CRUD ───
   const handleSaveProject = async () => {
     if (!editingProject) return;
+    // Slug uniqueness check
+    if (editingProject.slug) {
+      const { data: existing } = await supabase
+        .from('project_items')
+        .select('id')
+        .eq('slug', editingProject.slug)
+        .neq('id', editingProject.id.startsWith('new-') ? '00000000-0000-0000-0000-000000000000' : editingProject.id)
+        .maybeSingle();
+      if (existing) {
+        toast({ title: '錯誤', description: `URL 別名 "${editingProject.slug}" 已被其他專案使用，請更換`, variant: 'destructive' });
+        return;
+      }
+    }
     const { id, ...rest } = editingProject;
     if (id.startsWith('new-')) {
       const { error } = await supabase.from('project_items').insert({ ...rest });
@@ -269,7 +283,7 @@ export default function AdminContent() {
                   onClick={() => setEditingProject({
                     id: `new-${Date.now()}`, title: '', category: null, description: null,
                     location: null, area: null, main_image_url: null, fb_link: null,
-                    project_date: null, link: null, display_order: projectItems.length,
+                    project_date: null, link: null, slug: null, display_order: projectItems.length,
                   })}
                   disabled={!isAdmin} className="gap-2"
                 >
@@ -408,6 +422,20 @@ export default function AdminContent() {
               <div className="space-y-2">
                 <Label>主圖 URL</Label>
                 <Input value={editingProject.main_image_url || ''} onChange={(e) => setEditingProject({ ...editingProject, main_image_url: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label>URL 別名 (Slug)</Label>
+                <Input
+                  value={editingProject.slug || ''}
+                  onChange={(e) => {
+                    const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+                    setEditingProject({ ...editingProject, slug: val || null });
+                  }}
+                  placeholder="例如：yo-house（僅限英文小寫、數字與短橫線）"
+                />
+                <p className="text-xs text-muted-foreground">
+                  用於網址：/portfolio/{editingProject.slug || '...'}
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">

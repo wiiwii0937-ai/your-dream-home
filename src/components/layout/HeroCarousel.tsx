@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSiteImagesMap } from '@/hooks/useSiteImages';
@@ -131,8 +132,8 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
           "transition-all duration-500 transform",
           isTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
         )}>
-          <a
-            href={currentSlide.link}
+          <Link
+            to={currentSlide.link || '/projects'}
             className="group"
           >
             <h2 className="text-5xl md:text-7xl font-bold text-white mb-4 transition-colors duration-300 group-hover:text-primary">
@@ -143,7 +144,7 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
                 {currentSlide.subtitle}
               </p>
             )}
-          </a>
+          </Link>
         </div>
 
         {/* Navigation Controls */}
