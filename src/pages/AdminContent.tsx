@@ -13,7 +13,9 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Save, RefreshCw, Database, Edit, Trash2, Plus, Upload, Image, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ArrowLeft, Save, RefreshCw, Database, Edit, Trash2, Plus, Upload, Image, X, ChevronLeft, ChevronRight, ClipboardList, CheckCircle, Clock } from 'lucide-react';
 import contentData from '@/data/content.json';
 
 const SECTION_LABELS: Record<string, string> = {
@@ -65,6 +67,21 @@ interface ProgressItem {
   display_order: number | null;
 }
 
+// ─── Consultation Requests ───
+interface ConsultationRequest {
+  id: string;
+  created_at: string;
+  full_name: string;
+  phone: string;
+  line_id: string | null;
+  location: string | null;
+  estimated_pings: string | null;
+  budget_range: string | null;
+  estimated_construction_time: string | null;
+  special_requirements: string | null;
+  status: string;
+}
+
 export default function AdminContent() {
   const navigate = useNavigate();
   const { user, isAdmin, loading: authLoading } = useAuth();
@@ -86,6 +103,8 @@ export default function AdminContent() {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   // Progress items
   const [progressItems, setProgressItems] = useState<ProgressItem[]>([]);
+  // Consultation requests
+  const [consultations, setConsultations] = useState<ConsultationRequest[]>([]);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
@@ -94,6 +113,7 @@ export default function AdminContent() {
   useEffect(() => {
     if (activeTab === 'projects') fetchProjects();
     if (activeTab === 'progress') fetchProgress();
+    if (activeTab === 'consultations') fetchConsultations();
   }, [activeTab]);
 
   // ─── Fetch functions ───
@@ -110,6 +130,24 @@ export default function AdminContent() {
   const fetchProgress = async () => {
     const { data } = await supabase.from('progress_items').select('*').order('display_order');
     if (data) setProgressItems(data);
+  };
+
+  const fetchConsultations = async () => {
+    const { data } = await supabase.from('consultation_requests' as any).select('*').order('created_at', { ascending: false });
+    if (data) setConsultations(data as any);
+  };
+
+  const handleToggleConsultationStatus = async (item: ConsultationRequest) => {
+    const newStatus = item.status === 'pending' ? 'contacted' : 'pending';
+    await supabase.from('consultation_requests' as any).update({ status: newStatus }).eq('id', item.id);
+    setConsultations(prev => prev.map(c => c.id === item.id ? { ...c, status: newStatus } : c));
+    toast({ title: '狀態已更新', description: `${item.full_name}: ${newStatus === 'contacted' ? '已聯繫' : '待處理'}` });
+  };
+
+  const handleDeleteConsultation = async (id: string) => {
+    await supabase.from('consultation_requests' as any).delete().eq('id', id);
+    setConsultations(prev => prev.filter(c => c.id !== id));
+    toast({ title: '已刪除' });
   };
 
   // ─── Section handlers ───
@@ -288,6 +326,9 @@ export default function AdminContent() {
               <TabsTrigger value="sections">區塊內容</TabsTrigger>
               <TabsTrigger value="projects">工程實例</TabsTrigger>
               <TabsTrigger value="progress">工程進度</TabsTrigger>
+              <TabsTrigger value="consultations" className="gap-1">
+                <ClipboardList className="w-4 h-4" /> 預約管理
+              </TabsTrigger>
             </TabsList>
 
             {/* ── Tab: Sections ── */}
@@ -420,6 +461,71 @@ export default function AdminContent() {
                   <p className="text-center text-muted-foreground py-8">尚無工程進度資料，請點擊「新增工程進度」</p>
                 )}
               </div>
+            </TabsContent>
+
+            {/* ── Tab: Consultations ── */}
+            <TabsContent value="consultations">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ClipboardList className="w-5 h-5" /> 預約諮詢申請
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {consultations.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">尚無預約諮詢申請</p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>時間</TableHead>
+                            <TableHead>姓名</TableHead>
+                            <TableHead>電話</TableHead>
+                            <TableHead>LINE ID</TableHead>
+                            <TableHead>建築所在地</TableHead>
+                            <TableHead>坪數</TableHead>
+                            <TableHead>預算</TableHead>
+                            <TableHead>施工時間</TableHead>
+                            <TableHead>需求</TableHead>
+                            <TableHead>狀態</TableHead>
+                            <TableHead>操作</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {consultations.map((item) => (
+                            <TableRow key={item.id}>
+                              <TableCell className="whitespace-nowrap text-xs">{new Date(item.created_at).toLocaleString('zh-TW')}</TableCell>
+                              <TableCell className="font-medium">{item.full_name}</TableCell>
+                              <TableCell>{item.phone}</TableCell>
+                              <TableCell>{item.line_id || '-'}</TableCell>
+                              <TableCell>{item.location || '-'}</TableCell>
+                              <TableCell>{item.estimated_pings || '-'}</TableCell>
+                              <TableCell>{item.budget_range || '-'}</TableCell>
+                              <TableCell>{item.estimated_construction_time || '-'}</TableCell>
+                              <TableCell className="max-w-[200px] truncate">{item.special_requirements || '-'}</TableCell>
+                              <TableCell>
+                                <Badge variant={item.status === 'contacted' ? 'default' : 'secondary'} className="cursor-pointer" onClick={() => handleToggleConsultationStatus(item)}>
+                                  {item.status === 'contacted' ? (
+                                    <><CheckCircle className="w-3 h-3 mr-1" /> 已聯繫</>
+                                  ) : (
+                                    <><Clock className="w-3 h-3 mr-1" /> 待處理</>
+                                  )}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <Button size="sm" variant="destructive" onClick={() => handleDeleteConsultation(item.id)}>
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>
