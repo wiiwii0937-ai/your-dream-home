@@ -28,6 +28,7 @@ import ImageUploadPage from "./pages/ImageUploadPage";
 import AdminContent from "./pages/AdminContent";
 import { ArticleDetail } from "./components/ArticleDetail";
 import ProjectDetail from "./pages/ProjectDetail";
+import { FloatingLineButton } from "./components/FloatingLineButton";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              <FloatingLineButton />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<About />} />
