@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      consultation_requests: {
+        Row: {
+          budget_range: string | null
+          created_at: string
+          estimated_construction_time: string | null
+          estimated_pings: string | null
+          full_name: string
+          id: string
+          line_id: string | null
+          location: string | null
+          phone: string
+          special_requirements: string | null
+          status: string
+        }
+        Insert: {
+          budget_range?: string | null
+          created_at?: string
+          estimated_construction_time?: string | null
+          estimated_pings?: string | null
+          full_name: string
+          id?: string
+          line_id?: string | null
+          location?: string | null
+          phone: string
+          special_requirements?: string | null
+          status?: string
+        }
+        Update: {
+          budget_range?: string | null
+          created_at?: string
+          estimated_construction_time?: string | null
+          estimated_pings?: string | null
+          full_name?: string
+          id?: string
+          line_id?: string | null
+          location?: string | null
+          phone?: string
+          special_requirements?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       images_management: {
         Row: {
           alt_text: string | null

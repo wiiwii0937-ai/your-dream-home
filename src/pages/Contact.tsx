@@ -12,15 +12,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, Loader2 } from "lucide-react";
 import * as Icons from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const { data: contactData } = useSiteContent<any>('contact');
 
   const { toast } = useToast();
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -32,22 +34,32 @@ const Contact = () => {
     requirements: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "預約成功！",
-      description: "我們將在24小時內與您聯繫。",
-    });
-    setFormData({
-      name: "",
-      phone: "",
-      lineId: "",
-      location: "",
-      floorArea: "",
-      budget: "",
-      timeline: "",
-      requirements: "",
-    });
+    if (!formData.name.trim() || !formData.phone.trim()) {
+      toast({ title: "請填寫必填欄位", description: "姓名與聯絡電話為必填", variant: "destructive" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from('consultation_requests' as any).insert({
+        full_name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        line_id: formData.lineId.trim() || null,
+        location: formData.location.trim() || null,
+        estimated_pings: formData.floorArea.trim() || null,
+        budget_range: formData.budget || null,
+        estimated_construction_time: formData.timeline || null,
+        special_requirements: formData.requirements.trim() || null,
+      });
+      if (error) throw error;
+      toast({ title: "預約已送出", description: "我們將盡快與您聯繫" });
+      setFormData({ name: "", phone: "", lineId: "", location: "", floorArea: "", budget: "", timeline: "", requirements: "" });
+    } catch (err: any) {
+      toast({ title: "送出失敗", description: err.message || "請稍後再試", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -258,9 +270,9 @@ const Contact = () => {
                 </div>
 
                 {/* Submit Button */}
-                <Button type="submit" size="lg" className="w-full">
-                  <Send className="w-5 h-5 mr-2" />
-                  送出預約
+                <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+                  {submitting ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Send className="w-5 h-5 mr-2" />}
+                  {submitting ? '送出中...' : '送出預約'}
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center">
