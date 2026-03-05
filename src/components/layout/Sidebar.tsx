@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Menu, ArrowLeft, Sun, Moon } from 'lucide-react';
+import { Menu, ArrowLeft, Sun, Moon, X } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { ProjectsDrawer } from '@/components/ProjectsDrawer';
 
 interface SidebarProps {
   isMenuOpen: boolean;
@@ -21,12 +23,16 @@ const menuItems = [
 
 export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
   const { theme, toggleTheme } = useTheme();
+  const isMobile = useIsMobile();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+
+  const toggleProjects = () => setIsProjectsOpen((prev) => !prev);
 
   return (
     <>
       {/* Main Sidebar - Always visible */}
-      <aside 
+      <aside
         className={cn(
           "fixed left-0 top-0 h-screen z-50 flex flex-col justify-between py-8 px-4 transition-all duration-500 ease-out",
           "bg-background border-r border-border",
@@ -35,7 +41,7 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
       >
         {/* Logo */}
         <div className="flex flex-col items-center">
-          <h1 
+          <h1
             className={cn(
               "font-bold text-primary transition-all duration-300",
               isMenuOpen ? "text-3xl" : "vertical-text text-xl"
@@ -44,6 +50,38 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
             築安心
           </h1>
         </div>
+
+        {/* Sidebar Action Buttons — vertical, below logo, above bottom controls */}
+        {!isMenuOpen && (
+          <div className="flex-1 flex flex-col items-center justify-center gap-6">
+            {/* 工程實例 vertical button */}
+            <button
+              onClick={toggleProjects}
+              className={cn(
+                "vertical-text text-xs tracking-[0.25em] font-medium py-3 px-1 rounded-md transition-all duration-300",
+                "bg-black/30 backdrop-blur-md text-white/90 hover:bg-black/50 hover:text-white",
+                "border border-white/10",
+                isProjectsOpen && "bg-primary/80 text-primary-foreground border-primary/40"
+              )}
+            >
+              工程實例
+            </button>
+
+            {/* MENU button — moved here (upper area, below 工程實例) */}
+            <button
+              onClick={onMenuToggle}
+              className={cn(
+                "flex flex-col items-center gap-1 py-3 px-1 rounded-md transition-all duration-300",
+                "bg-black/30 backdrop-blur-md text-white/90 hover:bg-black/50 hover:text-white",
+                "border border-white/10"
+              )}
+              aria-label="開啟選單"
+            >
+              <Menu className="w-5 h-5" />
+              <span className="vertical-text text-xs tracking-widest">MENU</span>
+            </button>
+          </div>
+        )}
 
         {/* Menu Items - Only visible when expanded */}
         {isMenuOpen && (
@@ -54,8 +92,8 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
                 href={item.href}
                 className={cn(
                   "text-lg font-medium py-2 transition-all duration-300",
-                  hoveredItem === item.href 
-                    ? "text-primary-foreground bg-primary px-4 -mx-4 rounded-lg" 
+                  hoveredItem === item.href
+                    ? "text-primary-foreground bg-primary px-4 -mx-4 rounded-lg"
                     : "text-primary hover:translate-x-2"
                 )}
                 onMouseEnter={() => setHoveredItem(item.href)}
@@ -69,27 +107,20 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
 
         {/* Bottom Controls */}
         <div className="flex flex-col items-center gap-6">
-          {/* Menu Toggle */}
-          <button
-            onClick={onMenuToggle}
-            className={cn(
-              "flex items-center gap-2 text-primary transition-colors duration-300",
-              "hover:text-primary/70"
-            )}
-            aria-label={isMenuOpen ? '關閉選單' : '開啟選單'}
-          >
-            {isMenuOpen ? (
-              <>
-                <ArrowLeft className="w-5 h-5" />
-                <span className="text-sm font-medium">返回</span>
-              </>
-            ) : (
-              <div className="flex flex-col items-center">
-                <Menu className="w-5 h-5" />
-                <span className="vertical-text text-xs mt-2 tracking-widest">MENU</span>
-              </div>
-            )}
-          </button>
+          {/* Back button when expanded */}
+          {isMenuOpen && (
+            <button
+              onClick={onMenuToggle}
+              className={cn(
+                "flex items-center gap-2 text-primary transition-colors duration-300",
+                "hover:text-primary/70"
+              )}
+              aria-label="關閉選單"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="text-sm font-medium">返回</span>
+            </button>
+          )}
 
           {/* Theme Toggle */}
           <button
@@ -112,9 +143,16 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
         </div>
       </aside>
 
+      {/* Projects Drawer */}
+      <ProjectsDrawer
+        isOpen={isProjectsOpen}
+        onClose={() => setIsProjectsOpen(false)}
+        isMobile={isMobile}
+      />
+
       {/* Overlay when menu is open */}
       {isMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
           onClick={onMenuToggle}
         />
