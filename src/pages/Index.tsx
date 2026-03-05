@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { HeroCarousel } from '@/components/layout/HeroCarousel';
+import { ProjectsCarousel } from '@/components/ProjectsCarousel';
 import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
@@ -20,6 +21,10 @@ const Index = () => {
           onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} 
         />
         <HeroCarousel sidebarExpanded={isMenuOpen} />
+        {/* Projects Carousel section below hero */}
+        <div className="relative" style={{ marginTop: '100vh' }}>
+          <ProjectsCarousel />
+        </div>
       </div>
     </>
   );
