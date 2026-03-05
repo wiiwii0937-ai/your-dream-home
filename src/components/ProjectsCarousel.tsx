@@ -5,6 +5,16 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 
+/** Append resize params for mobile-optimized images */
+function optimizeImageUrl(url: string | null, width = 600, quality = 70): string {
+  if (!url) return '/placeholder.svg';
+  if (url.includes('supabase') && url.includes('/storage/')) {
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}width=${width}&quality=${quality}`;
+  }
+  return url;
+}
+
 interface ProjectItem {
   id: string;
   title: string;
@@ -84,11 +94,11 @@ export function ProjectsCarousel() {
                 to={project.slug ? `/portfolio/${project.slug}` : `/portfolio/${project.id}`}
                 className="group block"
               >
-                <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
+                <div className="relative aspect-[4/3] md:aspect-[3/4] rounded-xl overflow-hidden">
                   <img
-                    src={project.main_image_url || '/placeholder.svg'}
+                    src={optimizeImageUrl(project.main_image_url)}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                     loading="lazy"
                   />
                   {/* Gradient overlay */}

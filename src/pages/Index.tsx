@@ -22,7 +22,7 @@ const Index = () => {
         />
         <HeroCarousel sidebarExpanded={isMenuOpen} />
         {/* Projects Carousel section below hero */}
-        <div className="relative" style={{ marginTop: '100vh' }}>
+        <div className="relative mt-[65vh] md:mt-[100vh]">
           <ProjectsCarousel />
         </div>
       </div>

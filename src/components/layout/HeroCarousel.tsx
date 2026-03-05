@@ -77,9 +77,9 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
   if (slides.length === 0) {
     return (
       <div
-        className={cn(
-          "fixed top-0 right-0 h-screen transition-all duration-500 ease-out overflow-hidden flex items-center justify-center bg-muted",
-          sidebarExpanded ? "w-[70%]" : "w-[93%]"
+      className={cn(
+        "fixed top-0 right-0 h-[65vh] md:h-screen transition-all duration-500 ease-out overflow-hidden flex items-center justify-center bg-muted",
+        sidebarExpanded ? "w-full md:w-[70%]" : "w-full md:w-[93%]"
         )}
       >
         {/* Animated skeleton background */}
@@ -101,8 +101,8 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
   return (
     <div
       className={cn(
-        "fixed top-0 right-0 h-screen transition-all duration-500 ease-out overflow-hidden",
-        sidebarExpanded ? "w-[70%]" : "w-[93%]"
+        "fixed top-0 right-0 h-[65vh] md:h-screen transition-all duration-500 ease-out overflow-hidden",
+        sidebarExpanded ? "w-full md:w-[70%]" : "w-full md:w-[93%]"
       )}
       onMouseEnter={() => setHoveredSlide(true)}
       onMouseLeave={() => setHoveredSlide(false)}
@@ -119,7 +119,7 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
           <img
             src={slide.image}
             alt={slide.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -127,7 +127,7 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
       ))}
 
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end p-12 pb-24">
+      <div className="absolute inset-0 flex flex-col justify-end p-5 pb-16 md:p-12 md:pb-24">
         <div className={cn(
           "transition-all duration-500 transform",
           isTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
@@ -136,11 +136,11 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
             to={currentSlide.link || '/projects'}
             className="group"
           >
-            <h2 className="text-5xl md:text-7xl font-bold text-white mb-4 transition-colors duration-300 group-hover:text-primary">
+            <h2 className="text-2xl sm:text-4xl md:text-7xl font-bold text-white mb-2 md:mb-4 transition-colors duration-300 group-hover:text-primary">
               {currentSlide.title}
             </h2>
             {currentSlide.subtitle && (
-              <p className="text-xl md:text-2xl text-white/90 transition-colors duration-300 group-hover:text-primary">
+              <p className="text-sm sm:text-lg md:text-2xl text-white/90 transition-colors duration-300 group-hover:text-primary">
                 {currentSlide.subtitle}
               </p>
             )}
@@ -148,7 +148,7 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
         </div>
 
         {/* Navigation Controls */}
-        <div className="absolute bottom-12 right-12 flex items-center gap-6">
+        <div className="absolute bottom-4 right-4 md:bottom-12 md:right-12 flex items-center gap-4 md:gap-6">
           {/* Slide Indicators */}
           <div className="flex gap-2">
             {slides.map((_, index) => (
@@ -170,24 +170,24 @@ export function HeroCarousel({ sidebarExpanded }: HeroCarouselProps) {
           <div className="flex gap-2">
             <button
               onClick={prevSlide}
-              className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all duration-300"
+              className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all duration-300"
               aria-label="Previous slide"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
             </button>
             <button
               onClick={nextSlide}
-              className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all duration-300"
+              className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all duration-300"
               aria-label="Next slide"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
             </button>
           </div>
         </div>
 
         {/* Slide Counter */}
-        <div className="absolute top-12 right-12 text-white/70 text-sm font-medium">
-          <span className="text-white text-2xl">{String(currentIndex + 1).padStart(2, '0')}</span>
+        <div className="absolute top-4 right-4 md:top-12 md:right-12 text-white/70 text-xs md:text-sm font-medium">
+          <span className="text-white text-lg md:text-2xl">{String(currentIndex + 1).padStart(2, '0')}</span>
           <span className="mx-2">/</span>
           <span>{String(slides.length).padStart(2, '0')}</span>
         </div>
