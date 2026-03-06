@@ -67,7 +67,7 @@ export function ProjectsDrawer({ isOpen, onClose, isMobile }: ProjectsDrawerProp
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-xl font-bold text-foreground">工程實例</h2>
+          <h2 className="text-xl font-bold text-foreground">作品搶先看</h2>
           <button
             onClick={onClose}
             className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors"
