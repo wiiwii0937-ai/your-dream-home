@@ -34,8 +34,7 @@ export function ProjectsDrawer({ isOpen, onClose, isMobile }: ProjectsDrawerProp
       const { data } = await supabase
         .from('project_items')
         .select('id, title, category, main_image_url, slug')
-        .order('display_order')
-        .limit(8);
+        .order('created_at', { ascending: false });
       return (data || []) as ProjectItem[];
     },
   });
@@ -68,7 +67,7 @@ export function ProjectsDrawer({ isOpen, onClose, isMobile }: ProjectsDrawerProp
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-xl font-bold text-foreground">工程實例</h2>
+          <h2 className="text-xl font-bold text-foreground">作品搶先看</h2>
           <button
             onClick={onClose}
             className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors"
@@ -121,7 +120,7 @@ export function ProjectsDrawer({ isOpen, onClose, isMobile }: ProjectsDrawerProp
             onClick={onClose}
             className="block text-center text-primary font-medium hover:text-primary/80 transition-colors"
           >
-            查看全部工程實例 →
+            查看全部作品 →
           </Link>
         </div>
       </div>

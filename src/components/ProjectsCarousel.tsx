@@ -30,8 +30,7 @@ export function ProjectsCarousel() {
       const { data } = await supabase
         .from('project_items')
         .select('id, title, category, main_image_url, slug')
-        .order('display_order')
-        .limit(8);
+        .order('created_at', { ascending: false });
       return (data || []) as ProjectItem[];
     },
   });
@@ -70,7 +69,7 @@ export function ProjectsCarousel() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">工程實例</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">作品搶先看</h2>
             <p className="text-muted-foreground mt-2">探索我們最新的輕鋼構建築作品</p>
           </div>
           <Link
