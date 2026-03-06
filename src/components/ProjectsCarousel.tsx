@@ -30,8 +30,7 @@ export function ProjectsCarousel() {
       const { data } = await supabase
         .from('project_items')
         .select('id, title, category, main_image_url, slug')
-        .order('display_order')
-        .limit(8);
+        .order('created_at', { ascending: false });
       return (data || []) as ProjectItem[];
     },
   });
