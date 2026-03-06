@@ -120,7 +120,7 @@ export function ProjectsDrawer({ isOpen, onClose, isMobile }: ProjectsDrawerProp
             onClick={onClose}
             className="block text-center text-primary font-medium hover:text-primary/80 transition-colors"
           >
-            查看全部工程實例 →
+            查看全部作品 →
           </Link>
         </div>
       </div>

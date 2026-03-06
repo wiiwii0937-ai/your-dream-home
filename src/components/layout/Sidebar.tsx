@@ -64,7 +64,7 @@ export function Sidebar({ isMenuOpen, onMenuToggle }: SidebarProps) {
                 isProjectsOpen && "bg-primary/80 text-primary-foreground border-primary/40"
               )}
             >
-              工程實例
+              作品搶先看
             </button>
 
             {/* MENU button — moved here (upper area, below 工程實例) */}
