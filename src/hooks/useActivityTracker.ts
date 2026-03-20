@@ -22,7 +22,7 @@ async function logActivity(params: {
   metadata?: Record<string, unknown>;
 }) {
   try {
-    await supabase.from('user_activity_logs' as any).insert({
+    await (supabase as any).from('user_activity_logs').insert({
       session_id: getSessionId(),
       action_type: params.action_type,
       page_path: params.page_path,
