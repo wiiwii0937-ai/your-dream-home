@@ -25,6 +25,7 @@ interface ProjectItem {
 }
 
 export function ProjectsCarousel() {
+  const trackClick = useTrackClick();
   const { data: projects = [] } = useQuery({
     queryKey: ['project-items-carousel'],
     queryFn: async () => {
