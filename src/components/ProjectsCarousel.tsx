@@ -94,6 +94,7 @@ export function ProjectsCarousel() {
                 key={project.id}
                 to={project.slug ? `/portfolio/${project.slug}` : `/portfolio/${project.id}`}
                 className="group block"
+                onClick={() => trackClick(`project:${project.title}`, { project_id: project.id, category: project.category })}
               >
                 <div className="relative aspect-[4/3] md:aspect-[3/4] rounded-xl overflow-hidden">
                   <img
