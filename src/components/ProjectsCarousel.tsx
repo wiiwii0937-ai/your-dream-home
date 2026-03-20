@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { useTrackClick } from '@/components/ActivityTrackerProvider';
 
 /** Append resize params for mobile-optimized images */
 function optimizeImageUrl(url: string | null, width = 600, quality = 70): string {
