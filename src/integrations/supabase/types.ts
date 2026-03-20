@@ -334,6 +334,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_activity_logs: {
+        Row: {
+          action_type: string
+          click_target: string | null
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          metadata: Json | null
+          page_path: string
+          session_id: string
+        }
+        Insert: {
+          action_type?: string
+          click_target?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          metadata?: Json | null
+          page_path: string
+          session_id: string
+        }
+        Update: {
+          action_type?: string
+          click_target?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          metadata?: Json | null
+          page_path?: string
+          session_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
