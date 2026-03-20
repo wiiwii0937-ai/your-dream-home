@@ -51,12 +51,12 @@ export default function AdminAnalytics() {
 
   const fetchLogs = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from('user_activity_logs' as any)
+    const { data } = await (supabase as any)
+      .from('user_activity_logs')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(1000);
-    setLogs((data as ActivityLog[]) || []);
+    setLogs((data || []) as ActivityLog[]);
     setLoading(false);
   };
 
