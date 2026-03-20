@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { useTrackClick } from '@/components/ActivityTrackerProvider';
 
 /** Append resize params for mobile-optimized images */
 function optimizeImageUrl(url: string | null, width = 600, quality = 70): string {
@@ -24,6 +25,7 @@ interface ProjectItem {
 }
 
 export function ProjectsCarousel() {
+  const trackClick = useTrackClick();
   const { data: projects = [] } = useQuery({
     queryKey: ['project-items-carousel'],
     queryFn: async () => {
@@ -92,6 +94,7 @@ export function ProjectsCarousel() {
                 key={project.id}
                 to={project.slug ? `/portfolio/${project.slug}` : `/portfolio/${project.id}`}
                 className="group block"
+                onClick={() => trackClick(`project:${project.title}`, { project_id: project.id, category: project.category })}
               >
                 <div className="relative aspect-[4/3] md:aspect-[3/4] rounded-xl overflow-hidden">
                   <img

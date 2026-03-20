@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Save, RefreshCw, Database, Edit, Trash2, Plus, Upload, Image, X, ChevronLeft, ChevronRight, ClipboardList, CheckCircle, Clock } from 'lucide-react';
+import { ArrowLeft, Save, RefreshCw, Database, Edit, Trash2, Plus, Upload, Image, X, ChevronLeft, ChevronRight, ClipboardList, CheckCircle, Clock, BarChart3 } from 'lucide-react';
 import contentData from '@/data/content.json';
 
 const SECTION_LABELS: Record<string, string> = {
@@ -321,15 +321,23 @@ export default function AdminContent() {
             </Card>
           )}
 
+          <div className="flex items-center gap-2 mb-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
+              <TabsList>
+                <TabsTrigger value="sections">區塊內容</TabsTrigger>
+                <TabsTrigger value="projects">工程實例</TabsTrigger>
+                <TabsTrigger value="progress">工程進度</TabsTrigger>
+                <TabsTrigger value="consultations" className="gap-1">
+                  <ClipboardList className="w-4 h-4" /> 預約管理
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate('/admin/analytics')}>
+              <BarChart3 className="w-4 h-4" /> 流量統計
+            </Button>
+          </div>
+
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6">
-              <TabsTrigger value="sections">區塊內容</TabsTrigger>
-              <TabsTrigger value="projects">工程實例</TabsTrigger>
-              <TabsTrigger value="progress">工程進度</TabsTrigger>
-              <TabsTrigger value="consultations" className="gap-1">
-                <ClipboardList className="w-4 h-4" /> 預約管理
-              </TabsTrigger>
-            </TabsList>
 
             {/* ── Tab: Sections ── */}
             <TabsContent value="sections">
