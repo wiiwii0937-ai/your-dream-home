@@ -16,7 +16,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowLeft, Save, RefreshCw, Database, Edit, Trash2, Plus, Upload, Image, X, ChevronLeft, ChevronRight, ClipboardList, CheckCircle, Clock, BarChart3 } from 'lucide-react';
-import { useNavigate as useNav } from 'react-router-dom';
 import contentData from '@/data/content.json';
 
 const SECTION_LABELS: Record<string, string> = {
