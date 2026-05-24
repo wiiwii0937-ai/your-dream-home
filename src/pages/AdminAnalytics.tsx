@@ -152,7 +152,7 @@ export default function AdminAnalytics() {
       <div className="min-h-screen bg-background py-8 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="flex items-center gap-4 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
             <Button variant="ghost" size="icon" onClick={() => navigate('/admin/content')}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -164,6 +164,87 @@ export default function AdminAnalytics() {
               <RefreshCw className="w-4 h-4" /> 重新整理
             </Button>
           </div>
+
+          {/* Date Range Filter */}
+          <Card className="mb-6">
+            <CardContent className="pt-6">
+              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" onClick={() => applyDateRange(0)}>今天</Button>
+                  <Button variant="outline" size="sm" onClick={() => applyDateRange(7)}>最近7天</Button>
+                  <Button variant="outline" size="sm" onClick={() => applyDateRange(30)}>最近30天</Button>
+                  <Button variant="outline" size="sm" onClick={() => applyDateRange(90)}>最近90天</Button>
+                </div>
+                <div className="flex items-center gap-2 ml-auto">
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">自訂範圍：</span>
+                  <Popover open={startCalendarOpen} onOpenChange={setStartCalendarOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className={cn(
+                          'justify-start text-left font-normal',
+                          !startDate && 'text-muted-foreground'
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {startDate ? format(startDate, 'yyyy/MM/dd') : <span>開始日期</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-1" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={startDate}
+                        onSelect={(date: Date | undefined) => {
+                          setStartDate(date);
+                          setStartCalendarOpen(false);
+                          handleDateChange();
+                        }}
+                        locale={zhTW}
+                        className={cn('p-3 pointer-events-auto')}
+                        disabled={(date) => endDate ? isAfter(date, endDate) : false}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <span className="text-muted-foreground">—</span>
+                  <Popover open={endCalendarOpen} onOpenChange={setEndCalendarOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className={cn(
+                          'justify-start text-left font-normal',
+                          !endDate && 'text-muted-foreground'
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {endDate ? format(endDate, 'yyyy/MM/dd') : <span>結束日期</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-1" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={endDate}
+                        onSelect={(date: Date | undefined) => {
+                          setEndDate(date);
+                          setEndCalendarOpen(false);
+                          handleDateChange();
+                        }}
+                        locale={zhTW}
+                        className={cn('p-3 pointer-events-auto')}
+                        disabled={(date) => startDate ? isBefore(date, startDate) : false}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+              {startDate && endDate && (
+                <p className="text-xs text-muted-foreground mt-3">
+                  目前顯示：{format(startDate, 'yyyy/MM/dd')} 至 {format(endDate, 'yyyy/MM/dd')} 的資料
+                </p>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Summary Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
