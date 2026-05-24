@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect }  from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,7 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format, subDays, startOfDay, endOfDay, isAfter, isBefore } from 'date-fns';
+import { zhTW } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
+import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
 
 interface ActivityLog {
   id: string;
