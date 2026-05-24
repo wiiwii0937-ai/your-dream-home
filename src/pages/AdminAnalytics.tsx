@@ -58,6 +58,10 @@ export default function AdminAnalytics() {
     if (isAdmin) fetchLogs();
   }, [isAdmin]);
 
+  useEffect(() => {
+    if (isAdmin) fetchLogs();
+  }, [startDate, endDate]);
+
   const fetchLogs = async () => {
     setLoading(true);
     let query = (supabase as any)
@@ -83,12 +87,6 @@ export default function AdminAnalytics() {
     const start = subDays(end, days);
     setEndDate(end);
     setStartDate(start);
-    // Trigger fetch after state update using setTimeout
-    setTimeout(() => fetchLogs(), 0);
-  };
-
-  const handleDateChange = () => {
-    setTimeout(() => fetchLogs(), 0);
   };
 
   // Compute stats
