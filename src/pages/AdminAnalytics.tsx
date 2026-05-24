@@ -43,6 +43,10 @@ export default function AdminAnalytics() {
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
+  const [startDate, setStartDate] = useState<Date | undefined>(subDays(new Date(), 30));
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const [startCalendarOpen, setStartCalendarOpen] = useState(false);
+  const [endCalendarOpen, setEndCalendarOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -56,13 +60,35 @@ export default function AdminAnalytics() {
 
   const fetchLogs = async () => {
     setLoading(true);
-    const { data } = await (supabase as any)
+    let query = (supabase as any)
       .from('user_activity_logs')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(1000);
+
+    if (startDate) {
+      query = query.gte('created_at', startOfDay(startDate).toISOString());
+    }
+    if (endDate) {
+      query = query.lte('created_at', endOfDay(endDate).toISOString());
+    }
+
+    const { data } = await query;
     setLogs((data || []) as ActivityLog[]);
     setLoading(false);
+  };
+
+  const applyDateRange = (days: number) => {
+    const end = new Date();
+    const start = subDays(end, days);
+    setEndDate(end);
+    setStartDate(start);
+    // Trigger fetch after state update using setTimeout
+    setTimeout(() => fetchLogs(), 0);
+  };
+
+  const handleDateChange = () => {
+    setTimeout(() => fetchLogs(), 0);
   };
 
   // Compute stats
