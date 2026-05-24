@@ -225,7 +225,6 @@ export default function AdminAnalytics() {
                         onSelect={(date: Date | undefined) => {
                           setEndDate(date);
                           setEndCalendarOpen(false);
-                          handleDateChange();
                         }}
                         locale={zhTW}
                         className={cn('p-3 pointer-events-auto')}
