@@ -49,6 +49,11 @@ export default function AdminAnalytics() {
   const [startCalendarOpen, setStartCalendarOpen] = useState(false);
   const [endCalendarOpen, setEndCalendarOpen] = useState(false);
 
+  // Click search & sort
+  const [clickSearch, setClickSearch] = useState('');
+  const [clickSortField, setClickSortField] = useState<'count' | 'name'>('count');
+  const [clickSortDir, setClickSortDir] = useState<'desc' | 'asc'>('desc');
+
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
       navigate('/auth');
