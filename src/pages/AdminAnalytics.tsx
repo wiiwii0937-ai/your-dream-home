@@ -1,9 +1,10 @@
-import { useState, useEffect }  from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format, subDays, startOfDay, endOfDay, isAfter, isBefore } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown } from 'lucide-react';
 
 interface ActivityLog {
   id: string;
@@ -47,6 +48,11 @@ export default function AdminAnalytics() {
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [startCalendarOpen, setStartCalendarOpen] = useState(false);
   const [endCalendarOpen, setEndCalendarOpen] = useState(false);
+
+  // Click search & sort
+  const [clickSearch, setClickSearch] = useState('');
+  const [clickSortField, setClickSortField] = useState<'count' | 'name'>('count');
+  const [clickSortDir, setClickSortDir] = useState<'desc' | 'asc'>('desc');
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -327,36 +333,113 @@ export default function AdminAnalytics() {
             <TabsContent value="clicks">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">點擊目標排行</CardTitle>
+                  <div className="flex flex-col md:flex-row md:items-center gap-4">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg">點擊目標排行</CardTitle>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="relative">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          placeholder="搜尋點擊目標或頁面..."
+                          value={clickSearch}
+                          onChange={(e) => setClickSearch(e.target.value)}
+                          className="pl-9 w-full sm:w-64"
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (clickSortField === 'count') {
+                              setClickSortDir((d) => (d === 'desc' ? 'asc' : 'desc'));
+                            } else {
+                              setClickSortField('count');
+                              setClickSortDir('desc');
+                            }
+                          }}
+                          className={cn(
+                            'gap-1',
+                            clickSortField === 'count' && 'bg-primary/10 border-primary/30'
+                          )}
+                        >
+                          <ArrowUpDown className="w-3.5 h-3.5" />
+                          次數 {clickSortField === 'count' && (clickSortDir === 'desc' ? '↓' : '↑')}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (clickSortField === 'name') {
+                              setClickSortDir((d) => (d === 'desc' ? 'asc' : 'desc'));
+                            } else {
+                              setClickSortField('name');
+                              setClickSortDir('asc');
+                            }
+                          }}
+                          className={cn(
+                            'gap-1',
+                            clickSortField === 'name' && 'bg-primary/10 border-primary/30'
+                          )}
+                        >
+                          <ArrowUpDown className="w-3.5 h-3.5" />
+                          名稱 {clickSortField === 'name' && (clickSortDir === 'desc' ? '↓' : '↑')}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>排名</TableHead>
-                        <TableHead>點擊目標</TableHead>
-                        <TableHead>所在頁面</TableHead>
-                        <TableHead className="text-right">點擊次數</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {clickStats.slice(0, 20).map((s, i) => (
-                        <TableRow key={s.click_target}>
-                          <TableCell className="font-medium">{i + 1}</TableCell>
-                          <TableCell className="text-sm max-w-[200px] truncate">{s.click_target}</TableCell>
-                          <TableCell className="font-mono text-sm">{s.page_path}</TableCell>
-                          <TableCell className="text-right">{s.count}</TableCell>
-                        </TableRow>
-                      ))}
-                      {clickStats.length === 0 && (
-                        <TableRow>
-                          <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                            尚無點擊資料
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
+                  {(() => {
+                    const filtered = clickStats.filter((s) =>
+                      s.click_target.toLowerCase().includes(clickSearch.toLowerCase()) ||
+                      s.page_path.toLowerCase().includes(clickSearch.toLowerCase())
+                    );
+                    const sorted = [...filtered].sort((a, b) => {
+                      if (clickSortField === 'count') {
+                        return clickSortDir === 'desc' ? b.count - a.count : a.count - b.count;
+                      }
+                      return clickSortDir === 'desc'
+                        ? b.click_target.localeCompare(a.click_target, 'zh-TW')
+                        : a.click_target.localeCompare(b.click_target, 'zh-TW');
+                    });
+                    return (
+                      <>
+                        <p className="text-xs text-muted-foreground mb-3">
+                          共 {sorted.length} 筆資料
+                          {clickSearch && ` (搜尋「${clickSearch}」)`}
+                        </p>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>排名</TableHead>
+                              <TableHead>點擊目標</TableHead>
+                              <TableHead>所在頁面</TableHead>
+                              <TableHead className="text-right">點擊次數</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {sorted.map((s, i) => (
+                              <TableRow key={s.click_target}>
+                                <TableCell className="font-medium">{i + 1}</TableCell>
+                                <TableCell className="text-sm max-w-[200px] truncate">{s.click_target}</TableCell>
+                                <TableCell className="font-mono text-sm">{s.page_path}</TableCell>
+                                <TableCell className="text-right">{s.count}</TableCell>
+                              </TableRow>
+                            ))}
+                            {sorted.length === 0 && (
+                              <TableRow>
+                                <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                                  尚無符合條件的資料
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </>
+                    );
+                  })()}
                 </CardContent>
               </Card>
             </TabsContent>
