@@ -472,6 +472,55 @@ export default function AdminAnalytics() {
               </Card>
             </TabsContent>
 
+            {/* Visitor Locations */}
+            <TabsContent value="locations">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <MapPin className="w-4 h-4" /> 訪客地區分佈
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    依據 IP 推測的城市/區域，協助判斷網站訪客來自台北、高雄或屏東等地。
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>排名</TableHead>
+                        <TableHead>地區</TableHead>
+                        <TableHead>城市 / 區域</TableHead>
+                        <TableHead>國家</TableHead>
+                        <TableHead className="text-right">瀏覽次數</TableHead>
+                        <TableHead className="text-right">獨立訪客</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {locationStats.slice(0, 50).map((s, i) => (
+                        <TableRow key={s.label + i}>
+                          <TableCell className="font-medium">{i + 1}</TableCell>
+                          <TableCell className="font-medium">{s.label}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {[s.city, s.region].filter(Boolean).join(' / ') || '—'}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{s.country || '—'}</TableCell>
+                          <TableCell className="text-right">{s.views}</TableCell>
+                          <TableCell className="text-right">{s.uniqueSessions}</TableCell>
+                        </TableRow>
+                      ))}
+                      {locationStats.length === 0 && (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                            尚無地區資料（新訪客造訪後才會出現）
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             {/* Recent Logs */}
             <TabsContent value="recent">
               <Card>
@@ -485,6 +534,8 @@ export default function AdminAnalytics() {
                         <TableHead>時間</TableHead>
                         <TableHead>動作</TableHead>
                         <TableHead>頁面</TableHead>
+                        <TableHead>地區</TableHead>
+                        <TableHead>IP</TableHead>
                         <TableHead>點擊目標</TableHead>
                         <TableHead className="text-right">停留</TableHead>
                       </TableRow>
