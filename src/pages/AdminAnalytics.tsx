@@ -13,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format, subDays, startOfDay, endOfDay, isAfter, isBefore } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown, MapPin } from 'lucide-react';
 
 interface ActivityLog {
   id: string;
@@ -24,6 +24,10 @@ interface ActivityLog {
   click_target: string | null;
   metadata: Record<string, unknown> | null;
   created_at: string;
+  ip_address: string | null;
+  city: string | null;
+  region: string | null;
+  country: string | null;
 }
 
 interface PageStat {
@@ -36,6 +40,15 @@ interface ClickStat {
   click_target: string;
   count: number;
   page_path: string;
+}
+
+interface LocationStat {
+  label: string;
+  city: string | null;
+  region: string | null;
+  country: string | null;
+  views: number;
+  uniqueSessions: number;
 }
 
 export default function AdminAnalytics() {
