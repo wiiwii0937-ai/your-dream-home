@@ -160,6 +160,23 @@ export default function AdminAnalytics() {
     .map(([label, s]) => ({ label, city: s.city, region: s.region, country: s.country, views: s.views, uniqueSessions: s.sessions.size }))
     .sort((a, b) => b.views - a.views);
 
+  // Daily clicks by region — 每日地區建房興趣
+  // Rows = dates, columns = regions, value = click count
+  const dailyRegionMap = new Map<string, Map<string, number>>(); // date -> (region -> count)
+  const regionTotals = new Map<string, number>();
+  clicks.forEach((l) => {
+    const date = format(new Date(l.created_at), 'yyyy-MM-dd');
+    const region = l.city || l.region || l.country || '未知地區';
+    const dayMap = dailyRegionMap.get(date) || new Map<string, number>();
+    dayMap.set(region, (dayMap.get(region) || 0) + 1);
+    dailyRegionMap.set(date, dayMap);
+    regionTotals.set(region, (regionTotals.get(region) || 0) + 1);
+  });
+  const sortedRegions = Array.from(regionTotals.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([r]) => r);
+  const sortedDates = Array.from(dailyRegionMap.keys()).sort((a, b) => b.localeCompare(a));
+
   // Unique sessions
   const uniqueSessions = new Set(logs.map((l) => l.session_id)).size;
 
