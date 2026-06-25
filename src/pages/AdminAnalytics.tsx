@@ -160,6 +160,23 @@ export default function AdminAnalytics() {
     .map(([label, s]) => ({ label, city: s.city, region: s.region, country: s.country, views: s.views, uniqueSessions: s.sessions.size }))
     .sort((a, b) => b.views - a.views);
 
+  // Daily clicks by region — 每日地區建房興趣
+  // Rows = dates, columns = regions, value = click count
+  const dailyRegionMap = new Map<string, Map<string, number>>(); // date -> (region -> count)
+  const regionTotals = new Map<string, number>();
+  clicks.forEach((l) => {
+    const date = format(new Date(l.created_at), 'yyyy-MM-dd');
+    const region = l.city || l.region || l.country || '未知地區';
+    const dayMap = dailyRegionMap.get(date) || new Map<string, number>();
+    dayMap.set(region, (dayMap.get(region) || 0) + 1);
+    dailyRegionMap.set(date, dayMap);
+    regionTotals.set(region, (regionTotals.get(region) || 0) + 1);
+  });
+  const sortedRegions = Array.from(regionTotals.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([r]) => r);
+  const sortedDates = Array.from(dailyRegionMap.keys()).sort((a, b) => b.localeCompare(a));
+
   // Unique sessions
   const uniqueSessions = new Set(logs.map((l) => l.session_id)).size;
 
@@ -316,6 +333,7 @@ export default function AdminAnalytics() {
               <TabsTrigger value="overview">熱門頁面</TabsTrigger>
               <TabsTrigger value="clicks">點擊排行</TabsTrigger>
               <TabsTrigger value="locations">訪客地區</TabsTrigger>
+              <TabsTrigger value="daily-region">每日地區興趣</TabsTrigger>
               <TabsTrigger value="recent">最近紀錄</TabsTrigger>
             </TabsList>
 
@@ -521,7 +539,86 @@ export default function AdminAnalytics() {
               </Card>
             </TabsContent>
 
-            {/* Recent Logs */}
+            {/* Daily clicks by region — 每日各地區建房興趣 */}
+            <TabsContent value="daily-region">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <MapPin className="w-4 h-4" /> 每日地區建房興趣（依點擊次數）
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    每一列為一天，每一欄為一個地區。數值越高代表該日該地區的訪客對作品/連結點擊越多，可作為建房興趣的指標。
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  {sortedDates.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8 text-sm">
+                      尚無點擊資料
+                    </p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="whitespace-nowrap sticky left-0 bg-card">日期</TableHead>
+                            {sortedRegions.map((r) => (
+                              <TableHead key={r} className="text-right whitespace-nowrap">{r}</TableHead>
+                            ))}
+                            <TableHead className="text-right whitespace-nowrap font-bold">當日合計</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {sortedDates.map((date) => {
+                            const dayMap = dailyRegionMap.get(date)!;
+                            const dayTotal = Array.from(dayMap.values()).reduce((s, n) => s + n, 0);
+                            return (
+                              <TableRow key={date}>
+                                <TableCell className="font-medium whitespace-nowrap sticky left-0 bg-card">{date}</TableCell>
+                                {sortedRegions.map((r) => {
+                                  const v = dayMap.get(r) || 0;
+                                  return (
+                                    <TableCell key={r} className="text-right">
+                                      {v > 0 ? (
+                                        <span
+                                          className={cn(
+                                            'inline-block min-w-[2rem] px-2 py-0.5 rounded text-xs font-medium',
+                                            v >= 10 ? 'bg-primary text-primary-foreground' :
+                                            v >= 5 ? 'bg-primary/30 text-foreground' :
+                                            'bg-primary/10 text-foreground'
+                                          )}
+                                        >
+                                          {v}
+                                        </span>
+                                      ) : (
+                                        <span className="text-muted-foreground/40">—</span>
+                                      )}
+                                    </TableCell>
+                                  );
+                                })}
+                                <TableCell className="text-right font-bold">{dayTotal}</TableCell>
+                              </TableRow>
+                            );
+                          })}
+                          <TableRow className="border-t-2">
+                            <TableCell className="font-bold sticky left-0 bg-card">地區合計</TableCell>
+                            {sortedRegions.map((r) => (
+                              <TableCell key={r} className="text-right font-bold">
+                                {regionTotals.get(r) || 0}
+                              </TableCell>
+                            ))}
+                            <TableCell className="text-right font-bold">
+                              {Array.from(regionTotals.values()).reduce((s, n) => s + n, 0)}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+
             <TabsContent value="recent">
               <Card>
                 <CardHeader>
