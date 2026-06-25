@@ -312,9 +312,10 @@ export default function AdminAnalytics() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6">
+            <TabsList className="mb-6 flex-wrap h-auto">
               <TabsTrigger value="overview">熱門頁面</TabsTrigger>
               <TabsTrigger value="clicks">點擊排行</TabsTrigger>
+              <TabsTrigger value="locations">訪客地區</TabsTrigger>
               <TabsTrigger value="recent">最近紀錄</TabsTrigger>
             </TabsList>
 
