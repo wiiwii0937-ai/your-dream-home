@@ -117,12 +117,17 @@ export function useActivityTracker() {
         const seconds = Math.round((Date.now() - enterTime.current) / 1000);
         if (seconds > 1) {
           // Use sendBeacon via fetch keepalive for reliability
+          const geo = geoCache || {};
           const body = JSON.stringify({
             session_id: getSessionId(),
             action_type: 'page_leave',
             page_path: location.pathname,
             duration_seconds: seconds,
             metadata: {},
+            ip_address: geo.ip || null,
+            city: geo.city || null,
+            region: geo.region || null,
+            country: geo.country || null,
           });
           // Best-effort — navigator.sendBeacon or fetch keepalive
           try {
