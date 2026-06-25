@@ -146,6 +146,20 @@ export default function AdminAnalytics() {
     .map(([click_target, s]) => ({ click_target, ...s }))
     .sort((a, b) => b.count - a.count);
 
+  // Location stats (group by city, fallback region, fallback "未知")
+  const locationMap = new Map<string, { city: string | null; region: string | null; country: string | null; views: number; sessions: Set<string> }>();
+  logs.forEach((l) => {
+    if (l.action_type !== 'page_view') return;
+    const label = l.city || l.region || (l.country ? l.country : '未知地區');
+    const s = locationMap.get(label) || { city: l.city, region: l.region, country: l.country, views: 0, sessions: new Set<string>() };
+    s.views++;
+    s.sessions.add(l.session_id);
+    locationMap.set(label, s);
+  });
+  const locationStats: LocationStat[] = Array.from(locationMap.entries())
+    .map(([label, s]) => ({ label, city: s.city, region: s.region, country: s.country, views: s.views, uniqueSessions: s.sessions.size }))
+    .sort((a, b) => b.views - a.views);
+
   // Unique sessions
   const uniqueSessions = new Set(logs.map((l) => l.session_id)).size;
 
