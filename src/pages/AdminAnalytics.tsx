@@ -556,6 +556,10 @@ export default function AdminAnalytics() {
                             </span>
                           </TableCell>
                           <TableCell className="font-mono text-xs">{l.page_path}</TableCell>
+                          <TableCell className="text-xs whitespace-nowrap">
+                            {l.city || l.region || l.country || '—'}
+                          </TableCell>
+                          <TableCell className="font-mono text-xs text-muted-foreground">{l.ip_address || '—'}</TableCell>
                           <TableCell className="text-xs max-w-[150px] truncate">{l.click_target || '—'}</TableCell>
                           <TableCell className="text-right text-xs">
                             {l.duration_seconds ? formatDuration(l.duration_seconds) : '—'}
