@@ -13,6 +13,50 @@ function getSessionId(): string {
   return id;
 }
 
+/** Fetch & cache visitor geo info (once per session). */
+interface GeoInfo {
+  ip?: string;
+  city?: string;
+  region?: string;
+  country?: string;
+}
+let geoCache: GeoInfo | null = null;
+let geoPromise: Promise<GeoInfo> | null = null;
+
+async function getGeoInfo(): Promise<GeoInfo> {
+  if (geoCache) return geoCache;
+  const cached = sessionStorage.getItem('zax_geo_info');
+  if (cached) {
+    try {
+      geoCache = JSON.parse(cached);
+      return geoCache!;
+    } catch {
+      // ignore parse error
+    }
+  }
+  if (geoPromise) return geoPromise;
+  geoPromise = (async () => {
+    try {
+      const res = await fetch('https://ipapi.co/json/');
+      if (!res.ok) throw new Error('geo fetch failed');
+      const d = await res.json();
+      const info: GeoInfo = {
+        ip: d.ip,
+        city: d.city,
+        region: d.region,
+        country: d.country_name || d.country,
+      };
+      geoCache = info;
+      try { sessionStorage.setItem('zax_geo_info', JSON.stringify(info)); } catch { /* ignore */ }
+      return info;
+    } catch {
+      geoCache = {};
+      return geoCache;
+    }
+  })();
+  return geoPromise;
+}
+
 /** Log an activity event to user_activity_logs */
 async function logActivity(params: {
   action_type: string;
@@ -22,6 +66,7 @@ async function logActivity(params: {
   metadata?: Record<string, unknown>;
 }) {
   try {
+    const geo = await getGeoInfo();
     await (supabase as any).from('user_activity_logs').insert({
       session_id: getSessionId(),
       action_type: params.action_type,
@@ -29,6 +74,10 @@ async function logActivity(params: {
       click_target: params.click_target || null,
       duration_seconds: params.duration_seconds || null,
       metadata: params.metadata || {},
+      ip_address: geo.ip || null,
+      city: geo.city || null,
+      region: geo.region || null,
+      country: geo.country || null,
     });
   } catch {
     // Silent fail — tracking should never break UX
@@ -68,12 +117,17 @@ export function useActivityTracker() {
         const seconds = Math.round((Date.now() - enterTime.current) / 1000);
         if (seconds > 1) {
           // Use sendBeacon via fetch keepalive for reliability
+          const geo = geoCache || {};
           const body = JSON.stringify({
             session_id: getSessionId(),
             action_type: 'page_leave',
             page_path: location.pathname,
             duration_seconds: seconds,
             metadata: {},
+            ip_address: geo.ip || null,
+            city: geo.city || null,
+            region: geo.region || null,
+            country: geo.country || null,
           });
           // Best-effort — navigator.sendBeacon or fetch keepalive
           try {

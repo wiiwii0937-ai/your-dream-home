@@ -13,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format, subDays, startOfDay, endOfDay, isAfter, isBefore } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown, MapPin } from 'lucide-react';
 
 interface ActivityLog {
   id: string;
@@ -24,6 +24,10 @@ interface ActivityLog {
   click_target: string | null;
   metadata: Record<string, unknown> | null;
   created_at: string;
+  ip_address: string | null;
+  city: string | null;
+  region: string | null;
+  country: string | null;
 }
 
 interface PageStat {
@@ -36,6 +40,15 @@ interface ClickStat {
   click_target: string;
   count: number;
   page_path: string;
+}
+
+interface LocationStat {
+  label: string;
+  city: string | null;
+  region: string | null;
+  country: string | null;
+  views: number;
+  uniqueSessions: number;
 }
 
 export default function AdminAnalytics() {
@@ -132,6 +145,20 @@ export default function AdminAnalytics() {
   const clickStats: ClickStat[] = Array.from(clickMap.entries())
     .map(([click_target, s]) => ({ click_target, ...s }))
     .sort((a, b) => b.count - a.count);
+
+  // Location stats (group by city, fallback region, fallback "未知")
+  const locationMap = new Map<string, { city: string | null; region: string | null; country: string | null; views: number; sessions: Set<string> }>();
+  logs.forEach((l) => {
+    if (l.action_type !== 'page_view') return;
+    const label = l.city || l.region || (l.country ? l.country : '未知地區');
+    const s = locationMap.get(label) || { city: l.city, region: l.region, country: l.country, views: 0, sessions: new Set<string>() };
+    s.views++;
+    s.sessions.add(l.session_id);
+    locationMap.set(label, s);
+  });
+  const locationStats: LocationStat[] = Array.from(locationMap.entries())
+    .map(([label, s]) => ({ label, city: s.city, region: s.region, country: s.country, views: s.views, uniqueSessions: s.sessions.size }))
+    .sort((a, b) => b.views - a.views);
 
   // Unique sessions
   const uniqueSessions = new Set(logs.map((l) => l.session_id)).size;
@@ -285,9 +312,10 @@ export default function AdminAnalytics() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6">
+            <TabsList className="mb-6 flex-wrap h-auto">
               <TabsTrigger value="overview">熱門頁面</TabsTrigger>
               <TabsTrigger value="clicks">點擊排行</TabsTrigger>
+              <TabsTrigger value="locations">訪客地區</TabsTrigger>
               <TabsTrigger value="recent">最近紀錄</TabsTrigger>
             </TabsList>
 
@@ -444,6 +472,55 @@ export default function AdminAnalytics() {
               </Card>
             </TabsContent>
 
+            {/* Visitor Locations */}
+            <TabsContent value="locations">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <MapPin className="w-4 h-4" /> 訪客地區分佈
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    依據 IP 推測的城市/區域，協助判斷網站訪客來自台北、高雄或屏東等地。
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>排名</TableHead>
+                        <TableHead>地區</TableHead>
+                        <TableHead>城市 / 區域</TableHead>
+                        <TableHead>國家</TableHead>
+                        <TableHead className="text-right">瀏覽次數</TableHead>
+                        <TableHead className="text-right">獨立訪客</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {locationStats.slice(0, 50).map((s, i) => (
+                        <TableRow key={s.label + i}>
+                          <TableCell className="font-medium">{i + 1}</TableCell>
+                          <TableCell className="font-medium">{s.label}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {[s.city, s.region].filter(Boolean).join(' / ') || '—'}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{s.country || '—'}</TableCell>
+                          <TableCell className="text-right">{s.views}</TableCell>
+                          <TableCell className="text-right">{s.uniqueSessions}</TableCell>
+                        </TableRow>
+                      ))}
+                      {locationStats.length === 0 && (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                            尚無地區資料（新訪客造訪後才會出現）
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             {/* Recent Logs */}
             <TabsContent value="recent">
               <Card>
@@ -457,6 +534,8 @@ export default function AdminAnalytics() {
                         <TableHead>時間</TableHead>
                         <TableHead>動作</TableHead>
                         <TableHead>頁面</TableHead>
+                        <TableHead>地區</TableHead>
+                        <TableHead>IP</TableHead>
                         <TableHead>點擊目標</TableHead>
                         <TableHead className="text-right">停留</TableHead>
                       </TableRow>
@@ -477,6 +556,10 @@ export default function AdminAnalytics() {
                             </span>
                           </TableCell>
                           <TableCell className="font-mono text-xs">{l.page_path}</TableCell>
+                          <TableCell className="text-xs whitespace-nowrap">
+                            {l.city || l.region || l.country || '—'}
+                          </TableCell>
+                          <TableCell className="font-mono text-xs text-muted-foreground">{l.ip_address || '—'}</TableCell>
                           <TableCell className="text-xs max-w-[150px] truncate">{l.click_target || '—'}</TableCell>
                           <TableCell className="text-right text-xs">
                             {l.duration_seconds ? formatDuration(l.duration_seconds) : '—'}
