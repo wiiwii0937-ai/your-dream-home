@@ -537,9 +537,87 @@ export default function AdminAnalytics() {
                   </Table>
                 </CardContent>
               </Card>
+
+            {/* Daily clicks by region — 每日各地區建房興趣 */}
+            <TabsContent value="daily-region">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <MapPin className="w-4 h-4" /> 每日地區建房興趣（依點擊次數）
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    每一列為一天，每一欄為一個地區。數值越高代表該日該地區的訪客對作品/連結點擊越多，可作為建房興趣的指標。
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  {sortedDates.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8 text-sm">
+                      尚無點擊資料
+                    </p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="whitespace-nowrap sticky left-0 bg-card">日期</TableHead>
+                            {sortedRegions.map((r) => (
+                              <TableHead key={r} className="text-right whitespace-nowrap">{r}</TableHead>
+                            ))}
+                            <TableHead className="text-right whitespace-nowrap font-bold">當日合計</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {sortedDates.map((date) => {
+                            const dayMap = dailyRegionMap.get(date)!;
+                            const dayTotal = Array.from(dayMap.values()).reduce((s, n) => s + n, 0);
+                            return (
+                              <TableRow key={date}>
+                                <TableCell className="font-medium whitespace-nowrap sticky left-0 bg-card">{date}</TableCell>
+                                {sortedRegions.map((r) => {
+                                  const v = dayMap.get(r) || 0;
+                                  return (
+                                    <TableCell key={r} className="text-right">
+                                      {v > 0 ? (
+                                        <span
+                                          className={cn(
+                                            'inline-block min-w-[2rem] px-2 py-0.5 rounded text-xs font-medium',
+                                            v >= 10 ? 'bg-primary text-primary-foreground' :
+                                            v >= 5 ? 'bg-primary/30 text-foreground' :
+                                            'bg-primary/10 text-foreground'
+                                          )}
+                                        >
+                                          {v}
+                                        </span>
+                                      ) : (
+                                        <span className="text-muted-foreground/40">—</span>
+                                      )}
+                                    </TableCell>
+                                  );
+                                })}
+                                <TableCell className="text-right font-bold">{dayTotal}</TableCell>
+                              </TableRow>
+                            );
+                          })}
+                          <TableRow className="border-t-2">
+                            <TableCell className="font-bold sticky left-0 bg-card">地區合計</TableCell>
+                            {sortedRegions.map((r) => (
+                              <TableCell key={r} className="text-right font-bold">
+                                {regionTotals.get(r) || 0}
+                              </TableCell>
+                            ))}
+                            <TableCell className="text-right font-bold">
+                              {Array.from(regionTotals.values()).reduce((s, n) => s + n, 0)}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </TabsContent>
 
-            {/* Recent Logs */}
+
             <TabsContent value="recent">
               <Card>
                 <CardHeader>
