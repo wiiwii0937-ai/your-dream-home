@@ -333,6 +333,7 @@ export default function AdminAnalytics() {
               <TabsTrigger value="overview">熱門頁面</TabsTrigger>
               <TabsTrigger value="clicks">點擊排行</TabsTrigger>
               <TabsTrigger value="locations">訪客地區</TabsTrigger>
+              <TabsTrigger value="daily-region">每日地區興趣</TabsTrigger>
               <TabsTrigger value="recent">最近紀錄</TabsTrigger>
             </TabsList>
 
