@@ -337,32 +337,44 @@ export type Database = {
       user_activity_logs: {
         Row: {
           action_type: string
+          city: string | null
           click_target: string | null
+          country: string | null
           created_at: string
           duration_seconds: number | null
           id: string
+          ip_address: string | null
           metadata: Json | null
           page_path: string
+          region: string | null
           session_id: string
         }
         Insert: {
           action_type?: string
+          city?: string | null
           click_target?: string | null
+          country?: string | null
           created_at?: string
           duration_seconds?: number | null
           id?: string
+          ip_address?: string | null
           metadata?: Json | null
           page_path: string
+          region?: string | null
           session_id: string
         }
         Update: {
           action_type?: string
+          city?: string | null
           click_target?: string | null
+          country?: string | null
           created_at?: string
           duration_seconds?: number | null
           id?: string
+          ip_address?: string | null
           metadata?: Json | null
           page_path?: string
+          region?: string | null
           session_id?: string
         }
         Relationships: []
