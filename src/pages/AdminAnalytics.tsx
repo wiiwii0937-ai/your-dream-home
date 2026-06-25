@@ -537,6 +537,7 @@ export default function AdminAnalytics() {
                   </Table>
                 </CardContent>
               </Card>
+            </TabsContent>
 
             {/* Daily clicks by region — 每日各地區建房興趣 */}
             <TabsContent value="daily-region">
