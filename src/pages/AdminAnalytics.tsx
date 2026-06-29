@@ -13,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format, subDays, startOfDay, endOfDay, isAfter, isBefore } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown, MapPin } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown, MapPin, Download } from 'lucide-react';
 
 interface ActivityLog {
   id: string;
