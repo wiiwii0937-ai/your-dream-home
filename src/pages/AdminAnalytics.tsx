@@ -584,12 +584,25 @@ export default function AdminAnalytics() {
             <TabsContent value="daily-region">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> 每日地區建房興趣（依點擊次數）
-                  </CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    每一列為一天，每一欄為一個地區。數值越高代表該日該地區的訪客對作品/連結點擊越多，可作為建房興趣的指標。
-                  </p>
+                  <div className="flex flex-col md:flex-row md:items-start gap-4">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <MapPin className="w-4 h-4" /> 每日地區建房興趣（依點擊次數）
+                      </CardTitle>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        每一列為一天，每一欄為一個地區。數值越高代表該日該地區的訪客對作品/連結點擊越多，可作為建房興趣的指標。
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={exportDailyRegionCsv}
+                      disabled={sortedDates.length === 0 || sortedRegions.length === 0}
+                      className="gap-2 shrink-0"
+                    >
+                      <Download className="w-4 h-4" /> 匯出 CSV
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {sortedDates.length === 0 ? (
