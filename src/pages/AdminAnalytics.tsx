@@ -13,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format, subDays, startOfDay, endOfDay, isAfter, isBefore } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown, MapPin } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Eye, MousePointerClick, Clock, TrendingUp, Calendar as CalendarIcon, Search, ArrowUpDown, MapPin, Download } from 'lucide-react';
 
 interface ActivityLog {
   id: string;
@@ -183,6 +183,47 @@ export default function AdminAnalytics() {
   const formatDuration = (s: number) => {
     if (s < 60) return `${s}秒`;
     return `${Math.floor(s / 60)}分${s % 60}秒`;
+  };
+
+  const exportDailyRegionCsv = () => {
+    if (sortedDates.length === 0 || sortedRegions.length === 0) return;
+
+    const escapeCell = (val: string | number) => {
+      const str = String(val);
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    const headers = ['日期', ...sortedRegions, '當日合計'];
+    const rows: (string | number)[][] = [];
+
+    sortedDates.forEach((date) => {
+      const dayMap = dailyRegionMap.get(date)!;
+      const dayTotal = Array.from(dayMap.values()).reduce((s, n) => s + n, 0);
+      rows.push([date, ...sortedRegions.map((r) => dayMap.get(r) || 0), dayTotal]);
+    });
+
+    const totalRow = [
+      '地區合計',
+      ...sortedRegions.map((r) => regionTotals.get(r) || 0),
+      Array.from(regionTotals.values()).reduce((s, n) => s + n, 0),
+    ];
+    rows.push(totalRow);
+
+    const csv = [headers, ...rows].map((row) => row.map(escapeCell).join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const from = startDate ? format(startDate, 'yyyyMMdd') : 'start';
+    const to = endDate ? format(endDate, 'yyyyMMdd') : 'end';
+    link.download = `daily-region-interest-${from}-${to}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   if (authLoading || loading) {
@@ -543,12 +584,25 @@ export default function AdminAnalytics() {
             <TabsContent value="daily-region">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> 每日地區建房興趣（依點擊次數）
-                  </CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    每一列為一天，每一欄為一個地區。數值越高代表該日該地區的訪客對作品/連結點擊越多，可作為建房興趣的指標。
-                  </p>
+                  <div className="flex flex-col md:flex-row md:items-start gap-4">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <MapPin className="w-4 h-4" /> 每日地區建房興趣（依點擊次數）
+                      </CardTitle>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        每一列為一天，每一欄為一個地區。數值越高代表該日該地區的訪客對作品/連結點擊越多，可作為建房興趣的指標。
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={exportDailyRegionCsv}
+                      disabled={sortedDates.length === 0 || sortedRegions.length === 0}
+                      className="gap-2 shrink-0"
+                    >
+                      <Download className="w-4 h-4" /> 匯出 CSV
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {sortedDates.length === 0 ? (
